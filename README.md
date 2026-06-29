@@ -1,36 +1,107 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# UGMentor — Decoupled Architecture
 
-## Getting Started
+AI-powered learning platform for undergraduate medical students.
 
-First, run the development server:
+## 🗂️ Project Structure
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+```
+UGMentor/
+├── frontend/         # React + Vite (deploy to Netlify)
+│   ├── src/
+│   │   ├── App.tsx
+│   │   ├── main.tsx
+│   │   ├── index.css
+│   │   ├── context/AuthContext.tsx
+│   │   ├── lib/auth.ts
+│   │   ├── lib/supabase.ts
+│   │   ├── components/
+│   │   └── pages/
+│   │       ├── Landing.tsx
+│   │       ├── Login.tsx
+│   │       └── dashboard/
+│   ├── public/
+│   ├── package.json
+│   ├── vite.config.ts
+│   └── .env.example
+│
+└── backend/          # Express + TypeScript (deploy to Google Cloud Run)
+    ├── src/
+    │   ├── server.ts
+    │   ├── lib/supabase.ts
+    │   └── routes/
+    │       ├── generate-answer.ts
+    │       ├── generate-notes.ts
+    │       ├── generate-vocabulary.ts
+    │       ├── generate-mnemonic.ts
+    │       ├── generate-essay-questions.ts
+    │       ├── generate-essay-answer.ts
+    │       ├── generate-case-presentation.ts
+    │       ├── generate-education.ts
+    │       ├── generate-report.ts
+    │       ├── generate-research.ts
+    │       ├── generate-seminar.ts
+    │       ├── generate-topic-summary.ts
+    │       └── grade-proskill.ts
+    ├── Dockerfile
+    ├── package.json
+    └── .env.example
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🚀 Quick Start
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Backend
+```bash
+cd backend
+cp .env.example .env        # Fill in your secrets
+npm install
+npm run dev                 # Starts on http://localhost:8080
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Frontend
+```bash
+cd frontend
+cp .env.example .env        # Fill in VITE_API_URL=http://localhost:8080
+npm install
+npm run dev                 # Starts on http://localhost:3000
+```
 
-## Learn More
+## 🔐 Environment Variables
 
-To learn more about Next.js, take a look at the following resources:
+### Backend (`backend/.env`)
+| Variable | Description |
+|---|---|
+| `PORT` | Server port (default: 8080) |
+| `SUPABASE_URL` | Supabase project URL |
+| `SUPABASE_SERVICE_ROLE_KEY` | Supabase service role key (server-side only) |
+| `GEMINI_API_KEY` | Google Gemini AI API key |
+| `JWT_SECRET` | JWT signing secret |
+| `ZEPTOMAIL_API_KEY` | ZeptoMail transactional email key |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Frontend (`frontend/.env`)
+| Variable | Description |
+|---|---|
+| `VITE_API_URL` | Backend API URL |
+| `VITE_SUPABASE_URL` | Supabase project URL |
+| `VITE_SUPABASE_ANON_KEY` | Supabase anon/public key |
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## ☁️ Deployment
 
-## Deploy on Vercel
+### Backend → Google Cloud Run
+```bash
+cd backend
+gcloud builds submit --tag gcr.io/ugmentor-prod/ugmentor-api
+gcloud run deploy ugmentor-api \
+  --image gcr.io/ugmentor-prod/ugmentor-api \
+  --platform managed --region asia-south1 --allow-unauthenticated
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Frontend → Netlify
+```bash
+cd frontend
+npm run build
+# Deploy dist/ folder to Netlify
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🌐 Production URLs
+- **Frontend**: https://ugmentor.in
+- **Backend API**: https://api.ugmentor.in (Cloud Run)
