@@ -103,7 +103,7 @@ export default function LoginPage() {
                     position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)',
                     background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', fontSize: 16
                   }}
-                >{showPwd ? 'ðŸ™ˆ' : 'ðŸ‘ï¸'}</button>
+                >{showPwd ? '🙈' : '👁️'}</button>
               </div>
             </div>
 
@@ -118,13 +118,7 @@ export default function LoginPage() {
             </button>
           </form>
 
-          <div className="divider" />
-          <div style={{ background: 'var(--bg-surface)', borderRadius: 'var(--radius-md)', padding: '14px 16px', fontSize: 12, color: 'var(--text-muted)' }}>
-            <div style={{ fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 6 }}>Test Accounts</div>
-            <div style={{ marginBottom: 4 }}><strong>Basic:</strong> narayanakdr@yahoo.co.in | <span style={{ color: 'var(--text-secondary)' }}>User@2025</span></div>
-            <div style={{ marginBottom: 4 }}><strong>Standard:</strong> aimsrcpharmac@gmail.com | <span style={{ color: 'var(--text-secondary)' }}>User@2026</span></div>
-            <div><strong>Premium:</strong> drnarayanabjp@gmail.com | <span style={{ color: 'var(--text-secondary)' }}>User@2026</span></div>
-          </div>
+
         </div>
 
         <p style={{ textAlign: 'center', marginTop: 20, fontSize: 13, color: 'var(--text-muted)' }}>
