@@ -1,4 +1,4 @@
-﻿// React component
+// React component
 import React, { useState, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -122,7 +122,7 @@ export default function EssayGeneratorPage() {
   return (
     <div className="page-container">
       <div className="page-header">
-        <h1 className="page-title font-outfit">âœï¸ Essay Questions Generator</h1>
+        <h1 className="page-title font-outfit">✍️ Essay Questions Generator</h1>
         <p className="page-desc">Generate exam-standard essay questions and AI model answers by course and subject</p>
       </div>
       <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap', alignItems: 'flex-start' }}>
@@ -189,7 +189,7 @@ export default function EssayGeneratorPage() {
             </div>
             <button className="btn btn-primary" style={{ width: '100%', justifyContent: 'center', padding: '13px 20px', fontSize: 15 }}
               onClick={generate} disabled={generating || !course || !subject || !topic}>
-              {generating ? <><span className="spinner" style={{ marginRight: 8 }} />Generating Questionsâ€¦</> : '🤖 Generate Questions'}
+              {generating ? <><span className="spinner" style={{ marginRight: 8 }} />Generating Questions…</> : '🤖 Generate Questions'}
             </button>
           </div>
 
@@ -214,10 +214,10 @@ export default function EssayGeneratorPage() {
                             onClick={() => generateAnswer(i, q)}
                             disabled={generatingAnswer[i]}
                           >
-                            {generatingAnswer[i] ? <><span className="spinner" style={{width: 12, height: 12, marginRight: 4}} />Generatingâ€¦</> : 'âœ¨ Generate Answer'}
+                            {generatingAnswer[i] ? <><span className="spinner" style={{width: 12, height: 12, marginRight: 4}} />Generating…</> : '✨ Generate Answer'}
                           </button>
                         )}
-                        <button className="btn btn-ghost btn-sm" style={{ fontSize: 11, padding: '4px 10px' }} onClick={() => handleSave(i, q)}>â­ Save</button>
+                        <button className="btn btn-ghost btn-sm" style={{ fontSize: 11, padding: '4px 10px' }} onClick={() => handleSave(i, q)}>⭐ Save</button>
                       </div>
                     </div>
                     <div style={{ fontSize: 14.5, color: 'var(--text-primary)', lineHeight: 1.7, whiteSpace: 'pre-wrap', fontWeight: 500 }}>{q}</div>
@@ -254,7 +254,7 @@ export default function EssayGeneratorPage() {
         <div style={{ width: 300, flexShrink: 0, display: 'flex', flexDirection: 'column', gap: 16 }}>
           <div className="card">
             <div style={{ fontSize: 15, fontWeight: 800, marginBottom: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span>â­ Saved Questions</span>
+              <span>⭐ Saved Questions</span>
               <span className="badge badge-primary">{saved.length}</span>
             </div>
             
@@ -345,11 +345,8 @@ export default function EssayGeneratorPage() {
                       }, 250);
                     }} 
                     style={{ padding: '2px 8px', fontSize: 11 }}
-                    title="Download as PDF"
-                  >
-                    â¬‡ï¸ PDF
-                  </button>
-                  <button className="btn btn-ghost btn-sm" onClick={() => setSelectedSaved(null)} style={{ padding: '2px 8px' }}>âœ•</button>
+                    title="Download as PDF">⬇️ PDF</button>
+                  <button className="btn btn-ghost btn-sm" onClick={() => setSelectedSaved(null)} style={{ padding: '2px 8px' }}>✖</button>
                 </div>
               </div>
               <div id={`printable-essay-${selectedSaved.id}`} className="markdown-body" style={{ padding: 20, maxHeight: 400, overflowY: 'auto', fontSize: 13, lineHeight: 1.7, color: 'var(--text-secondary)' }}>

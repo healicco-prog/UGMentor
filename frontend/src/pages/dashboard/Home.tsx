@@ -1,4 +1,4 @@
-﻿// React component
+// React component
 import React from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
@@ -29,11 +29,11 @@ const ProgressItem = ({ label, percent, color }: { label: string; percent: numbe
 );
 
 const recentActivities = [
-  { icon: 'ðŸ“', text: 'Completed Notes Creator â€“ Pharmacology Chapter 3', time: '2h ago', type: 'notes' },
-  { icon: 'ðŸŽ¯', text: 'Practiced 20 MCQs on Anatomy', time: '4h ago', type: 'mcq' },
-  { icon: 'âœï¸', text: 'Essay generated: "Role of Kidney in Homeostasis"', time: '1d ago', type: 'essay' },
+  { icon: '📝', text: 'Completed Notes Creator – Pharmacology Chapter 3', time: '2h ago', type: 'notes' },
+  { icon: '🎯', text: 'Practiced 20 MCQs on Anatomy', time: '4h ago', type: 'mcq' },
+  { icon: '✍️', text: 'Essay generated: "Role of Kidney in Homeostasis"', time: '1d ago', type: 'essay' },
   { icon: '📖', text: '5 new vocabulary words learned in Biochemistry', time: '1d ago', type: 'vocab' },
-  { icon: 'ðŸ“Š', text: 'Assessment submitted: Physiology Essay Q', time: '2d ago', type: 'assessment' },
+  { icon: '📊', text: 'Assessment submitted: Physiology Essay Q', time: '2d ago', type: 'assessment' },
 ];
 
 const upcomingTasks = [
@@ -49,6 +49,13 @@ export default function DashboardPage() {
   const tierColors: Record<string, string> = { basic: '#0EA5E9', standard: '#6C3BFF', premium: '#F59E0B' };
   const tc = tierColors[tier];
 
+  const handleFeatureClick = (e: React.MouseEvent, reqTiers: string[]) => {
+    if (!reqTiers.includes(tier)) {
+      e.preventDefault();
+      alert('This feature requires an upgrade. Please upgrade your subscription package to access this module.');
+    }
+  };
+
   return (
     <div className="page-container">
       {/* Welcome */}
@@ -60,7 +67,7 @@ export default function DashboardPage() {
       }}>
         <div>
           <h1 className="font-outfit" style={{ fontSize: 26, fontWeight: 800, marginBottom: 6 }}>
-            Good day, {user?.name?.split(' ')[0]}! ðŸ‘‹
+            Good day, {user?.name?.split(' ')[0]}! 👋
           </h1>
           <p style={{ color: 'var(--text-secondary)', fontSize: 15 }}>
             Track your learning progress, explore your modules, and keep growing every day.
@@ -74,7 +81,7 @@ export default function DashboardPage() {
             </div>
           </div>
           {tier !== 'premium' && (
-            <Link to="/dashboard/upgrade" className="btn btn-primary btn-sm">Upgrade âœ¨</Link>
+            <Link to="/dashboard/upgrade" className="btn btn-primary btn-sm">Upgrade ✨</Link>
           )}
         </div>
       </div>
@@ -83,8 +90,8 @@ export default function DashboardPage() {
       <div className="grid-4" style={{ marginBottom: 28 }}>
         <StatCard icon="📚" label="Notes Created" value="24" change="+3 this week" color="#6C3BFF" />
         <StatCard icon="📖" label="Words Learned" value="142" change="+12 today" color="#0EA5E9" />
-        <StatCard icon="âœï¸" label="Essays Assessed" value="8" change="+1 new" color="#10B981" />
-        <StatCard icon="ðŸŽ¯" label="MCQs Practiced" value="380" change="+45 today" color="#F59E0B" />
+        <StatCard icon="✍️" label="Essays Assessed" value="8" change="+1 new" color="#10B981" />
+        <StatCard icon="🎯" label="MCQs Practiced" value="380" change="+45 today" color="#F59E0B" />
       </div>
 
       <div className="grid-2" style={{ marginBottom: 28 }}>
@@ -157,25 +164,28 @@ export default function DashboardPage() {
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 10 }}>
             {[
-              { icon: '📚', label: 'LMS Notes', href: '/dashboard/lms-notes', color: '#0EA5E9' },
-              { icon: '🤖', label: 'AI MentorPro', href: '/dashboard/learning/ai-mentor', color: '#6C3BFF' },
-              { icon: 'âœï¸', label: 'Essay Generator', href: '/dashboard/learning/essay-generator', color: '#10B981' },
-              { icon: 'ðŸŽ¯', label: 'MCQ Practice', href: '/dashboard/learning/mcq-generator', color: '#F59E0B' },
-              { icon: '📄', label: 'Essay Grader', href: '/dashboard/assessment/essay-question', color: '#EF4444' },
-              { icon: 'ðŸ—‚ï¸', label: 'Portfolio', href: '/dashboard/portfolio', color: '#8B5CF6' },
+              { icon: '📚', label: 'LMS Notes', href: '/dashboard/lms-notes', color: '#0EA5E9', req: ['basic', 'standard', 'premium'] },
+              { icon: '🤖', label: 'AI MentorPro', href: '/dashboard/learning/ai-mentor', color: '#6C3BFF', req: ['standard', 'premium'] },
+              { icon: '✍️', label: 'Essay Generator', href: '/dashboard/learning/essay-generator', color: '#10B981', req: ['standard', 'premium'] },
+              { icon: '🎯', label: 'MCQ Practice', href: '/dashboard/learning/mcq-generator', color: '#F59E0B', req: ['standard', 'premium'] },
+              { icon: '📄', label: 'Essay Grader', href: '/dashboard/assessment/essay-question', color: '#EF4444', req: ['premium'] },
+              { icon: '🗂️', label: 'Portfolio', href: '/dashboard/portfolio', color: '#8B5CF6', req: ['premium'] },
             ].map((item, i) => (
-              <Link key={i} to={item.href} style={{
-                display: 'flex', alignItems: 'center', gap: 10,
-                padding: '12px 14px', background: 'var(--bg-surface)',
-                borderRadius: 'var(--radius-sm)', border: '1px solid var(--border)',
-                textDecoration: 'none', transition: 'var(--transition)'
-              }}
+              <Link key={i} to={item.href} 
+                onClick={(e) => handleFeatureClick(e, item.req)}
+                style={{
+                  display: 'flex', alignItems: 'center', gap: 10,
+                  padding: '12px 14px', background: 'var(--bg-surface)',
+                  borderRadius: 'var(--radius-sm)', border: '1px solid var(--border)',
+                  textDecoration: 'none', transition: 'var(--transition)'
+                }}
                 className="quick-link"
               >
                 <div style={{ width: 36, height: 36, borderRadius: 'var(--radius-sm)', background: `${item.color}20`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, flexShrink: 0 }}>
                   {item.icon}
                 </div>
                 <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)' }}>{item.label}</span>
+                {(!item.req.includes(tier)) && <span style={{ marginLeft: 'auto', fontSize: 14 }} title="Premium Feature">🔒</span>}
               </Link>
             ))}
           </div>
