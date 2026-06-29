@@ -67,7 +67,7 @@ export default function LoginPage() {
               background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)',
               borderRadius: 'var(--radius-sm)', padding: '12px 16px',
               color: 'var(--danger)', fontSize: 14, marginBottom: 20
-            }}>âš ï¸ {error}</div>
+            }}>⚠️ {error}</div>
           )}
 
           <form onSubmit={handleSubmit}>
