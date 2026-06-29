@@ -114,15 +114,16 @@ export default function LoginPage() {
               disabled={submitting}
               style={{ width: '100%', justifyContent: 'center', padding: '13px', fontSize: 15, marginTop: 8 }}
             >
-              {submitting ? <><span className="spinner" />Signing inâ€¦</> : 'Sign In →'}
+              {submitting ? <><span className="spinner" />Signing in…</> : 'Sign In →'}
             </button>
           </form>
 
           <div className="divider" />
           <div style={{ background: 'var(--bg-surface)', borderRadius: 'var(--radius-md)', padding: '14px 16px', fontSize: 12, color: 'var(--text-muted)' }}>
-            <div style={{ fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 6 }}>Demo Accounts</div>
-            <div>📧 basic@ugmentor.in | standard@ugmentor.in | premium@ugmentor.in</div>
-            <div>ðŸ” Password: <strong style={{ color: 'var(--text-secondary)' }}>ugmentor123</strong></div>
+            <div style={{ fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 6 }}>Test Accounts</div>
+            <div style={{ marginBottom: 4 }}><strong>Basic:</strong> narayanakdr@yahoo.co.in | <span style={{ color: 'var(--text-secondary)' }}>User@2025</span></div>
+            <div style={{ marginBottom: 4 }}><strong>Standard:</strong> aimsrcpharmac@gmail.com | <span style={{ color: 'var(--text-secondary)' }}>User@2026</span></div>
+            <div><strong>Premium:</strong> drnarayanabjp@gmail.com | <span style={{ color: 'var(--text-secondary)' }}>User@2026</span></div>
           </div>
         </div>
 

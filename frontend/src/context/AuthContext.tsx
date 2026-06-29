@@ -30,10 +30,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setUser(SUPER_ADMIN.user);
       return { success: true };
     }
-    const demoUser = DEMO_USERS.find(u => u.email.toLowerCase() === email.trim().toLowerCase());
-    if (demoUser && password === 'ugmentor123') {
-      saveUser(demoUser);
-      setUser(demoUser);
+    const demoAccount = DEMO_USERS.find(d => d.user.email.toLowerCase() === email.trim().toLowerCase());
+    if (demoAccount && password === demoAccount.password) {
+      saveUser(demoAccount.user);
+      setUser(demoAccount.user);
       return { success: true };
     }
     return { success: false, error: 'Invalid email or password.' };
