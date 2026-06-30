@@ -410,7 +410,7 @@ export default function LMSNotesPage() {
                     onClick={() => setActiveTab(tab)}
                     className={`notes-tab-btn${isRevision ? ' revision' : ''}${isActiveTab ? ' active' : ''}`}
                   >
-                    {isRevision && <span style={{ marginRight: 4 }}>âš¡</span>}
+                    {isRevision && <span style={{ marginRight: 4 }}>⚡</span>}
                     {tab}
                   </button>
                 );
@@ -475,7 +475,7 @@ export default function LMSNotesPage() {
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
                         <div style={{ padding: '24px', background: 'rgba(108,59,255,0.05)', borderRadius: '12px', border: '1px solid rgba(108,59,255,0.2)' }}>
                           <h3 style={{ display: 'flex', alignItems: 'center', gap: '8px', margin: '0 0 16px', color: 'var(--primary)', fontSize: '18px', fontWeight: 800 }}>
-                            <span>âš¡</span> Quick Review
+                            <span>⚡</span> Quick Review
                           </h3>
                           <div style={{ fontSize: '15px', color: 'var(--text-secondary)' }}>
                             <ReactMarkdown remarkPlugins={[remarkGfm]}>{activeTopic.summary || '*No summary available.*'}</ReactMarkdown>
@@ -484,7 +484,7 @@ export default function LMSNotesPage() {
                         
                         <div style={{ padding: '24px', background: 'var(--bg-elevated)', borderRadius: '12px', border: '1px solid var(--border)' }}>
                           <h3 style={{ display: 'flex', alignItems: 'center', gap: '8px', margin: '0 0 16px', color: 'var(--text-primary)', fontSize: '18px', fontWeight: 800 }}>
-                            <span>ðŸŽ¯</span> High-Yield Flashcards
+                            <span>🎯</span> High-Yield Flashcards
                           </h3>
                           <div style={{ fontSize: '15px', color: 'var(--text-secondary)' }}>
                             <FlashcardRenderer text={activeTopic.flashcards} />

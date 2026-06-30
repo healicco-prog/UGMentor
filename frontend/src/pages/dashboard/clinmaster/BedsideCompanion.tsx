@@ -75,7 +75,7 @@ function generateContent(caseName: string, subject: string) {
     `💊 Correlate presenting symptoms with signs before forming a differential diagnosis.`,
     `ðŸ©º Use the SOCRATES framework for any pain-related complaint to avoid missing key features.`,
     `âš•ï¸ Always ask about drug history — many presentations are iatrogenic or drug-modified.`,
-    `ðŸ“Š For ${caseName} — key investigations: confirm with appropriate first-line tests before escalating.`,
+    `📊 For ${caseName} — key investigations: confirm with appropriate first-line tests before escalating.`,
     `âš ï¸ Identify and document red-flag symptoms that require urgent escalation or specialist referral.`,
     `📋 Document all findings in structured SOAP format: Subjective → Objective → Assessment → Plan.`,
     `🧠 Use clinical reasoning to distinguish ${caseName} from its closest differentials by key discriminating features.`,

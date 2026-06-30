@@ -52,7 +52,7 @@ const NOTE_TYPES = [
     id: 'summary',
     label: 'Brief Summary',
     desc: '~750 words Â· Concise bullet points for quick revision',
-    icon: 'âš¡',
+    icon: '⚡',
     words: 750,
   },
 ];
@@ -384,7 +384,7 @@ export default function NotesCreatorPage() {
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 8 }}>
                       <span style={{ fontWeight: 700, fontSize: 13, color: 'var(--text-primary)', flex: 1 }}>{n.topic}</span>
                       <span className={`badge ${n.noteType === 'detailed' ? 'badge-primary' : 'badge-secondary'}`} style={{ fontSize: 10, flexShrink: 0 }}>
-                        {n.noteType === 'detailed' ? '📖 Detailed' : 'âš¡ Summary'}
+                        {n.noteType === 'detailed' ? '📖 Detailed' : '⚡ Summary'}
                       </span>
                     </div>
                     <div style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 4 }}>{n.course} Â· {n.subject}</div>

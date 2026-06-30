@@ -154,7 +154,7 @@ export default function MCQQuestionPage() {
       <div style={{ display: 'flex', gap: 12, marginBottom: 24, overflowX: 'auto', paddingBottom: 4 }}>
         {[
           { id: 'generate', label: 'Self Assess using MCQs', icon: '🤖' },
-          { id: 'practice', label: 'Practice Session', icon: 'ðŸ“Š' },
+          { id: 'practice', label: 'Practice Session', icon: '📊' },
           { id: 'report', label: 'Performance Report', icon: '📈' },
           { id: 'bank', label: 'Question Bank', icon: '📋' },
         ].map(t => (
@@ -336,7 +336,7 @@ export default function MCQQuestionPage() {
         <div className="animate-fadeIn">
           {!submitted ? (
             <div className="empty-state card glass">
-              <div className="empty-state-icon">ðŸ“Š</div>
+              <div className="empty-state-icon">📊</div>
               <h3 className="empty-state-title">No Report Available</h3>
               <p className="empty-state-desc">You need to submit a practice session first to view the report.</p>
               <button className="btn btn-primary" onClick={() => setStep('practice')}>Go to Practice Session</button>

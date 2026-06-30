@@ -300,7 +300,7 @@ export default function PortfolioPage() {
 
   const getTabLabel = (tab: string) => {
     switch (tab) {
-      case 'dashboard': return 'ðŸ“Š Dashboard';
+      case 'dashboard': return '📊 Dashboard';
       case 'student-profile': return 'ðŸ‘¤ Student Profile';
       case 'clinical-logbook': return 'ðŸ¥ Clinical Logbook';
       case 'case-presentations': return 'ðŸ“‚ Case Presentations';

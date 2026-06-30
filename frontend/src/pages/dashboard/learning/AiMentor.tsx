@@ -47,7 +47,7 @@ export default function AIMentorProPage() {
   const [topic, setTopic] = useState('');
 
   const [messages, setMessages] = useState<Message[]>([
-    { role: 'ai', content: `Hello ${user?.name?.split(' ')[0] || 'Doctor'}! ðŸ‘‹ I'm your AI MentorPro, powered by advanced UGMentor.\n\nI can help you with:\n• 📚 Explaining complex medical concepts\n• ðŸŽ¯ Answering university exam questions\n• 💊 Drug mechanisms and pharmacology\n• ðŸ¥ Clinical case discussions\n• âœï¸ Essay writing strategies\n\nWhat would you like to learn today?`, time: new Date().toLocaleTimeString() }
+    { role: 'ai', content: `Hello ${user?.name?.split(' ')[0] || 'Doctor'}! 👋 I'm your AI MentorPro, powered by advanced UGMentor.\n\nI can help you with:\n• 📚 Explaining complex medical concepts\n• 🎯 Answering university exam questions\n• 💊 Drug mechanisms and pharmacology\n• ðŸ¥ Clinical case discussions\n• âœï¸ Essay writing strategies\n\nWhat would you like to learn today?`, time: new Date().toLocaleTimeString() }
   ]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);

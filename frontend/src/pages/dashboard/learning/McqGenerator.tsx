@@ -87,7 +87,7 @@ export default function MCQGeneratorPage() {
   return (
     <div className="page-container">
       <div className="page-header">
-        <h1 className="page-title font-outfit">ðŸŽ¯ MCQs Generator</h1>
+        <h1 className="page-title font-outfit">🎯 MCQs Generator</h1>
         <p className="page-desc">Generate and practice single-best-answer MCQs for exam preparation</p>
       </div>
 
@@ -166,7 +166,7 @@ export default function MCQGeneratorPage() {
 
       {submitted && (
         <div style={{ background: 'linear-gradient(135deg, rgba(16,185,129,0.1), rgba(108,59,255,0.1))', border: '1px solid rgba(16,185,129,0.3)', borderRadius: 'var(--radius-lg)', padding: '16px 20px', marginBottom: 20, display: 'flex', alignItems: 'center', gap: 16 }}>
-          <span style={{ fontSize: 36 }}>ðŸ“Š</span>
+          <span style={{ fontSize: 36 }}>📊</span>
           <div>
             <div style={{ fontSize: 20, fontWeight: 800, fontFamily: 'Outfit', color: 'var(--text-primary)' }}>Score: {score}/{mcqs.length} ({Math.round((score / mcqs.length) * 100)}%)</div>
             <div style={{ fontSize: 13, color: 'var(--text-secondary)' }}>{difficulty} level • {course} • {subject} • {topic}</div>

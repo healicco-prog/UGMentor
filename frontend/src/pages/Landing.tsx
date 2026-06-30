@@ -7,8 +7,8 @@ const features = [
   { icon: '📚', title: 'LMS Notes', desc: 'AI-generated structured study notes aligned with university exam patterns for UG medical students.' },
   { icon: '🧠', title: 'AI MentorPro', desc: 'Your personal AI mentor that guides learning, answers doubts, and helps you master complex concepts.' },
   { icon: 'ðŸ“', title: 'Essay & MCQ Generator', desc: 'Auto-generate examination questions with answer rubrics for deep self-assessment.' },
-  { icon: 'ðŸŽ¯', title: 'Assessment Center', desc: 'Essay grading with AI-powered rubric evaluation and Viva Simulator for oral exam practice.' },
-  { icon: 'ðŸ“Š', title: 'Learning Analytics', desc: 'Track your progress across all modules with visual dashboards and performance insights.' },
+  { icon: '🎯', title: 'Assessment Center', desc: 'Essay grading with AI-powered rubric evaluation and Viva Simulator for oral exam practice.' },
+  { icon: '📊', title: 'Learning Analytics', desc: 'Track your progress across all modules with visual dashboards and performance insights.' },
   { icon: 'ðŸ—‚ï¸', title: 'E-Portfolio', desc: 'Build a comprehensive digital portfolio showcasing your academic journey and achievements.' },
 ];
 
@@ -110,7 +110,7 @@ export default function LandingPage() {
         {/* Floating cards */}
         <div className={styles.heroFloating}>
           <div className={`${styles.floatCard} ${styles.fc1}`}>
-            <div className={styles.fcIcon}>ðŸ“Š</div>
+            <div className={styles.fcIcon}>📊</div>
             <div>
               <div className={styles.fcTitle}>Progress Score</div>
               <div className={styles.fcValue}>87%</div>
@@ -123,7 +123,7 @@ export default function LandingPage() {
             <div className={styles.fcValue}>142 Notes</div>
           </div>
           <div className={`${styles.floatCard} ${styles.fc3}`}>
-            <div className={styles.fcIcon}>ðŸŽ¯</div>
+            <div className={styles.fcIcon}>🎯</div>
             <div className={styles.fcTitle}>Viva Practice Sessions</div>
             <div className={styles.fcValue}>28 Sessions</div>
           </div>

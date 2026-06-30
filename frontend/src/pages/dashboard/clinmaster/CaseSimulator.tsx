@@ -51,7 +51,7 @@ export default function ClinicalCaseSimulatorPage() {
     { key: 'examination', label: 'Clinical Examination', icon: 'ðŸ©º' },
     { key: 'diagnosis', label: 'Diagnosis', icon: 'ðŸ”' },
     { key: 'management', label: 'Management', icon: '💊' },
-    { key: 'feedback', label: 'AI Feedback', icon: 'ðŸ“Š' },
+    { key: 'feedback', label: 'AI Feedback', icon: '📊' },
   ];
   const stageIdx = STAGES.findIndex(s => s.key === stage);
 
@@ -246,7 +246,7 @@ export default function ClinicalCaseSimulatorPage() {
               </div>
               <div style={{ display: 'flex', gap: 10 }}>
                 <button className="btn btn-secondary" onClick={() => setStage('diagnosis')}>â† Back</button>
-                <button className="btn btn-primary" onClick={() => setStage('feedback')}>ðŸ“Š View AI Feedback →</button>
+                <button className="btn btn-primary" onClick={() => setStage('feedback')}>📊 View AI Feedback →</button>
               </div>
             </div>
           )}

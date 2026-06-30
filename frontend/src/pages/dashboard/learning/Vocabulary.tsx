@@ -177,7 +177,7 @@ export default function VocabularyPage() {
                 <select className="input-field" value={filterSubject} onChange={e => setFilterSubject(e.target.value)} style={{ width: 'auto', minWidth: 140 }}>
                   {allSubjects.map(s => <option key={s}>{s}</option>)}
                 </select>
-                <button className="btn btn-primary btn-sm" onClick={() => { setQuizMode(true); setQuizIdx(0); setShowDef(false); }}>ðŸŽ¯ Quiz Mode</button>
+                <button className="btn btn-primary btn-sm" onClick={() => { setQuizMode(true); setQuizIdx(0); setShowDef(false); }}>🎯 Quiz Mode</button>
               </div>
 
               {/* Word cards */}

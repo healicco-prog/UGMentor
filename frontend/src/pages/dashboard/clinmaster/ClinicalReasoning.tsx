@@ -108,7 +108,7 @@ export default function ClinicalReasoningPage(){
     {key:'adverse',label:'Adverse Effects',icon:'âš ï¸',color:'#EF4444'},
     {key:'interactions',label:'Drug Interactions',icon:'ðŸ”—',color:'#F59E0B'},
     {key:'dosing',label:'Dosing Guidelines',icon:'💊',color:'#0EA5E9'},
-    {key:'monitoring',label:'Monitoring',icon:'ðŸ“Š',color:'#8B5CF6'},
+    {key:'monitoring',label:'Monitoring',icon:'📊',color:'#8B5CF6'},
   ];
 
   return(
