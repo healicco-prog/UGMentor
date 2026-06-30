@@ -89,7 +89,50 @@ export default function LMSNotesPage() {
   const [activeTopicId, setActiveTopicId] = useState('');
   const [activeTab, setActiveTab] = useState('Introduction');
   const [chatInput, setChatInput] = useState('');
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiResponse, setAiResponse] = useState('');
+  const [aiPrompt, setAiPrompt] = useState('');
   const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({});
+
+  const handleAiAction = async (action: string) => {
+    if (!activeTopic) return;
+    setAiPrompt(action);
+    setAiResponse('');
+    setAiLoading(true);
+    
+    let aiInstruction = `Please provide: ${action} for the topic "${activeTopic.topic}".`;
+    if (action.includes('MCQ')) {
+        aiInstruction += `\nFormat exactly like this:\n1. Question\na) Option A\nb) Option B\nc) Option C\nd) Option D\nAnswer: A\nReason: Explanation here`;
+    } else if (action.includes('Summarize')) {
+        aiInstruction += `\nPresent the summary as clear bullet points.`;
+    } else if (action.includes('simple terms')) {
+        aiInstruction += `\nExplaination should be presented with layman terms.`;
+    }
+
+    try {
+      const apiUrl = import.meta.env.VITE_API_URL || '';
+      const endpoint = apiUrl ? `${apiUrl}/api/generate-answer` : '/api/generate-answer';
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          course,
+          subject,
+          section: activeTopic.section,
+          topic: activeTopic.topic,
+          question: aiInstruction,
+          marksType: 'AI Assistant Request'
+        })
+      });
+      const data = await response.json();
+      if (data.answer) setAiResponse(data.answer);
+      else setAiResponse('Error generating response.');
+    } catch (err) {
+      setAiResponse('Failed to connect to AI server.');
+    } finally {
+      setAiLoading(false);
+    }
+  };
   const [isLeftOpen, setIsLeftOpen] = useState(true);
   const [isRightOpen, setIsRightOpen] = useState(true);
 
@@ -336,7 +379,7 @@ export default function LMSNotesPage() {
                           }}
                         >
                           <span style={{ fontSize: 11, width: 18, textAlign: 'center', opacity: 0.5, fontWeight: 600, flexShrink: 0 }}>{idx + 1}</span>
-                          <span style={{ fontSize: 14, flexShrink: 0 }}>{topic.completed ? '✅' : 'â³'}</span>
+                          <span style={{ fontSize: 14, flexShrink: 0 }}>{topic.completed ? '✅' : '⏳'}</span>
                           <span style={{ fontSize: 13, fontWeight: activeTopicId === topic.id ? 600 : 500, flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                             {topic.topic}
                           </span>
@@ -389,7 +432,7 @@ export default function LMSNotesPage() {
                   className="btn btn-secondary btn-sm"
                   style={{ marginTop: 2, padding: '4px 10px', fontSize: 12, borderColor: activeTopic?.completed ? '#22c55e' : undefined, color: activeTopic?.completed ? '#22c55e' : undefined }}
                 >
-                  {activeTopic?.completed ? '✅ Completed' : 'â˜‘ï¸ Mark Complete'}
+                  {activeTopic?.completed ? '✅ Completed' : '☑️ Mark Complete'}
                 </button>
                 {!isRightOpen && (
                   <button onClick={() => setIsRightOpen(true)} className="btn btn-primary btn-sm" style={{ padding: '6px', marginTop: 2 }} title="Open AI Mentor">
@@ -526,23 +569,54 @@ export default function LMSNotesPage() {
             </button>
           </div>
 
-          <div style={{ flex: 1, padding: '24px 20px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 14, textAlign: 'center', overflowY: 'auto' }}>
-            <div style={{ fontSize: 56 }}>🤖</div>
-            <div style={{ fontSize: 14, color: 'var(--text-secondary)', lineHeight: 1.6 }}>
-              Hi Student! Need help understanding <br/>
-              <strong style={{ color: 'var(--text-primary)' }}>{activeTopic?.topic}</strong>?
-            </div>
-            <div style={{ fontSize: 12, color: 'var(--text-muted)', background: 'var(--bg-elevated)', padding: '6px 12px', borderRadius: 999, border: '1px solid var(--border)' }}>
-              {course} · {subject.length > 22 ? subject.substring(0, 22) + '…' : subject}
-            </div>
-
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8, width: '100%', marginTop: 8 }}>
-              {['Explain in simple terms', 'Create a mnemonic for this', 'Generate 5 practice MCQs', 'Summarize key points'].map(action => (
-                <button key={action} className="btn btn-secondary" style={{ width: '100%', justifyContent: 'flex-start', padding: '10px 16px', fontSize: 13 }}>
-                  {action}
-                </button>
-              ))}
-            </div>
+          <div style={{ flex: 1, padding: '24px 20px', display: 'flex', flexDirection: 'column', gap: 14, overflowY: 'auto', overflowX: 'hidden' }}>
+            {!aiPrompt && !aiLoading && !aiResponse ? (
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', height: '100%' }}>
+                <div style={{ fontSize: 56 }}>🤖</div>
+                <div style={{ fontSize: 14, color: 'var(--text-secondary)', lineHeight: 1.6, marginTop: 14 }}>
+                  Hi Student! Need help understanding <br/>
+                  <strong style={{ color: 'var(--text-primary)' }}>{activeTopic?.topic}</strong>?
+                </div>
+                <div style={{ fontSize: 12, color: 'var(--text-muted)', background: 'var(--bg-elevated)', padding: '6px 12px', borderRadius: 999, border: '1px solid var(--border)', marginTop: 14 }}>
+                  {course} · {subject.length > 22 ? subject.substring(0, 22) + '…' : subject}
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 8, width: '100%', marginTop: 22 }}>
+                  {['Explain in simple terms', 'Create a mnemonic for this', 'Generate 5 practice MCQs', 'Summarize key points'].map(action => (
+                    <button key={action} onClick={() => handleAiAction(action)} className="btn btn-secondary" style={{ width: '100%', justifyContent: 'flex-start', padding: '10px 16px', fontSize: 13 }}>
+                      {action}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                <div style={{ alignSelf: 'flex-end', background: 'var(--primary)', color: 'white', padding: '12px 16px', borderRadius: '16px 16px 2px 16px', fontSize: 14, maxWidth: '85%', lineHeight: 1.5 }}>
+                  {aiPrompt}
+                </div>
+                
+                {aiLoading ? (
+                  <div style={{ alignSelf: 'flex-start', background: 'var(--bg-elevated)', border: '1px solid var(--border)', padding: '14px', borderRadius: '16px 16px 16px 2px', fontSize: 14, color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <span className="spinner" style={{ width: 16, height: 16, borderTopColor: 'var(--primary)', borderRightColor: 'var(--primary)' }} /> Thinking...
+                  </div>
+                ) : (
+                  <div style={{ alignSelf: 'flex-start', background: 'var(--bg-elevated)', border: '1px solid var(--border)', padding: '16px', borderRadius: '16px 16px 16px 2px', fontSize: 14, maxWidth: '100%', color: 'var(--text-primary)', overflowX: 'hidden' }}>
+                    {aiPrompt.includes('MCQ') ? (
+                      <MCQRenderer text={aiResponse} />
+                    ) : (
+                      <div className="notes-content-scroll" style={{ padding: 0 }}>
+                        <ReactMarkdown remarkPlugins={[remarkGfm]}>{aiResponse}</ReactMarkdown>
+                      </div>
+                    )}
+                  </div>
+                )}
+                
+                {!aiLoading && (
+                  <button onClick={() => { setAiPrompt(''); setAiResponse(''); }} className="btn btn-secondary btn-sm" style={{ alignSelf: 'center', marginTop: 12 }}>
+                    Clear Conversation
+                  </button>
+                )}
+              </div>
+            )}
           </div>
 
           <div style={{ padding: '14px 16px', borderTop: '1px solid var(--border)' }}>
