@@ -1,4 +1,4 @@
-﻿// React component
+// React component
 import React, { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 import ReactMarkdown from 'react-markdown';
@@ -274,7 +274,7 @@ export default function LMSNotesPage() {
 
             {/* Search */}
             <div style={{ position: 'relative' }}>
-              <span style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', fontSize: 14, pointerEvents: 'none' }}>ðŸ”</span>
+              <span style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', fontSize: 14, pointerEvents: 'none' }}>🔍</span>
               <input
                 className="input-field"
                 placeholder="Search topic..."
@@ -293,7 +293,7 @@ export default function LMSNotesPage() {
                 {filteredTopics.length}
               </span>
               <button onClick={() => setIsLeftOpen(false)} style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', padding: 0 }} title="Close Sidebar">
-                âœ•
+                ✕
               </button>
             </div>
           </div>
@@ -352,14 +352,14 @@ export default function LMSNotesPage() {
           {/* Progress footer */}
           <div style={{ padding: '14px 16px', borderTop: '1px solid var(--border)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
-              <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)' }}>ðŸ† Progress</span>
+              <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)' }}>📈 Progress</span>
               <span style={{ fontSize: 12, fontWeight: 800, color: '#22c55e' }}>{progress}%</span>
             </div>
             <div className="progress-bar">
               <div className="progress-fill" style={{ width: `${progress}%`, background: '#22c55e' }} />
             </div>
             <div style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 6 }}>
-              {course} â€º {subject.length > 28 ? subject.substring(0, 28) + 'â€¦' : subject}
+              {course} › {subject.length > 28 ? subject.substring(0, 28) + '…' : subject}
             </div>
           </div>
         </div>
@@ -369,7 +369,7 @@ export default function LMSNotesPage() {
           {/* Header + breadcrumb + tabs */}
           <div style={{ padding: '16px 24px 0', borderBottom: '1px solid var(--border)', background: 'var(--bg-surface)' }}>
             <div style={{ fontSize: 10, fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 6 }}>
-              {course} â€º {subject}
+              {course} › {subject}
             </div>
 
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 16 }}>
@@ -423,7 +423,7 @@ export default function LMSNotesPage() {
             <div className="card notes-card">
               <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 24 }}>
                 <div style={{ width: 40, height: 40, borderRadius: 8, background: 'rgba(108,59,255,0.1)', color: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20 }}>
-                  ðŸ“
+                  📖
                 </div>
                 <h2 style={{ margin: 0, fontSize: 20, fontWeight: 800, color: 'var(--text-primary)' }}>{activeTab}</h2>
               </div>
@@ -518,11 +518,11 @@ export default function LMSNotesPage() {
         <div className={`notes-right ${!isRightOpen ? 'collapsed' : ''}`}>
           <div style={{ padding: '18px 20px', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-              <span style={{ fontSize: 20 }}>âœ¨</span>
+              <span style={{ fontSize: 20 }}>✨</span>
               <span style={{ fontWeight: 800, fontSize: 16, background: 'linear-gradient(135deg, var(--primary), var(--secondary))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>UGMentor AI</span>
             </div>
             <button onClick={() => setIsRightOpen(false)} style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }} title="Close AI Mentor">
-              âœ•
+              ✕
             </button>
           </div>
 
@@ -533,7 +533,7 @@ export default function LMSNotesPage() {
               <strong style={{ color: 'var(--text-primary)' }}>{activeTopic?.topic}</strong>?
             </div>
             <div style={{ fontSize: 12, color: 'var(--text-muted)', background: 'var(--bg-elevated)', padding: '6px 12px', borderRadius: 999, border: '1px solid var(--border)' }}>
-              {course} Â· {subject.length > 22 ? subject.substring(0, 22) + 'â€¦' : subject}
+              {course} · {subject.length > 22 ? subject.substring(0, 22) + '…' : subject}
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8, width: '100%', marginTop: 8 }}>
@@ -548,7 +548,7 @@ export default function LMSNotesPage() {
           <div style={{ padding: '14px 16px', borderTop: '1px solid var(--border)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10, fontSize: 11, fontWeight: 700 }}>
               <span style={{ color: 'var(--danger)' }}>0 AI TOKENS</span>
-              <span style={{ color: 'var(--primary)', cursor: 'pointer' }}>ðŸ† Upgrade</span>
+              <span style={{ color: 'var(--primary)', cursor: 'pointer' }}>💎 Upgrade</span>
             </div>
             <div style={{ position: 'relative' }}>
               <input
@@ -559,7 +559,7 @@ export default function LMSNotesPage() {
                 style={{ width: '100%', padding: '11px 44px 11px 16px', borderRadius: 24 }}
               />
               <button style={{ position: 'absolute', right: 6, top: '50%', transform: 'translateY(-50%)', width: 30, height: 30, borderRadius: '50%', background: 'var(--primary)', color: 'white', border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', fontSize: 14 }}>
-                â†‘
+                ⬆
               </button>
             </div>
           </div>
