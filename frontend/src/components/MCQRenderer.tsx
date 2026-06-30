@@ -3,37 +3,42 @@ import React, { useState } from 'react';
 
 function parseMCQText(text: string) {
   if (!text) return [];
-  // Split by "1. ", "2. " at the start of a block
-  const blocks = text.split(/(?=\b\d+\.\s+)/).map(t => t.trim()).filter(Boolean);
+  // Split by "1. ", "2. ", "**1. ", etc.
+  const blocks = text.split(/(?=(?:^|\n)\s*\*?\*?\b\d+\.[\s*]+)/).map(t => t.trim()).filter(Boolean);
 
   return blocks.map(block => {
-    // Extract everything up to "a)"
-    const questionMatch = block.match(/^([\s\S]*?)(?=a\))/i);
+    // Extract everything up to "a)" or "A." or "a." or "* a)"
+    const questionMatch = block.match(/^([\s\S]*?)(?=(?:^|\n)\s*[-*]?\s*\(?[aA][).\s])/i);
     let question = questionMatch ? questionMatch[1].trim() : block;
-    question = question.replace(/^\d+\.\s+/, '');
+    question = question.replace(/^[\s*]*\d+\.[\s*]+/, '');
 
-    // Options
-    const optA = block.match(/a\)\s*([\s\S]*?)(?=b\))/i)?.[1]?.trim() || '';
-    const optB = block.match(/b\)\s*([\s\S]*?)(?=c\))/i)?.[1]?.trim() || '';
-    const optC = block.match(/c\)\s*([\s\S]*?)(?=d\))/i)?.[1]?.trim() || '';
-    const optD = block.match(/d\)\s*([\s\S]*?)(?=Answer:|$)/i)?.[1]?.trim() || '';
+    const getOption = (letter: string, nextLetter: string) => {
+      // Matches a), A., * a), (a), etc.
+      const regexStr = '(?:^|\n)\s*[-*]?\s*\(?' + letter + '[).]\s+([\s\S]*?)(?=(?:^|\n)\s*[-*]?\s*\(?' + nextLetter + '[).\s]|(?:^|\n)\s*\*?\*?Answer:|$)';
+      const regex = new RegExp(regexStr, 'i');
+      return block.match(regex)?.[1]?.trim() || '';
+    };
 
-    // Answer and Reason
-    const answerMatch = block.match(/Answer:\s*([a-d])\)?\s*([\s\S]*?)(?=Reason:|$)/i);
+    const optA = getOption('a', 'b');
+    const optB = getOption('b', 'c');
+    const optC = getOption('c', 'd');
+    const optD = getOption('d', 'Answer:');
+
+    // Answer: C or Answer: c) or **Answer:** C
+    const answerMatch = block.match(/(?:^|\n)\s*\*?\*?Answer:\s*\*?\*?\s*([a-d])/i);
     const correctLetter = answerMatch?.[1]?.toLowerCase() || '';
-    const answerText = answerMatch?.[2]?.trim() || '';
 
-    const reasonMatch = block.match(/Reason:\s*([\s\S]*)/i);
+    const reasonMatch = block.match(/(?:^|\n)\s*\*?\*?Reason:\s*\*?\*?\s*([\s\S]*)/i);
     const reason = reasonMatch?.[1]?.trim() || '';
 
     return { 
       question, 
       options: { a: optA, b: optB, c: optC, d: optD }, 
       correctLetter, 
-      answerText, 
+      answerText: '', 
       reason 
     };
-  });
+  }).filter(q => q.options.a && q.options.b); // Ensure it's a valid parsed question
 }
 
 export default function MCQRenderer({ text }: { text: string }) {
@@ -43,8 +48,9 @@ export default function MCQRenderer({ text }: { text: string }) {
 
   const questions = parseMCQText(text);
 
-  if (questions.length === 0 || !questions[0].options.a) {
-    return <div style={{ whiteSpace: 'pre-wrap' }}>{text}</div>;
+  if (questions.length === 0) {
+    // If no valid questions were parsed, fallback to markdown rendering or plain text
+    return <div style={{ whiteSpace: 'pre-wrap', lineHeight: 1.6 }}>{text}</div>;
   }
 
   const handleSelect = (qIndex: number, letter: string) => {
