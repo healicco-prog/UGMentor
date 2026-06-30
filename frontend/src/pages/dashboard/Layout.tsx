@@ -209,6 +209,10 @@ export default function DashboardLayout() {
             {NAV_ITEMS.flatMap(i => [i, ...(i.children || [])]).find(i => i.href && (pathname === i.href || pathname.startsWith(i.href + '/')))?.label || 'Dashboard'}
           </div>
           <div className={styles.headerRight}>
+            <Link to="/dashboard" className={styles.headerLink}>Back to Dashboard</Link>
+            <div className={styles.headerDivider}>|</div>
+            <Link to="/" className={styles.headerLink}>Back to Home</Link>
+            <div className={styles.headerDivider}>|</div>
             <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>www.ugmentor.in</div>
           </div>
         </header>
