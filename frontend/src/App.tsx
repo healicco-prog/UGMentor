@@ -35,21 +35,63 @@ import McqQuestionPage from './pages/dashboard/assessment/McqQuestion';
 import VivaSimulatorPage from './pages/dashboard/assessment/VivaSimulator';
 import PortfolioPage from './pages/dashboard/Portfolio';
 
-function ProtectedRoute({ children }: { children: React.ReactNode }) {
+// Admin Pages
+import AdminLayout from './pages/admin/AdminLayout';
+import AdminHome from './pages/admin/Home';
+import AdminCreator from './pages/admin/Creator';
+import AdminBlog from './pages/admin/Blog';
+import AdminUsers from './pages/admin/Users';
+import AdminTokens from './pages/admin/Tokens';
+import AdminLoginPage from './pages/admin/AdminLogin';
+
+function ProtectedRoute({ children, publicAllowed = false }: { children: React.ReactNode, publicAllowed?: boolean }) {
   const { user, isLoading } = useAuth();
-  if (isLoading) return <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><div className="spinner" style={{ width: 40, height: 40 }} /></div>;
-  if (!user) return <Navigate to="/login" replace />;
-  if (user.role === 'superadmin') return <Navigate to="/contrl-panl" replace />;
+  if (isLoading) {
+    return (
+      <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', backgroundColor: '#0F172A', color: 'white' }}>
+        <img src="/logo.png" alt="UGMentor Logo" width="80" height="80" style={{ objectFit: 'contain', backgroundColor: 'white', padding: '10px', borderRadius: '16px', marginBottom: '24px', animation: 'pulse 2s infinite' }} />
+        <div className="spinner" style={{ width: 40, height: 40 }} />
+      </div>
+    );
+  }
+  
+  if (publicAllowed && user) {
+    if (user.role === 'superadmin') return <Navigate to="/contrl-panl" replace />;
+    return <Navigate to="/dashboard" replace />;
+  }
+  
+  if (!publicAllowed && !user) return <Navigate to="/login" replace />;
+  if (!publicAllowed && user?.role === 'superadmin') return <Navigate to="/contrl-panl" replace />;
+  
   return <>{children}</>;
 }
+
+function SuperAdminRoute({ children }: { children: React.ReactNode }) {
+  const { user, isLoading } = useAuth();
+  if (isLoading) return <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><div className="spinner" style={{ width: 40, height: 40 }} /></div>;
+  if (!user) return <AdminLoginPage />;
+  if (user.role !== 'superadmin') return <Navigate to="/dashboard" replace />;
+  return <>{children}</>;
+}
+
+import ReloadPrompt from './components/ReloadPrompt';
+import BlogList from './pages/BlogList';
+import BlogPost from './pages/BlogPost';
 
 export default function App() {
   return (
     <AuthProvider>
       <Toaster position="top-right" />
+      <ReloadPrompt />
       <Routes>
-        <Route path="/" element={<LandingPage />} />
+        <Route path="/" element={
+          <ProtectedRoute publicAllowed>
+            <LandingPage />
+          </ProtectedRoute>
+        } />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/blog" element={<BlogList />} />
+        <Route path="/blog/:slug" element={<BlogPost />} />
         <Route path="/dashboard" element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>}>
           <Route index element={<DashboardHome />} />
           <Route path="lms-notes" element={<LmsNotesPage />} />
@@ -79,6 +121,15 @@ export default function App() {
           <Route path="assessment/viva-simulator" element={<VivaSimulatorPage />} />
           <Route path="portfolio" element={<PortfolioPage />} />
         </Route>
+        
+        <Route path="/contrl-panl" element={<SuperAdminRoute><AdminLayout /></SuperAdminRoute>}>
+          <Route index element={<AdminHome />} />
+          <Route path="creator" element={<AdminCreator />} />
+          <Route path="blog" element={<AdminBlog />} />
+          <Route path="users" element={<AdminUsers />} />
+          <Route path="tokens" element={<AdminTokens />} />
+        </Route>
+
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </AuthProvider>

@@ -100,14 +100,14 @@ export default function VivaSimulatorPage() {
   return (
     <div className="page-container">
       <div className="page-header">
-        <h1 className="page-title font-outfit">ðŸŽ™ï¸ Viva Simulator</h1>
+        <h1 className="page-title font-outfit">🎙️ Viva Simulator</h1>
         <p className="page-desc">Practice. Perform. Perfect. — AI-Powered Oral Examination & Performance Analytics System</p>
       </div>
 
       {stage === 'config' && (
         <div style={{ maxWidth: 860 }} className="animate-fadeIn">
           <div className="card" style={{ marginBottom: 20 }}>
-            <h2 style={{ fontSize: 18, fontWeight: 700, marginBottom: 20 }}>âš™ï¸ Configure Viva Session</h2>
+            <h2 style={{ fontSize: 18, fontWeight: 700, marginBottom: 20 }}>š™️ Configure Viva Session</h2>
             <div className="grid-2">
               <div className="form-group">
                 <label className="label">Select Course *</label>
@@ -125,13 +125,13 @@ export default function VivaSimulatorPage() {
             </div>
             <div className="form-group">
               <label className="label">Select / Type Topic *</label>
-              <input className="input-field" list="topic-list" value={topic} onChange={e => setTopic(e.target.value)} placeholder="Search or type topicâ€¦" />
+              <input className="input-field" list="topic-list" value={topic} onChange={e => setTopic(e.target.value)} placeholder="Search or type topic…" />
               <datalist id="topic-list">{topicSuggestions.map(t => <option key={t} value={t}/>)}</datalist>
             </div>
           </div>
 
           <div className="card" style={{ marginBottom: 20 }}>
-            <h2 style={{ fontSize: 16, fontWeight: 700, marginBottom: 16 }}>ðŸŽ›ï¸ Viva Configuration</h2>
+            <h2 style={{ fontSize: 16, fontWeight: 700, marginBottom: 16 }}>🎙️ Viva Configuration</h2>
             <div style={{ display:'flex', flexWrap:'wrap', gap: 12, marginBottom: 16 }}>
               {VIVA_MODES.map(m => (
                 <button key={m.id} onClick={() => setVivaMode(m.id)} className={`chip ${vivaMode === m.id ? 'active' : ''}`} style={{ padding:'8px 16px' }}>{m.icon} {m.label}</button>
@@ -173,7 +173,7 @@ export default function VivaSimulatorPage() {
             </div>
             <div className="form-group">
               <label className="label">Specific Instructions (Optional)</label>
-              <textarea className="input-field" rows={2} value={instructions} onChange={e => setInstructions(e.target.value)} placeholder="e.g., Focus on university viva questions, Ask clinically oriented questions, Include recent advancesâ€¦" />
+              <textarea className="input-field" rows={2} value={instructions} onChange={e => setInstructions(e.target.value)} placeholder="e.g., Focus on university viva questions, Ask clinically oriented questions, Include recent advances…" />
             </div>
             <div style={{ display:'flex', alignItems:'center', gap:12 }}>
               <label className="label" style={{ margin:0 }}>Real-time Feedback after each answer:</label>
@@ -183,7 +183,7 @@ export default function VivaSimulatorPage() {
 
           <button className="btn btn-primary btn-lg" style={{ width:'100%', justifyContent:'center', padding:'16px', fontSize:17 }}
             onClick={startSession} disabled={loading || !subject || !topic}>
-            {loading ? <><span className="spinner" style={{ marginRight:8 }}/>Setting up AI Examinerâ€¦</> : 'ðŸŽ™ï¸ Start the Session'}
+            {loading ? <><span className="spinner" style={{ marginRight:8 }}/>Setting up AI Examiner…</> : '🎙️ Start the Session'}
           </button>
         </div>
       )}
@@ -197,7 +197,7 @@ export default function VivaSimulatorPage() {
               <div style={{ fontSize:12, color:'var(--text-muted)' }}>{EXAMINER_PERSONAS.find(p=>p.id===persona)?.label} • {difficulty} • {numQ} Questions</div>
             </div>
             <div style={{ textAlign:'right' }}>
-              <div style={{ fontSize:22, fontWeight:800, fontFamily:'Outfit', color: timeLeft < 60 ? 'var(--danger)' : 'var(--primary-light)' }}>â± {fmtTime(timeLeft)}</div>
+              <div style={{ fontSize:22, fontWeight:800, fontFamily:'Outfit', color: timeLeft < 60 ? 'var(--danger)' : 'var(--primary-light)' }}>⏱ {fmtTime(timeLeft)}</div>
               <div style={{ fontSize:11, color:'var(--text-muted)' }}>Time Remaining</div>
             </div>
           </div>
@@ -224,7 +224,7 @@ export default function VivaSimulatorPage() {
             {/* Probing */}
             {showProbing && (
               <div style={{ marginLeft:56, marginBottom:16, padding:'10px 14px', background:'rgba(245,158,11,0.08)', border:'1px solid rgba(245,158,11,0.25)', borderRadius:'var(--radius-sm)', fontSize:14, color:'var(--warning)' }}>
-                ðŸ” <strong>Follow-up:</strong> {questions[currentQ].probingQuestion}
+                🔍 <strong>Follow-up:</strong> {questions[currentQ].probingQuestion}
               </div>
             )}
 
@@ -234,16 +234,16 @@ export default function VivaSimulatorPage() {
                 <label className="label" style={{ margin:0 }}>Your Answer</label>
                 <div style={{ display:'flex', gap:8 }}>
                   <button className={`btn btn-sm ${listening ? 'btn-danger' : 'btn-secondary'}`} onClick={listening ? stopListening : startListening} style={{ padding:'4px 10px', fontSize:12 }}>
-                    {listening ? 'â¹ Stop' : '🎤 Speak'}
+                    {listening ? '⏹ Stop' : '🎤 Speak'}
                   </button>
-                  {!showProbing && <button className="btn btn-secondary btn-sm" style={{ padding:'4px 10px', fontSize:12 }} onClick={() => setShowProbing(true)}>ðŸ” Probing Q</button>}
+                  {!showProbing && <button className="btn btn-secondary btn-sm" style={{ padding:'4px 10px', fontSize:12 }} onClick={() => setShowProbing(true)}>🔍 Probing Q</button>}
                 </div>
               </div>
-              <textarea className="input-field" rows={5} value={userAnswer} onChange={e => setUserAnswer(e.target.value)} placeholder="Type your answer here, or use the mic to speak your answerâ€¦" />
+              <textarea className="input-field" rows={5} value={userAnswer} onChange={e => setUserAnswer(e.target.value)} placeholder="Type your answer here, or use the mic to speak your answer…" />
             </div>
 
             {!showModel ? (
-              <button className="btn btn-secondary" onClick={() => setShowModel(true)}>ðŸ‘ï¸ Show Model Answer</button>
+              <button className="btn btn-secondary" onClick={() => setShowModel(true)}>👁️ Show Model Answer</button>
             ) : (
               <>
                 <div style={{ background:'rgba(16,185,129,0.08)', border:'1px solid rgba(16,185,129,0.25)', borderRadius:'var(--radius-md)', padding:16, marginBottom:16 }}>
@@ -271,7 +271,7 @@ export default function VivaSimulatorPage() {
                   </div>
                 )}
                 <button className="btn btn-primary" onClick={submitAnswer}>
-                  {currentQ < questions.length - 1 ? 'Next Question →' : 'ðŸ Finish Viva →'}
+                  {currentQ < questions.length - 1 ? 'Next Question →' : '🏁 Finish Viva →'}
                 </button>
               </>
             )}
@@ -283,7 +283,7 @@ export default function VivaSimulatorPage() {
         <div style={{ maxWidth: 860 }} className="animate-fadeIn">
           {/* Score card */}
           <div className="card glass" style={{ textAlign:'center', padding:'40px 20px', marginBottom:24 }}>
-            <div style={{ fontSize:60, marginBottom:12 }}>{pct >= 75 ? 'ðŸ†' : pct >= 60 ? '🌟' : pct >= 50 ? 'ðŸ‘' : '📚'}</div>
+            <div style={{ fontSize:60, marginBottom:12 }}>{pct >= 75 ? '🏆' : pct >= 60 ? '🌟' : pct >= 50 ? '👍' : '📚'}</div>
             <h2 className="font-outfit" style={{ fontSize:28, fontWeight:800, marginBottom:8 }}>Viva Completed!</h2>
             <div style={{ fontSize:56, fontWeight:900, fontFamily:'Outfit', color:gradeColor, marginBottom:6 }}>{totalScore}/{maxScore}</div>
             <div style={{ fontSize:18, color:'var(--text-secondary)', marginBottom:16 }}>{pct}% — <strong style={{ color:gradeColor }}>{grade}</strong></div>
@@ -297,7 +297,7 @@ export default function VivaSimulatorPage() {
             </div>
             <div style={{ display:'flex', justifyContent:'center', gap:12, flexWrap:'wrap' }}>
               <button className="btn btn-primary" onClick={() => { setStage('config'); setResults([]); setQuestions([]); }}>🔄 New Session</button>
-              <button className="btn btn-secondary" onClick={() => window.print()}>ðŸ–¨ï¸ Print Report</button>
+              <button className="btn btn-secondary" onClick={() => window.print()}>Ÿ–️ Print Report</button>
             </div>
           </div>
 
@@ -364,9 +364,9 @@ export default function VivaSimulatorPage() {
             <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(200px,1fr))', gap:12 }}>
               {[
                 { icon:'📖', title:'Topics to Revise', items:[topic,'Pathophysiology','Clinical Features','Management'] },
-                { icon:'ðŸ†', title:'Competencies', items:['Knowledge Recall','Clinical Application','Analytical Thinking','Communication'] },
+                { icon:'🏆', title:'Competencies', items:['Knowledge Recall','Clinical Application','Analytical Thinking','Communication'] },
                 { icon:'📚', title:'Study Resources', items:['Standard Textbooks','USMLE/NEXT Q-Bank','Previous Year Papers','Mnemonics'] },
-                { icon:'ðŸŽ™ï¸', title:'Practice Next', items:[`${subject} — Related Topics`,'Case-Based Viva','Rapid Fire Mode','Peer Viva Practice'] },
+                { icon:'🎙️', title:'Practice Next', items:[`${subject} — Related Topics`,'Case-Based Viva','Rapid Fire Mode','Peer Viva Practice'] },
               ].map((block,i) => (
                 <div key={i} style={{ background:'var(--bg-surface)', borderRadius:'var(--radius-md)', padding:16 }}>
                   <div style={{ fontSize:14, fontWeight:700, marginBottom:10 }}>{block.icon} {block.title}</div>

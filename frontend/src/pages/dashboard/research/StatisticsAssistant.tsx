@@ -14,9 +14,9 @@ export default function StatisticsAssistantPage() {
     setOutput('');
     
     try {
-      const response = await fetch('/api/generate-research', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://ugmentor-api-476471947498.asia-south1.run.app'}/api/generate-research`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${(await import('@/lib/supabase').then(m => m.supabase.auth.getSession())).data?.session?.access_token || ''}` },
         body: JSON.stringify({ module: 'statistics_assistant', topic, details, taskType }),
       });
       const data = await response.json();
@@ -98,7 +98,7 @@ export default function StatisticsAssistantPage() {
           onClick={handleGenerate} 
           disabled={generating || !topic}
         >
-          {generating ? <><span className="spinner" style={{ marginRight: 8 }} />Calculating...</> : 'âœ¨ Generate Advice'}
+          {generating ? <><span className="spinner" style={{ marginRight: 8 }} />Calculating...</> : '✨ Generate Advice'}
         </button>
       </div>
 
@@ -111,7 +111,7 @@ export default function StatisticsAssistantPage() {
                 📋 Copy Text
               </button>
               <button className="btn btn-primary" style={{ padding: '8px 16px', borderRadius: 8, fontSize: 14, fontWeight: 600 }} onClick={() => window.print()}>
-                ðŸ“¥ Save as PDF
+                📝¥ Save as PDF
               </button>
             </div>
           </div>

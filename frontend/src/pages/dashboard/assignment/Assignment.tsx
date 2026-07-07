@@ -19,7 +19,7 @@ const assignmentModules = [
     ]
   },
   {
-    id: 'case', icon: 'ðŸ¥', title: 'Case Presentations',
+    id: 'case', icon: '🏥', title: 'Case Presentations',
     desc: 'Create structured clinical case presentations from patient data',
     fields: [
       { label: 'Chief Complaint', placeholder: 'e.g., 45-year-old male with chest pain and shortness of breath...', type: 'textarea' },
@@ -130,7 +130,7 @@ A concise summary capturing the key learning points and their significance for e
                     value={inputs[field.label] || ''} onChange={e => updateInput(field.label, e.target.value)} />
                 ) : field.type === 'select' ? (
                   <select className="input-field" value={inputs[field.label] || ''} onChange={e => updateInput(field.label, e.target.value)}>
-                    <option value="">Selectâ€¦</option>
+                    <option value="">Select…</option>
                     {field.options?.map(o => <option key={o}>{o}</option>)}
                   </select>
                 ) : (
@@ -142,18 +142,18 @@ A concise summary capturing the key learning points and their significance for e
 
             <button className="btn btn-primary" style={{ width: '100%', justifyContent: 'center' }}
               onClick={generate} disabled={generating}>
-              {generating ? <><span className="spinner" />Generatingâ€¦</> : `🤖 Generate ${activeModule.title}`}
+              {generating ? <><span className="spinner" />Generating…</> : `🤖 Generate ${activeModule.title}`}
             </button>
           </div>
 
           {output && (
             <div className="card">
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-                <div style={{ fontWeight: 700 }}>âœ¨ Generated Output</div>
+                <div style={{ fontWeight: 700 }}>✨ Generated Output</div>
                 <div style={{ display: 'flex', gap: 8 }}>
                   <button className="btn btn-secondary btn-sm">📋 Copy</button>
                   <button className="btn btn-secondary btn-sm">💾 Save</button>
-                  <button className="btn btn-secondary btn-sm">ðŸ–¨ï¸ Print</button>
+                  <button className="btn btn-secondary btn-sm">🖨️ Print</button>
                 </div>
               </div>
               <div className="ai-response" style={{ maxHeight: 500, overflowY: 'auto' }}>{output}</div>

@@ -20,9 +20,9 @@ export default function ScientificWritingPage() {
     setOutput('');
     
     try {
-      const response = await fetch('/api/generate-research', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://ugmentor-api-476471947498.asia-south1.run.app'}/api/generate-research`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${(await import('@/lib/supabase').then(m => m.supabase.auth.getSession())).data?.session?.access_token || ''}` },
         body: JSON.stringify({ module: 'scientific_writing', topic, details, taskType: 'Manuscript Builder', options }),
       });
       const data = await response.json();
@@ -60,7 +60,7 @@ export default function ScientificWritingPage() {
   return (
     <div className="page-container" style={{ padding: 'clamp(16px, 3vw, 32px)', maxWidth: '1200px', margin: '0 auto' }}>
       <div className="page-header" style={{ marginBottom: 32, textAlign: 'center' }}>
-        <h1 className="page-title font-outfit" style={{ fontSize: 'clamp(24px, 5vw, 32px)', color: 'var(--primary)', fontWeight: 800 }}>âœï¸ Scientific Writing</h1>
+        <h1 className="page-title font-outfit" style={{ fontSize: 'clamp(24px, 5vw, 32px)', color: 'var(--primary)', fontWeight: 800 }}>✍️ Scientific Writing</h1>
         <p className="page-desc" style={{ fontSize: 'clamp(14px, 2vw, 16px)', color: '#64748B' }}>Generate structured academic manuscript drafts based on your research data.</p>
       </div>
 
@@ -105,7 +105,7 @@ export default function ScientificWritingPage() {
           onClick={handleGenerate} 
           disabled={generating || !topic || options.length === 0}
         >
-          {generating ? <><span className="spinner" style={{ marginRight: 8 }} />Writing Draft...</> : 'âœ¨ Generate Manuscript Draft'}
+          {generating ? <><span className="spinner" style={{ marginRight: 8 }} />Writing Draft...</> : '✨ Generate Manuscript Draft'}
         </button>
       </div>
 
@@ -118,7 +118,7 @@ export default function ScientificWritingPage() {
                 📋 Copy Text
               </button>
               <button className="btn btn-primary" style={{ padding: '8px 16px', borderRadius: 8, fontSize: 14, fontWeight: 600 }} onClick={() => window.print()}>
-                ðŸ“¥ Save as PDF
+                📝¥ Save as PDF
               </button>
             </div>
           </div>

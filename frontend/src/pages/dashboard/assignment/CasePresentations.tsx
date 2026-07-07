@@ -1,7 +1,7 @@
 ﻿// React component
 import React, { useState, useEffect } from 'react';
 
-// â”€â”€â”€ Course → Subject Mapping â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Course → Subject Mapping ─────────────────────────────────────────────────
 const COURSE_DATA: Record<string, string[]> = {
   MBBS: [
     'Anatomy', 'Physiology', 'Biochemistry', 'Pathology', 'Microbiology',
@@ -86,9 +86,9 @@ export default function CasePresentationPage() {
         )
       );
 
-      const response = await fetch('/api/generate-case-presentation', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://ugmentor-api-476471947498.asia-south1.run.app'}/api/generate-case-presentation`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${(await import('@/lib/supabase').then(m => m.supabase.auth.getSession())).data?.session?.access_token || ''}` },
         body: JSON.stringify({ 
           course, 
           subject, 
@@ -140,7 +140,7 @@ export default function CasePresentationPage() {
   return (
     <div className="page-container" style={{ padding: 'clamp(16px, 3vw, 32px)', maxWidth: '1200px', margin: '0 auto' }}>
       <div className="page-header" style={{ marginBottom: 32, textAlign: 'center' }}>
-        <h1 className="page-title font-outfit" style={{ fontSize: 'clamp(24px, 5vw, 32px)', color: 'var(--primary)', fontWeight: 800 }}>ðŸ¥ Case Presentation Generator</h1>
+        <h1 className="page-title font-outfit" style={{ fontSize: 'clamp(24px, 5vw, 32px)', color: 'var(--primary)', fontWeight: 800 }}>🏥 Case Presentation Generator</h1>
         <p className="page-desc" style={{ fontSize: 'clamp(14px, 2vw, 16px)', color: '#64748B' }}>Generate structured, highly detailed clinical case presentations tailored to your academic needs.</p>
       </div>
 
@@ -228,7 +228,7 @@ export default function CasePresentationPage() {
             <div style={{ padding: 16, border: '2px dashed #CBD5E1', borderRadius: 8, background: '#F8FAFC', textAlign: 'center' }}>
               <div style={{ display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap' }}>
                 <label className="btn btn-secondary btn-sm" style={{ cursor: 'pointer', margin: 0, padding: '6px 12px', background: '#fff', border: '1px solid #E2E8F0' }}>
-                  <span style={{ marginRight: 6 }}>ðŸ“¸</span> Take Photo
+                  <span style={{ marginRight: 6 }}>📝¸</span> Take Photo
                   <input 
                     type="file" 
                     accept="image/*" 
@@ -238,7 +238,7 @@ export default function CasePresentationPage() {
                   />
                 </label>
                 <label className="btn btn-secondary btn-sm" style={{ cursor: 'pointer', margin: 0, padding: '6px 12px', background: '#fff', border: '1px solid #E2E8F0' }}>
-                  <span style={{ marginRight: 6 }}>ðŸ“</span> Choose Files
+                  <span style={{ marginRight: 6 }}>📝</span> Choose Files
                   <input 
                     type="file" 
                     multiple 
@@ -259,7 +259,7 @@ export default function CasePresentationPage() {
                         onClick={() => setFiles(prev => prev.filter((_, idx) => idx !== i))} 
                         style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#94A3B8', fontWeight: 'bold', fontSize: 14, padding: 0, lineHeight: 1 }}
                       >
-                        Ã—
+                        ×
                       </button>
                     </div>
                   ))}
@@ -275,7 +275,7 @@ export default function CasePresentationPage() {
           onClick={handleGenerate} 
           disabled={generating || !course || !subject || !topic || !activePresentationType}
         >
-          {generating ? <><span className="spinner" style={{ marginRight: 8 }} />Generating Case Presentationâ€¦</> : 'âœ¨ Generate Case Presentation'}
+          {generating ? <><span className="spinner" style={{ marginRight: 8 }} />Generating Case Presentation…</> : '✨ Generate Case Presentation'}
         </button>
       </div>
 
@@ -293,7 +293,7 @@ export default function CasePresentationPage() {
                 <span style={{ marginRight: 6 }}>📋</span> Copy Text
               </button>
               <button className="btn btn-primary" style={{ padding: '8px 16px', borderRadius: 8, fontSize: 14, fontWeight: 600 }} onClick={() => window.print()}>
-                <span style={{ marginRight: 6 }}>ðŸ“¥</span> Save as PDF
+                <span style={{ marginRight: 6 }}>📝¥</span> Save as PDF
               </button>
             </div>
           </div>

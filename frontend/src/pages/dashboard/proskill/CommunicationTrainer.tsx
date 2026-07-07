@@ -108,9 +108,9 @@ export default function CommunicationTrainerPage() {
     setSessionStage('analysing');
     
     try {
-      const res = await fetch('/api/grade-proskill', {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || 'https://ugmentor-api-476471947498.asia-south1.run.app'}/api/grade-proskill`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${(await import('@/lib/supabase').then(m => m.supabase.auth.getSession())).data?.session?.access_token || ''}` },
         body: JSON.stringify({ transcript: userTranscript, caseType: activeCase, type: 'communication' })
       });
       const data = await res.json();
@@ -149,7 +149,7 @@ export default function CommunicationTrainerPage() {
     <div className="page-container" style={{ paddingBottom: 60 }}>
       <div className="page-header" style={{ marginBottom: 30 }}>
         <h1 className="page-title font-outfit" style={{ fontSize: 28, color: 'var(--primary)', display: 'flex', alignItems: 'center', gap: 10 }}>
-          <span style={{ fontSize: 28 }}>ðŸ—£ï¸</span> Communication Trainer
+          <span style={{ fontSize: 28 }}>Ÿ—️</span> Communication Trainer
         </h1>
         <p className="page-desc">Doctor-Patient Communication & Patient Counseling Simulators</p>
       </div>
@@ -192,7 +192,7 @@ export default function CommunicationTrainerPage() {
             )}
 
             <div style={{ textAlign: 'center', marginTop: 30, padding: 30, background: '#F8FAFC', borderRadius: 8, border: '2px dashed #CBD5E1' }}>
-              <div style={{ fontSize: 40, marginBottom: 16 }}>ðŸŽ™ï¸ ðŸ”Š</div>
+              <div style={{ fontSize: 40, marginBottom: 16 }}>🎙️ 🔊</div>
               <h3 style={{ fontSize: 18, marginBottom: 8, color: 'var(--text)' }}>Open Mic & Speaker</h3>
               <p style={{ fontSize: 14, color: 'var(--text-secondary)', marginBottom: 20, maxWidth: 500, margin: '0 auto 20px' }}>
                 Ensure your microphone is connected and speakers are turned on. The AI will vocally present the patient's concern, and you will need to counsel them verbally.
@@ -215,7 +215,7 @@ export default function CommunicationTrainerPage() {
                 <div style={{ fontSize: 13, color: 'var(--text-muted)' }}>Scenario: {activeCase}</div>
               </div>
               <button className="btn btn-secondary btn-sm" onClick={cleanUp}>
-                âœ• End Session
+                ✖ End Session
               </button>
             </div>
 
@@ -224,7 +224,7 @@ export default function CommunicationTrainerPage() {
                 
                 {sessionStage === 'ai_speaking' && (
                   <div className="animate-fadeIn" style={{ textAlign: 'center' }}>
-                    <div style={{ fontSize: 60, marginBottom: 20 }}>ðŸ”Š</div>
+                    <div style={{ fontSize: 60, marginBottom: 20 }}>🔊</div>
                     <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--primary)', marginBottom: 16 }}>Patient is speaking...</div>
                     <div style={{ fontSize: 16, color: '#334155', fontStyle: 'italic', background: '#F1F5F9', padding: '16px 24px', borderRadius: 8, maxWidth: 600 }}>
                       {question}
@@ -241,7 +241,7 @@ export default function CommunicationTrainerPage() {
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16, marginBottom: 30, width: '100%', maxWidth: 500 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
                         <div style={{ width: 60, height: 60, borderRadius: '50%', background: '#FEE2E2', border: '3px solid #EF4444', display: 'flex', alignItems: 'center', justifyContent: 'center', animation: 'pulse 1.5s infinite' }}>
-                          <span style={{ fontSize: 24 }}>ðŸŽ™ï¸</span>
+                          <span style={{ fontSize: 24 }}>🎙️</span>
                         </div>
                         <div style={{ fontSize: 24, fontWeight: 700, color: '#DC2626', fontFamily: 'monospace' }}>
                           {formatTime(recordingTime)}
@@ -262,14 +262,14 @@ export default function CommunicationTrainerPage() {
                     </div>
                     
                     <button className="btn btn-primary" style={{ background: '#EF4444', borderColor: '#EF4444', padding: '10px 24px', fontSize: 15 }} onClick={stopRecordingAndAnalyze}>
-                      â¹ Stop Recording & Grade Response
+                      ⏹ Stop Recording & Grade Response
                     </button>
                   </div>
                 )}
 
                 {sessionStage === 'analysing' && (
                   <div className="animate-fadeIn" style={{ textAlign: 'center' }}>
-                    <div style={{ display: 'inline-block', animation: 'spin 1s linear infinite', fontSize: 40, marginBottom: 20, color: 'var(--primary)' }}>âš™ï¸</div>
+                    <div style={{ display: 'inline-block', animation: 'spin 1s linear infinite', fontSize: 40, marginBottom: 20, color: 'var(--primary)' }}>š™️</div>
                     <h3 style={{ fontSize: 18, color: 'var(--primary)' }}>Analysing Communication with AI...</h3>
                     <p style={{ color: 'var(--text-muted)' }}>Evaluating empathy, clarity, medical accuracy, and jargon usage based on your transcript.</p>
                   </div>
@@ -278,7 +278,7 @@ export default function CommunicationTrainerPage() {
                 {sessionStage === 'result' && evaluation && (
                   <div className="animate-fadeIn" style={{ width: '100%' }}>
                     <div style={{ textAlign: 'center', marginBottom: 24 }}>
-                      <div style={{ fontSize: 48, marginBottom: 8 }}>ðŸ…</div>
+                      <div style={{ fontSize: 48, marginBottom: 8 }}>🏅</div>
                       <h3 style={{ fontSize: 22, color: 'var(--text)' }}>Performance Evaluation</h3>
                       <div style={{ fontSize: 36, fontWeight: 800, color: evaluation.score > 60 ? '#10B981' : '#EF4444' }}>
                         {evaluation.score}/100
@@ -308,7 +308,7 @@ export default function CommunicationTrainerPage() {
                     </div>
 
                     <div style={{ display: 'flex', gap: 12, marginTop: 24, justifyContent: 'center' }}>
-                      <button className="btn btn-secondary" onClick={cleanUp}>â†º Retry Scenario</button>
+                      <button className="btn btn-secondary" onClick={cleanUp}>↺ Retry Scenario</button>
                       <button className="btn btn-primary" onClick={() => alert('Results saved to Portfolio!')}>💾 Save Results for Analysis</button>
                     </div>
                   </div>

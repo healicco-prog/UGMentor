@@ -1,7 +1,7 @@
 ﻿// React component
 import React, { useState, useEffect } from 'react';
 
-// â”€â”€â”€ Course → Subject Mapping â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Course → Subject Mapping ─────────────────────────────────────────────────
 const COURSE_DATA: Record<string, string[]> = {
   MBBS: [
     'Anatomy', 'Physiology', 'Biochemistry', 'Pathology', 'Microbiology',
@@ -35,7 +35,7 @@ const COURSE_DATA: Record<string, string[]> = {
 const COURSES = Object.keys(COURSE_DATA);
 const WORD_COUNT_OPTIONS = [5, 10, 15, 20, 25, 30];
 
-// â”€â”€â”€ Word type â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Word type ────────────────────────────────────────────────────────────────
 interface VocabWord {
   word: string;
   def: string;
@@ -53,9 +53,9 @@ const SEED_WORDS: VocabWord[] = [
   { word: 'Etiology', def: 'The cause or set of causes of a disease or condition.', subject: 'Pathology', course: 'MBBS', learned: false },
 ];
 
-// â”€â”€â”€ AI Connected Generator â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── AI Connected Generator ──────────────────────────────────────────────────
 
-// â”€â”€â”€ Component â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Component ────────────────────────────────────────────────────────────────
 export default function VocabularyPage() {
   const [ws, setWs] = useState<VocabWord[]>(SEED_WORDS);
   const [search, setSearch] = useState('');
@@ -95,9 +95,9 @@ export default function VocabularyPage() {
     setLastGenerated([]);
     
     try {
-      const res = await fetch('/api/generate-vocabulary', {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || 'https://ugmentor-api-476471947498.asia-south1.run.app'}/api/generate-vocabulary`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${(await import('@/lib/supabase').then(m => m.supabase.auth.getSession())).data?.session?.access_token || ''}` },
         body: JSON.stringify({ course: genCourse, subject: genSubject, count: genCount })
       });
       const data = await res.json();
@@ -167,13 +167,13 @@ export default function VocabularyPage() {
 
       <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap', alignItems: 'flex-start' }}>
 
-        {/* â”€â”€ LEFT: Word List / Quiz â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+        {/* ── LEFT: Word List / Quiz ─────────────────────────── */}
         <div style={{ flex: 1, minWidth: 300 }}>
           {!quizMode ? (
             <>
               {/* Search + filter bar */}
               <div style={{ display: 'flex', gap: 8, marginBottom: 14, flexWrap: 'wrap' }}>
-                <input className="input-field" placeholder="ðŸ” Search wordsâ€¦" value={search} onChange={e => setSearch(e.target.value)} style={{ flex: 1, minWidth: 160 }} />
+                <input className="input-field" placeholder="🔍 Search words…" value={search} onChange={e => setSearch(e.target.value)} style={{ flex: 1, minWidth: 160 }} />
                 <select className="input-field" value={filterSubject} onChange={e => setFilterSubject(e.target.value)} style={{ width: 'auto', minWidth: 140 }}>
                   {allSubjects.map(s => <option key={s}>{s}</option>)}
                 </select>
@@ -183,7 +183,7 @@ export default function VocabularyPage() {
               {/* Word cards */}
               {filtered.length === 0 ? (
                 <div className="empty-state card">
-                  <div className="empty-state-icon">ðŸ“­</div>
+                  <div className="empty-state-icon">📭</div>
                   <div className="empty-state-title">No words found</div>
                   <div className="empty-state-desc">Generate words using the panel on the right.</div>
                 </div>
@@ -212,7 +212,7 @@ export default function VocabularyPage() {
             <div className="card" style={{ textAlign: 'center', padding: 32 }}>
               {unlearnedWords.length === 0 ? (
                 <div className="empty-state">
-                  <div className="empty-state-icon">ðŸŽ‰</div>
+                  <div className="empty-state-icon">🎉</div>
                   <div className="empty-state-title">All words learned!</div>
                   <button className="btn btn-primary" style={{ marginTop: 16 }} onClick={() => setQuizMode(false)}>Exit Quiz</button>
                 </div>
@@ -229,14 +229,14 @@ export default function VocabularyPage() {
                     <span className="badge badge-secondary">{unlearnedWords[quizIdx % unlearnedWords.length]?.course}</span>
                   </div>
                   {!showDef ? (
-                    <button className="btn btn-secondary" onClick={() => setShowDef(true)}>ðŸ‘ï¸ Show Definition</button>
+                    <button className="btn btn-secondary" onClick={() => setShowDef(true)}>👁️ Show Definition</button>
                   ) : (
                     <>
                       <div className="ai-response" style={{ marginBottom: 20, textAlign: 'left' }}>
                         {unlearnedWords[quizIdx % unlearnedWords.length]?.def}
                       </div>
                       <div style={{ display: 'flex', gap: 10, justifyContent: 'center' }}>
-                        <button className="btn btn-danger btn-sm" onClick={() => { setQuizIdx(q => q + 1); setShowDef(false); }}>âŒ Not Yet</button>
+                        <button className="btn btn-danger btn-sm" onClick={() => { setQuizIdx(q => q + 1); setShowDef(false); }}>❌ Not Yet</button>
                         <button className="btn btn-sm" style={{ background: 'rgba(16,185,129,0.15)', color: 'var(--success)', border: '1px solid rgba(16,185,129,0.3)' }}
                           onClick={() => { toggleLearned(unlearnedWords[quizIdx % unlearnedWords.length].word); setQuizIdx(q => q + 1); setShowDef(false); }}>✅ Got It!</button>
                       </div>
@@ -249,7 +249,7 @@ export default function VocabularyPage() {
           )}
         </div>
 
-        {/* â”€â”€ RIGHT: Generate Words Panel â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+        {/* ── RIGHT: Generate Words Panel ────────────────────── */}
         <div style={{ width: 296, flexShrink: 0 }}>
           <div className="card">
             <div style={{ fontWeight: 800, fontSize: 16, marginBottom: 20, color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -310,7 +310,7 @@ export default function VocabularyPage() {
                 ))}
               </div>
               <p style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 6 }}>
-                Will generate {genCount} medical terms for {genSubject || 'â€¦'}
+                Will generate {genCount} medical terms for {genSubject || '…'}
               </p>
             </div>
 
@@ -321,8 +321,8 @@ export default function VocabularyPage() {
               disabled={generating || !canGenerate}
             >
               {generating
-                ? <><span className="spinner" style={{ marginRight: 8 }} />Generating {genCount} wordsâ€¦</>
-                : `âœ¨ Generate ${genCount} Words`}
+                ? <><span className="spinner" style={{ marginRight: 8 }} />Generating {genCount} words…</>
+                : `✨ Generate ${genCount} Words`}
             </button>
 
             {!canGenerate && !generating && (
@@ -338,7 +338,7 @@ export default function VocabularyPage() {
               <div style={{ padding: '14px 16px', borderBottom: '1px solid var(--border)', background: 'var(--bg-elevated)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div>
                   <div style={{ fontWeight: 700, fontSize: 14, color: 'var(--text-primary)' }}>✅ {lastGenerated.length} Words Generated</div>
-                  <div style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 2 }}>{genSubject} Â· {genCourse}</div>
+                  <div style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 2 }}>{genSubject} · {genCourse}</div>
                 </div>
                 <button className="btn btn-primary btn-sm" onClick={saveGenerated}>💾 Save All</button>
               </div>

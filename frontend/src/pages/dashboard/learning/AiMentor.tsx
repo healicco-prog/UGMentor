@@ -1,8 +1,9 @@
-﻿// React component
 import React, { useState, useRef, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
-// â”€â”€â”€ Course → Subject Mapping â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Course → Subject Mapping ─────────────────────────────────────────────────
 const COURSE_DATA: Record<string, string[]> = {
   MBBS: [
     'Anatomy', 'Physiology', 'Biochemistry', 'Pathology', 'Microbiology',
@@ -35,6 +36,21 @@ const COURSE_DATA: Record<string, string[]> = {
 
 const COURSES = Object.keys(COURSE_DATA);
 
+const LEARNING_GOALS = [
+  'Explain Concept Simply',
+  'Deep Dive & Pathophysiology',
+  'Prepare for Exams (High Yield)',
+  'Clinical Case & Application',
+  'Mnemonics & Memory Tricks'
+];
+
+const LEARNING_STYLES = [
+  'Detailed & Comprehensive',
+  'Bullet Points (Quick Revision)',
+  'Q&A Socratic Method',
+  'Use Real-world Analogies'
+];
+
 interface Message { role: 'user' | 'ai'; content: string; time: string; }
 
 export default function AIMentorProPage() {
@@ -45,9 +61,15 @@ export default function AIMentorProPage() {
   const [subjectList, setSubjectList] = useState<string[]>([]);
   const [subject, setSubject] = useState('');
   const [topic, setTopic] = useState('');
+  
+  // New Selection States
+  const [learningGoal, setLearningGoal] = useState('');
+  const [learningStyle, setLearningStyle] = useState('');
+
+  const initialMessage = `Hello ${user?.name?.split(' ')[0] || 'Doctor'}! 👋 I'm your AI MentorPro, powered by advanced UGMentor.\n\nTo give you the best learning experience, please configure your session above:\n1. Select your **Course**, **Subject**, and **Topic**.\n2. Choose **What you want to learn** and **How you want to learn it**.\n\nOnce you've made your selections, you can ask a question or use a quick prompt below to begin!`;
 
   const [messages, setMessages] = useState<Message[]>([
-    { role: 'ai', content: `Hello ${user?.name?.split(' ')[0] || 'Doctor'}! 👋 I'm your AI MentorPro, powered by advanced UGMentor.\n\nI can help you with:\n• 📚 Explaining complex medical concepts\n• 🎯 Answering university exam questions\n• 💊 Drug mechanisms and pharmacology\n• ðŸ¥ Clinical case discussions\n• âœï¸ Essay writing strategies\n\nWhat would you like to learn today?`, time: new Date().toLocaleTimeString() }
+    { role: 'ai', content: initialMessage, time: new Date().toLocaleTimeString() }
   ]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
@@ -67,13 +89,28 @@ export default function AIMentorProPage() {
 
   useEffect(() => { bottomRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [messages]);
 
-  const generateAIReply = async (userMsg: string): Promise<string> => {
-    await new Promise(r => setTimeout(r, 1500 + Math.random() * 1000));
-    
-    // Dynamic context based on selected Course, Subject, and Topic
-    const contextPrefix = (course && subject) ? `From the perspective of **${course} - ${subject}**${topic ? ` (focusing on ${topic})` : ''}, ` : '';
-    
-    return `Great question! Let me explain that for you in a structured way.\n\n**Context:** ${contextPrefix || 'General Medical Knowledge'}\n**Understanding: "${userMsg.slice(0, 50)}..."**\n\nThis is a clinically important topic that appears frequently in university examinations. Here's a comprehensive breakdown:\n\n**1. Definition & Overview:**\nThe concept involves multiple physiological and pathological mechanisms that are fundamental to ${subject ? subject : 'medical practice'}.\n\n**2. Key Mechanisms:**\n• Primary mechanism: Involves receptor-mediated pathways\n• Secondary effects: Downstream signaling cascades\n• Clinical relevance: Direct application to patient care\n\n**3. Clinical Significance:**\nUnderstanding this topic helps you:\n- Diagnose conditions accurately\n- Choose appropriate investigations\n- Select optimal treatment strategies\n\n**4. Exam Tips:**\n✓ Always mention definition first\n✓ Use classification to organize your answer\n✓ Include clinical examples\n✓ Draw diagrams where applicable\n\n**5. Related Topics to Study:**\n- Pathophysiology connections\n- Pharmacological implications\n- Recent advances\n\nWould you like me to elaborate on any specific aspect, or shall we practice some MCQs on this topic?`;
+  const generateAIReply = async (userMsg: string, history: Message[]): Promise<string> => {
+    try {
+      const { supabase } = await import('@/lib/supabase');
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      const res = await fetch(`${import.meta.env.VITE_API_URL || 'https://ugmentor-api-476471947498.asia-south1.run.app'}/api/generate-ai-mentor`, {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session?.access_token || ''}`
+        },
+        body: JSON.stringify({
+          course, subject, topic, goal: learningGoal, style: learningStyle, userMsg, history
+        })
+      });
+      const data = await res.json();
+      if (data.error) throw new Error(data.error);
+      return data.answer || "No response generated.";
+    } catch (err: any) {
+      console.error(err);
+      return `*Error: ${err.message || 'Failed to connect to AI Mentor.'}*`;
+    }
   };
 
   const send = async (msg?: string) => {
@@ -81,19 +118,19 @@ export default function AIMentorProPage() {
     if (!text || loading) return;
     setInput('');
     const userMsg: Message = { role: 'user', content: text, time: new Date().toLocaleTimeString() };
+    const currentHistory = [...messages];
     setMessages(prev => [...prev, userMsg]);
     setLoading(true);
-    const reply = await generateAIReply(text);
+    const reply = await generateAIReply(text, currentHistory);
     setMessages(prev => [...prev, { role: 'ai', content: reply, time: new Date().toLocaleTimeString() }]);
     setLoading(false);
   };
 
-  // Dynamic quick questions based on Subject/Topic
   const quickQuestions = topic && subject ? [
-    `Explain the mechanism of action related to ${topic}`,
-    `What are the clinical features of ${topic}?`,
-    `Discuss the management protocol for ${topic}`,
-    `Important university exam questions from ${subject}`,
+    `Explain the concept of ${topic} in simple terms`,
+    `What are the most high-yield exam points for ${topic}?`,
+    `Provide a clinical scenario/application for ${topic}`,
+    `How does ${topic} relate to ${subject} overall?`,
   ] : [
     'Explain the mechanism of action of beta blockers',
     'What are the complications of diabetes mellitus?',
@@ -109,15 +146,15 @@ export default function AIMentorProPage() {
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
           <div>
             <h1 className="font-outfit" style={{ fontSize: 22, fontWeight: 800, color: 'var(--text-primary)' }}>🤖 AI MentorPro</h1>
-            <p style={{ fontSize: 13, color: 'var(--text-secondary)', marginTop: 2 }}>Your personal AI tutor for medical education</p>
+            <p style={{ fontSize: 13, color: 'var(--text-secondary)', marginTop: 2 }}>Your comprehensive personal AI tutor for medical education</p>
           </div>
-          <button className="btn btn-secondary btn-sm" onClick={() => setMessages([{ role: 'ai', content: 'Chat cleared! How can I help you?', time: new Date().toLocaleTimeString() }])}>ðŸ—‘ Clear Chat</button>
+          <button className="btn btn-secondary btn-sm" onClick={() => setMessages([{ role: 'ai', content: initialMessage, time: new Date().toLocaleTimeString() }])}>🗑️ Clear Chat</button>
         </div>
 
         {/* Dynamic Context Selectors */}
-        <div className="grid-3" style={{ gap: 12 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 12, marginBottom: 12 }}>
           <select className="input-field" style={{ padding: '8px 12px', fontSize: 13 }} value={course} onChange={e => setCourse(e.target.value)}>
-            <option value="">Select Course</option>
+            <option value="">1. Select Course</option>
             {COURSES.map(c => <option key={c} value={c}>{c}</option>)}
           </select>
 
@@ -128,18 +165,51 @@ export default function AIMentorProPage() {
             onChange={e => setSubject(e.target.value)}
             disabled={!course}
           >
-            <option value="">{course ? 'Select Subject' : 'Select Course first'}</option>
+            <option value="">{course ? '2. Select Subject' : 'Select Course first'}</option>
             {subjectList.map(s => <option key={s} value={s}>{s}</option>)}
           </select>
 
           <input 
             className="input-field" 
             style={{ padding: '8px 12px', fontSize: 13, opacity: subject ? 1 : 0.5, cursor: subject ? 'text' : 'not-allowed' }}
-            placeholder="Type Topic (e.g. Diabetes)" 
+            placeholder="3. Type Topic (e.g. Diabetes)" 
             value={topic} 
             onChange={e => setTopic(e.target.value)} 
             disabled={!subject}
           />
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 12 }}>
+          <select 
+            className="input-field" 
+            style={{ padding: '8px 12px', fontSize: 13, opacity: topic ? 1 : 0.5, cursor: topic ? 'pointer' : 'not-allowed' }} 
+            value={learningGoal} 
+            onChange={e => setLearningGoal(e.target.value)}
+            disabled={!topic}
+          >
+            <option value="">{topic ? '4. What to learn? (Optional)' : 'Type Topic first'}</option>
+            {LEARNING_GOALS.map(g => <option key={g} value={g}>{g}</option>)}
+          </select>
+
+          <select 
+            className="input-field" 
+            style={{ padding: '8px 12px', fontSize: 13, opacity: topic ? 1 : 0.5, cursor: topic ? 'pointer' : 'not-allowed' }} 
+            value={learningStyle} 
+            onChange={e => setLearningStyle(e.target.value)}
+            disabled={!topic}
+          >
+            <option value="">{topic ? '5. How to learn? (Optional)' : 'Type Topic first'}</option>
+            {LEARNING_STYLES.map(s => <option key={s} value={s}>{s}</option>)}
+          </select>
+          
+          <button 
+            className="btn btn-primary"
+            style={{ padding: '8px 12px', fontSize: 14, fontWeight: 600, opacity: (subject && topic) ? 1 : 0.5, cursor: (subject && topic) ? 'pointer' : 'not-allowed', height: '100%' }}
+            disabled={!subject || !topic || loading}
+            onClick={() => send(`Please teach me about ${topic}.`)}
+          >
+            🚀 Start Mentoring
+          </button>
         </div>
       </div>
 
@@ -152,17 +222,34 @@ export default function AIMentorProPage() {
               background: msg.role === 'ai' ? 'linear-gradient(135deg, var(--primary), var(--primary-light))' : 'linear-gradient(135deg, #0EA5E9, #38BDF8)',
               display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18
             }}>
-              {msg.role === 'ai' ? '🤖' : 'ðŸ‘¤'}
+              {msg.role === 'ai' ? '🤖' : '👤'}
             </div>
-            <div style={{ maxWidth: '70%' }}>
+            <div style={{ maxWidth: '80%' }}>
               <div style={{
                 padding: '14px 18px', borderRadius: msg.role === 'ai' ? '4px 16px 16px 16px' : '16px 4px 16px 16px',
                 background: msg.role === 'ai' ? 'var(--bg-card)' : 'linear-gradient(135deg, var(--primary), var(--primary-light))',
                 border: msg.role === 'ai' ? '1px solid var(--border)' : 'none',
                 fontSize: 14, lineHeight: 1.8, color: msg.role === 'ai' ? 'var(--text-secondary)' : 'white',
-                whiteSpace: 'pre-wrap', wordBreak: 'break-word'
+                wordBreak: 'break-word',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.04)'
               }}>
-                {msg.content}
+                {msg.role === 'ai' ? (
+                  <div className="markdown-body" style={{ fontSize: 14, lineHeight: 1.7 }}>
+                    <style>{`
+                      .markdown-body h3 { font-size: 16px; margin-top: 12px; margin-bottom: 8px; color: var(--text-primary); border-bottom: 1px solid var(--border); padding-bottom: 4px; }
+                      .markdown-body h4 { font-size: 14px; margin-top: 10px; margin-bottom: 6px; color: var(--text-primary); }
+                      .markdown-body p { margin-bottom: 8px; }
+                      .markdown-body ul, .markdown-body ol { margin-left: 20px; margin-bottom: 12px; }
+                      .markdown-body li { margin-bottom: 4px; }
+                      .markdown-body hr { border: 0; border-top: 1px solid var(--border); margin: 16px 0; }
+                    `}</style>
+                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                      {msg.content}
+                    </ReactMarkdown>
+                  </div>
+                ) : (
+                  msg.content
+                )}
               </div>
               <div style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 4, textAlign: msg.role === 'user' ? 'right' : 'left' }}>{msg.time}</div>
             </div>
@@ -181,24 +268,39 @@ export default function AIMentorProPage() {
         <div ref={bottomRef} />
       </div>
 
-
-
       {/* Input */}
-      <div style={{ padding: '16px 28px', borderTop: '1px solid var(--border)', background: 'var(--bg-surface)', display: 'flex', gap: 12 }}>
-        <textarea
-          className="input-field"
-          style={{ flex: 1, resize: 'none', minHeight: 'auto', height: 48, lineHeight: '24px', padding: '12px 14px' }}
-          placeholder="Ask anything about medical topicsâ€¦"
-          value={input}
-          onChange={e => setInput(e.target.value)}
-          onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); } }}
-          rows={1}
-        />
-        <button className="btn btn-primary" style={{ height: 48, padding: '0 20px' }} onClick={() => send()} disabled={!input.trim() || loading}>
-          {loading ? <span className="spinner" /> : '→'}
-        </button>
+      <div style={{ padding: '16px 28px', borderTop: '1px solid var(--border)', background: 'var(--bg-surface)', display: 'flex', flexDirection: 'column', gap: 12 }}>
+        
+        {/* Quick Prompts */}
+        <div style={{ display: 'flex', gap: 8, overflowX: 'auto', paddingBottom: 4, scrollbarWidth: 'none' }}>
+          {quickQuestions.map((q, idx) => (
+            <button 
+              key={idx} 
+              className="btn btn-secondary btn-sm" 
+              style={{ whiteSpace: 'nowrap', borderRadius: 20, background: 'var(--bg-elevated)' }}
+              onClick={() => send(q)}
+              disabled={loading}
+            >
+              {q}
+            </button>
+          ))}
+        </div>
+
+        <div style={{ display: 'flex', gap: 12 }}>
+          <textarea
+            className="input-field"
+            style={{ flex: 1, resize: 'none', minHeight: 'auto', height: 48, lineHeight: '24px', padding: '12px 14px' }}
+            placeholder="Ask anything about medical topics…"
+            value={input}
+            onChange={e => setInput(e.target.value)}
+            onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); } }}
+            rows={1}
+          />
+          <button className="btn btn-primary" style={{ height: 48, padding: '0 20px' }} onClick={() => send()} disabled={!input.trim() || loading}>
+            {loading ? <span className="spinner" /> : '→'}
+          </button>
+        </div>
       </div>
     </div>
   );
 }
-

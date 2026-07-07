@@ -4,13 +4,16 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 
 export default function LoginPage() {
-  const { user, login, isLoading } = useAuth();
+  const { user, login, signup, isLoading } = useAuth();
   const navigate = useNavigate();
+  const [isSignup, setIsSignup] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [course, setCourse] = useState('MBBS');
   const [showPwd, setShowPwd] = useState(false);
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [successMsg, setSuccessMsg] = useState('');
 
   useEffect(() => {
     if (!isLoading && user) {
@@ -21,12 +24,31 @@ export default function LoginPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email || !password) { setError('Please fill in all fields.'); return; }
+    if (!email || !password || (isSignup && !course)) { setError('Please fill in all fields.'); return; }
     setError('');
+    setSuccessMsg('');
     setSubmitting(true);
-    const result = await login(email, password);
-    setSubmitting(false);
-    if (!result.success) setError(result.error || 'Invalid credentials.');
+    try {
+      if (isSignup) {
+        const result = await signup(email, password, course);
+        setSubmitting(false);
+        if (!result.success) {
+          setError(result.error || 'Failed to sign up.');
+        } else {
+          setSuccessMsg('Account created successfully! You can now log in.');
+          setIsSignup(false);
+          setPassword('');
+        }
+      } else {
+        const result = await login(email, password);
+        setSubmitting(false);
+        if (!result.success) setError(result.error || 'Invalid credentials.');
+      }
+    } catch (err: any) {
+      setSubmitting(false);
+      setError(err?.message || 'An unexpected error occurred.');
+      console.error('Auth exception:', err);
+    }
   };
 
   if (isLoading) return (
@@ -59,8 +81,12 @@ export default function LoginPage() {
           background: 'var(--bg-card)', border: '1px solid var(--border)',
           borderRadius: 'var(--radius-xl)', padding: '36px'
         }}>
-          <h1 style={{ fontSize: 24, fontWeight: 800, marginBottom: 6, fontFamily: 'Outfit' }}>Welcome Back</h1>
-          <p style={{ color: 'var(--text-secondary)', fontSize: 14, marginBottom: 28 }}>Sign in to continue your learning journey</p>
+          <h1 style={{ fontSize: 24, fontWeight: 800, marginBottom: 6, fontFamily: 'Outfit' }}>
+            {isSignup ? 'Create Account' : 'Welcome Back'}
+          </h1>
+          <p style={{ color: 'var(--text-secondary)', fontSize: 14, marginBottom: 28 }}>
+            {isSignup ? 'Sign up to start your learning journey' : 'Sign in to continue your learning journey'}
+          </p>
 
           {error && (
             <div style={{
@@ -68,6 +94,14 @@ export default function LoginPage() {
               borderRadius: 'var(--radius-sm)', padding: '12px 16px',
               color: 'var(--danger)', fontSize: 14, marginBottom: 20
             }}>⚠️ {error}</div>
+          )}
+
+          {successMsg && (
+            <div style={{
+              background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.3)',
+              borderRadius: 'var(--radius-sm)', padding: '12px 16px',
+              color: 'var(--success)', fontSize: 14, marginBottom: 20
+            }}>✅ {successMsg}</div>
           )}
 
           <form onSubmit={handleSubmit}>
@@ -94,7 +128,7 @@ export default function LoginPage() {
                   value={password}
                   onChange={e => setPassword(e.target.value)}
                   style={{ paddingRight: 44 }}
-                  autoComplete="current-password"
+                  autoComplete={isSignup ? "new-password" : "current-password"}
                 />
                 <button
                   type="button"
@@ -107,6 +141,22 @@ export default function LoginPage() {
               </div>
             </div>
 
+            {isSignup && (
+              <div className="form-group">
+                <label className="label">Select Course</label>
+                <select 
+                  className="input-field" 
+                  value={course} 
+                  onChange={e => setCourse(e.target.value)}
+                  style={{ cursor: 'pointer' }}
+                >
+                  <option value="MBBS">MBBS</option>
+                  <option value="BDS">BDS</option>
+                  <option value="BSc Nursing">BSc Nursing</option>
+                </select>
+              </div>
+            )}
+
             <button
               id="login-submit"
               type="submit"
@@ -114,7 +164,7 @@ export default function LoginPage() {
               disabled={submitting}
               style={{ width: '100%', justifyContent: 'center', padding: '13px', fontSize: 15, marginTop: 8 }}
             >
-              {submitting ? <><span className="spinner" />Signing in…</> : 'Sign In →'}
+              {submitting ? <><span className="spinner" />{isSignup ? 'Signing up…' : 'Signing in…'}</> : (isSignup ? 'Sign Up →' : 'Sign In →')}
             </button>
           </form>
 
@@ -122,11 +172,18 @@ export default function LoginPage() {
         </div>
 
         <p style={{ textAlign: 'center', marginTop: 20, fontSize: 13, color: 'var(--text-muted)' }}>
-          Don&apos;t have an account? <Link to="/login" style={{ color: 'var(--primary-light)', textDecoration: 'none', fontWeight: 600 }}>Contact us to enroll</Link>
+          {isSignup ? 'Already have an account? ' : "Don't have an account? "}
+          <button 
+            onClick={() => { setIsSignup(!isSignup); setError(''); setSuccessMsg(''); }}
+            style={{ 
+              background: 'none', border: 'none', color: 'var(--primary-light)', 
+              textDecoration: 'none', fontWeight: 600, cursor: 'pointer', fontSize: 13 
+            }}
+          >
+            {isSignup ? 'Sign in' : 'Sign up now'}
+          </button>
         </p>
-        <p style={{ textAlign: 'center', marginTop: 8, fontSize: 12, color: 'var(--text-muted)' }}>
-          Admin? <Link to="/contrl-panl" style={{ color: 'var(--text-muted)', textDecoration: 'underline' }}>Control Panel</Link>
-        </p>
+
       </div>
     </div>
   );

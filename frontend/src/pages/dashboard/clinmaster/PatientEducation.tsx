@@ -20,14 +20,14 @@ const EDUCATION_TEMPLATES: Record<string, { overview: string; lifestyle: string;
     overview: 'Diabetes Mellitus is a condition where your body cannot properly control blood sugar levels. Type 2 diabetes is very common and is strongly influenced by lifestyle choices. With proper care, you can live a full, healthy life.',
     lifestyle: '• Diet: Reduce sugar, white rice, white bread, sweets, and soft drinks. Increase vegetables, pulses (dal), whole grains, and lean proteins.\n• Exercise: Walk 30 minutes daily, 5 days a week. Avoid prolonged sitting.\n• Weight: Losing even 5-10% of your body weight significantly improves blood sugar control.\n• Smoking: If you smoke, stopping will dramatically reduce your risk of complications.\n• Alcohol: Limit strictly — alcohol can cause dangerous blood sugar swings.',
     medications: '• Take your diabetes medicines every day at the same time, even when you feel well.\n• Do not stop medicines without telling your doctor.\n• Know your medicines: name, dose, what it does, and side effects.\n• If on insulin: Learn correct injection technique, rotate injection sites, store insulin properly.',
-    warning: 'Go to the hospital immediately if you experience:\nðŸ”´ Very high blood sugar: extreme thirst, frequent urination, vomiting, stomach pain, fruity breath smell.\nðŸ”´ Low blood sugar (Hypoglycaemia): sweating, trembling, confusion, unconsciousness. Take 15g of sugar immediately (glucose tablets, sugar water, sweet drink).\nðŸ”´ Chest pain, difficulty breathing, sudden weakness (may be heart attack or stroke).',
+    warning: 'Go to the hospital immediately if you experience:\n🔴 Very high blood sugar: extreme thirst, frequent urination, vomiting, stomach pain, fruity breath smell.\n🔴 Low blood sugar (Hypoglycaemia): sweating, trembling, confusion, unconsciousness. Take 15g of sugar immediately (glucose tablets, sugar water, sweet drink).\n🔴 Chest pain, difficulty breathing, sudden weakness (may be heart attack or stroke).',
     followup: '• Blood sugar (fasting + post-meal) — every visit\n• HbA1c — every 3 months\n• Blood pressure — every visit\n• Kidney function (eGFR, urine albumin) — every 6 months\n• Cholesterol (lipid profile) — every year\n• Eye check (fundoscopy) — every year\n• Foot examination — every visit\n• Dental check — every 6 months',
   },
   'Hypertension': {
     overview: 'High Blood Pressure (Hypertension) means your heart is working too hard to pump blood through your arteries. If not controlled, it can lead to heart attack, stroke, and kidney damage. The good news: it is very well managed with lifestyle changes and medicines.',
-    lifestyle: '• Diet: Reduce salt to <5g/day (avoid pickles, papad, processed foods, restaurant food). Follow DASH diet: more fruits, vegetables, and low-fat dairy.\n• Exercise: 30 minutes brisk walking, 5 days/week.\n• Weight loss: Each 1 kg loss reduces BP by ~1 mmHg.\n• Alcohol: Limit (men: â‰¤2 drinks/day, women: â‰¤1 drink/day).\n• Smoking: Stop completely — major cardiovascular risk factor.\n• Stress management: Yoga, meditation, adequate sleep (7-8 hours).',
+    lifestyle: '• Diet: Reduce salt to <5g/day (avoid pickles, papad, processed foods, restaurant food). Follow DASH diet: more fruits, vegetables, and low-fat dairy.\n• Exercise: 30 minutes brisk walking, 5 days/week.\n• Weight loss: Each 1 kg loss reduces BP by ~1 mmHg.\n• Alcohol: Limit (men: ≤2 drinks/day, women: ≤1 drink/day).\n• Smoking: Stop completely — major cardiovascular risk factor.\n• Stress management: Yoga, meditation, adequate sleep (7-8 hours).',
     medications: '• Take BP medicines EVERY day — even if you feel fine. BP has no symptoms until a crisis occurs.\n• Do not stop medicines suddenly without consulting your doctor.\n• Take medicines at the same time daily.\n• Know your target BP: usually < 130/80 mmHg.',
-    warning: 'Seek emergency care if:\nðŸ”´ BP > 180/120 mmHg with symptoms (severe headache, vision change, chest pain, confusion) = Hypertensive Emergency.\nðŸ”´ Sudden severe headache, face drooping, arm weakness, speech difficulty = Possible Stroke (FAST test).\nðŸ”´ Chest pain radiating to arm or jaw = Possible Heart Attack.',
+    warning: 'Seek emergency care if:\n🔴 BP > 180/120 mmHg with symptoms (severe headache, vision change, chest pain, confusion) = Hypertensive Emergency.\n🔴 Sudden severe headache, face drooping, arm weakness, speech difficulty = Possible Stroke (FAST test).\n🔴 Chest pain radiating to arm or jaw = Possible Heart Attack.',
     followup: '• BP check — every visit or home monitoring daily\n• Kidney function (Creatinine, eGFR) — every 6 months\n• Urine protein — every year\n• ECG — every year\n• Fundoscopy — every year\n• Cholesterol profile — every year',
   },
 };
@@ -56,9 +56,9 @@ export default function PatientEducationPage() {
     setHasGenerated(false);
     
     try {
-      const res = await fetch('/api/generate-education', {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || 'https://ugmentor-api-476471947498.asia-south1.run.app'}/api/generate-education`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${(await import('@/lib/supabase').then(m => m.supabase.auth.getSession())).data?.session?.access_token || ''}` },
         body: JSON.stringify({ condition: activeCase, language, customNotes })
       });
       const data = await res.json();
@@ -81,7 +81,7 @@ export default function PatientEducationPage() {
     <div className="page-container" style={{ paddingBottom: 60 }}>
       <div className="page-header" style={{ marginBottom: 30 }}>
         <h1 className="page-title font-outfit" style={{ fontSize: 28, color: 'var(--primary)', display: 'flex', alignItems: 'center', gap: 10 }}>
-          <span style={{ fontSize: 28 }}>ðŸ‘¨â€âš•ï¸</span> Patient Education
+          <span style={{ fontSize: 28 }}>Ÿ‘€⚕️</span> Patient Education
         </h1>
         <p className="page-desc">Generate structured, patient-friendly educational content for clinical cases — printable & multilingual</p>
       </div>
@@ -122,7 +122,7 @@ export default function PatientEducationPage() {
           {!clinicalCase && (
             <div className="form-group" style={{ marginTop: 16, marginBottom: 0 }}>
               <label className="label">Or Enter Custom Case / Condition</label>
-              <input className="input-field" value={customCase} onChange={e => { setCustomCase(e.target.value); setHasGenerated(false); }} placeholder="e.g., Post-operative appendectomy care, Asthma management, Goutâ€¦" />
+              <input className="input-field" value={customCase} onChange={e => { setCustomCase(e.target.value); setHasGenerated(false); }} placeholder="e.g., Post-operative appendectomy care, Asthma management, Gout…" />
             </div>
           )}
 
@@ -134,9 +134,9 @@ export default function PatientEducationPage() {
               disabled={isGenerating}
             >
               {isGenerating ? (
-                <><span style={{ display: 'inline-block', animation: 'spin 1s linear infinite' }}>â³</span> Generating Education Material...</>
+                <><span style={{ display: 'inline-block', animation: 'spin 1s linear infinite' }}>⏳</span> Generating Education Material...</>
               ) : (
-                <>âœ¨ Generate Patient Education Sheet</>
+                <>✨ Generate Patient Education Sheet</>
               )}
             </button>
           )}
@@ -151,7 +151,7 @@ export default function PatientEducationPage() {
                 <div style={{ fontSize: 14, color: 'var(--text-muted)' }}>Patient Education Sheet • {language}</div>
               </div>
               <div style={{ display: 'flex', gap: 10 }}>
-                <button className="btn btn-secondary" onClick={() => window.print()}>ðŸ–¨ï¸ Print Sheet</button>
+                <button className="btn btn-secondary" onClick={() => window.print()}>Ÿ–️ Print Sheet</button>
                 <button className="btn btn-primary">💾 Save to Patient File</button>
               </div>
             </div>
@@ -171,7 +171,7 @@ export default function PatientEducationPage() {
               {/* SECTION: Lifestyle */}
               <div className="card shadow-sm" style={{ borderLeft: '4px solid #10B981' }}>
                 <h3 style={{ fontSize: 16, marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8, color: '#059669' }}>
-                  <span style={{ fontSize: 20 }}>ðŸŒ±</span> Lifestyle Advice
+                  <span style={{ fontSize: 20 }}>🌱</span> Lifestyle Advice
                 </h3>
                 <div style={{ fontSize: 14, color: '#334155', lineHeight: 1.7, whiteSpace: 'pre-wrap' }}>
                   {template.lifestyle}
@@ -191,7 +191,7 @@ export default function PatientEducationPage() {
               {/* SECTION: Warning Signs */}
               <div className="card shadow-sm" style={{ borderLeft: '4px solid #EF4444', background: '#FEF2F2' }}>
                 <h3 style={{ fontSize: 16, marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8, color: '#DC2626' }}>
-                  <span style={{ fontSize: 20 }}>ðŸš¨</span> Warning Signs
+                  <span style={{ fontSize: 20 }}>🚨</span> Warning Signs
                 </h3>
                 <div style={{ fontSize: 14, color: '#991B1B', lineHeight: 1.7, whiteSpace: 'pre-wrap', fontWeight: 500 }}>
                   {template.warning}
@@ -201,7 +201,7 @@ export default function PatientEducationPage() {
               {/* SECTION: Follow-up */}
               <div className="card shadow-sm" style={{ borderLeft: '4px solid #3B82F6' }}>
                 <h3 style={{ fontSize: 16, marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8, color: '#2563EB' }}>
-                  <span style={{ fontSize: 20 }}>ðŸ“…</span> Follow-up Plan
+                  <span style={{ fontSize: 20 }}>📝…</span> Follow-up Plan
                 </h3>
                 <div style={{ fontSize: 14, color: '#334155', lineHeight: 1.7, whiteSpace: 'pre-wrap' }}>
                   {template.followup}
@@ -211,7 +211,7 @@ export default function PatientEducationPage() {
               {/* SECTION: Custom Notes */}
               <div className="card shadow-sm" style={{ borderLeft: '4px solid #8B5CF6' }}>
                 <h3 style={{ fontSize: 16, marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8, color: '#7C3AED' }}>
-                  <span style={{ fontSize: 20 }}>âœï¸</span> Custom Notes
+                  <span style={{ fontSize: 20 }}>œ️</span> Custom Notes
                 </h3>
                 <textarea 
                   className="input-field" 
@@ -229,7 +229,7 @@ export default function PatientEducationPage() {
 
         {!activeCase && (
           <div className="card" style={{ textAlign: 'center', padding: 60, color: 'var(--text-muted)', border: '2px dashed var(--border)' }}>
-            <div style={{ fontSize: 52, marginBottom: 16 }}>ðŸ‘¨â€âš•ï¸</div>
+            <div style={{ fontSize: 52, marginBottom: 16 }}>Ÿ‘€⚕️</div>
             <div style={{ fontWeight: 700, fontSize: 18, marginBottom: 8, color: 'var(--text-secondary)' }}>Select a Clinical Case</div>
             <div style={{ fontSize: 14 }}>Choose a course, subject, and clinical case above to generate a patient education sheet.</div>
           </div>

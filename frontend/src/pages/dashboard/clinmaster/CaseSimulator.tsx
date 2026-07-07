@@ -47,9 +47,9 @@ export default function ClinicalCaseSimulatorPage() {
   const handleSave = () => { setSaved(true); setTimeout(() => setSaved(false), 2500); };
 
   const STAGES: { key: Stage; label: string; icon: string }[] = [
-    { key: 'history', label: 'History Taking', icon: 'ðŸ“' },
-    { key: 'examination', label: 'Clinical Examination', icon: 'ðŸ©º' },
-    { key: 'diagnosis', label: 'Diagnosis', icon: 'ðŸ”' },
+    { key: 'history', label: 'History Taking', icon: '📝' },
+    { key: 'examination', label: 'Clinical Examination', icon: '🩺' },
+    { key: 'diagnosis', label: 'Diagnosis', icon: '🔍' },
     { key: 'management', label: 'Management', icon: '💊' },
     { key: 'feedback', label: 'AI Feedback', icon: '📊' },
   ];
@@ -67,14 +67,14 @@ export default function ClinicalCaseSimulatorPage() {
   return (
     <div className="page-container">
       <div className="page-header">
-        <h1 className="page-title font-outfit">ðŸ¥ Clinical Case Simulator</h1>
+        <h1 className="page-title font-outfit">🏥 Clinical Case Simulator</h1>
         <p className="page-desc">Virtual Patient Encounters — History, Examination, Diagnosis & Management with AI Feedback</p>
       </div>
 
       {stage === 'config' && (
         <div style={{ maxWidth: 780 }} className="animate-fadeIn">
           <div className="card" style={{ marginBottom: 20 }}>
-            <h2 style={{ fontSize: 17, fontWeight: 700, marginBottom: 18 }}>âš™ï¸ Select Clinical Scenario</h2>
+            <h2 style={{ fontSize: 17, fontWeight: 700, marginBottom: 18 }}>⚙️ Select Clinical Scenario</h2>
             <div className="grid-2" style={{ marginBottom: 16 }}>
               <div className="form-group">
                 <label className="label">Course *</label>
@@ -99,7 +99,7 @@ export default function ClinicalCaseSimulatorPage() {
             </div>
             <div className="form-group">
               <label className="label">Or Type Custom Clinical Presentation</label>
-              <input className="input-field" value={customCase} onChange={e => setCustomCase(e.target.value)} placeholder="e.g., 45-year-old male with chest pain and shortness of breathâ€¦" />
+              <input className="input-field" value={customCase} onChange={e => setCustomCase(e.target.value)} placeholder="e.g., 45-year-old male with chest pain and shortness of breath…" />
             </div>
           </div>
           <div className="card" style={{ marginBottom: 20, background: 'linear-gradient(135deg, rgba(108,59,255,0.06), rgba(14,165,233,0.04))', border: '1px solid rgba(108,59,255,0.15)' }}>
@@ -112,7 +112,7 @@ export default function ClinicalCaseSimulatorPage() {
           </div>
           <button className="btn btn-primary btn-lg" style={{ width: '100%', justifyContent: 'center', padding: 16 }}
             onClick={handleStart} disabled={loading || !subject || !activeCase}>
-            {loading ? <><span className="spinner" style={{ marginRight: 8 }} />Preparing Virtual Patientâ€¦</> : 'ðŸ¥ Start Virtual Patient Encounter'}
+            {loading ? <><span className="spinner" style={{ marginRight: 8 }} />Preparing Virtual Patient…</> : '🏥 Start Virtual Patient Encounter'}
           </button>
         </div>
       )}
@@ -152,14 +152,14 @@ export default function ClinicalCaseSimulatorPage() {
                 </div>
                 <div className="grid-2">
                   {[
-                    { key: 'chiefComplaint', label: 'Chief Complaint', placeholder: 'Main presenting symptom, durationâ€¦' },
-                    { key: 'hpi', label: 'History of Presenting Illness (SOCRATES)', placeholder: 'Site, Onset, Character, Radiation, Associations, Time, Exacerbating/Relieving, Severityâ€¦' },
-                    { key: 'pmh', label: 'Past Medical / Surgical History', placeholder: 'Previous illnesses, hospitalizations, surgeries, chronic conditionsâ€¦' },
-                    { key: 'medications', label: 'Current Medications', placeholder: 'Drug name, dose, frequency, durationâ€¦' },
-                    { key: 'allergies', label: 'Allergies', placeholder: 'Drug, food, environmental allergies and reactionsâ€¦' },
-                    { key: 'socialHistory', label: 'Social History', placeholder: 'Occupation, smoking, alcohol, diet, travel, living conditionsâ€¦' },
-                    { key: 'familyHistory', label: 'Family History', placeholder: 'Similar conditions in parents, siblingsâ€¦' },
-                    { key: 'ros', label: 'Review of Systems', placeholder: 'Systematic enquiry of other systemsâ€¦' },
+                    { key: 'chiefComplaint', label: 'Chief Complaint', placeholder: 'Main presenting symptom, duration…' },
+                    { key: 'hpi', label: 'History of Presenting Illness (SOCRATES)', placeholder: 'Site, Onset, Character, Radiation, Associations, Time, Exacerbating/Relieving, Severity…' },
+                    { key: 'pmh', label: 'Past Medical / Surgical History', placeholder: 'Previous illnesses, hospitalizations, surgeries, chronic conditions…' },
+                    { key: 'medications', label: 'Current Medications', placeholder: 'Drug name, dose, frequency, duration…' },
+                    { key: 'allergies', label: 'Allergies', placeholder: 'Drug, food, environmental allergies and reactions…' },
+                    { key: 'socialHistory', label: 'Social History', placeholder: 'Occupation, smoking, alcohol, diet, travel, living conditions…' },
+                    { key: 'familyHistory', label: 'Family History', placeholder: 'Similar conditions in parents, siblings…' },
+                    { key: 'ros', label: 'Review of Systems', placeholder: 'Systematic enquiry of other systems…' },
                   ].map(field => (
                     <div key={field.key} className="form-group">
                       <label className="label">{field.label}</label>
@@ -178,12 +178,12 @@ export default function ClinicalCaseSimulatorPage() {
           {stage === 'examination' && (
             <div style={{ maxWidth: 820 }}>
               <div className="card" style={{ marginBottom: 20 }}>
-                <h2 style={{ fontSize: 16, fontWeight: 700, marginBottom: 18 }}>ðŸ©º Clinical Examination Findings</h2>
+                <h2 style={{ fontSize: 16, fontWeight: 700, marginBottom: 18 }}>🩺 Clinical Examination Findings</h2>
                 {[
-                  { key: 'vitals', label: 'Vital Signs', placeholder: 'BP, HR, RR, Temperature, SpOâ‚‚, Weight, Height, BMIâ€¦' },
-                  { key: 'general', label: 'General Examination', placeholder: 'Conscious, oriented, built, nutrition; Pallor, Icterus, Cyanosis, Clubbing, Lymphadenopathy, Oedema (PICCLE)â€¦' },
-                  { key: 'systemic', label: 'Systemic Examination', placeholder: 'Cardiovascular, Respiratory, Abdomen, CNS, Musculoskeletal findingsâ€¦' },
-                  { key: 'specific', label: 'Specific / Focused Examination', placeholder: 'Region-specific or specialist examination findings relevant to the caseâ€¦' },
+                  { key: 'vitals', label: 'Vital Signs', placeholder: 'BP, HR, RR, Temperature, SpO₂, Weight, Height, BMI…' },
+                  { key: 'general', label: 'General Examination', placeholder: 'Conscious, oriented, built, nutrition; Pallor, Icterus, Cyanosis, Clubbing, Lymphadenopathy, Oedema (PICCLE)…' },
+                  { key: 'systemic', label: 'Systemic Examination', placeholder: 'Cardiovascular, Respiratory, Abdomen, CNS, Musculoskeletal findings…' },
+                  { key: 'specific', label: 'Specific / Focused Examination', placeholder: 'Region-specific or specialist examination findings relevant to the case…' },
                 ].map(field => (
                   <div key={field.key} className="form-group">
                     <label className="label">{field.label}</label>
@@ -195,7 +195,7 @@ export default function ClinicalCaseSimulatorPage() {
                 ))}
               </div>
               <div style={{ display: 'flex', gap: 10 }}>
-                <button className="btn btn-secondary" onClick={() => setStage('history')}>â† Back</button>
+                <button className="btn btn-secondary" onClick={() => setStage('history')}>← Back</button>
                 <button className="btn btn-primary" onClick={() => setStage('diagnosis')}>Next: Diagnosis →</button>
               </div>
             </div>
@@ -204,22 +204,22 @@ export default function ClinicalCaseSimulatorPage() {
           {stage === 'diagnosis' && (
             <div style={{ maxWidth: 820 }}>
               <div className="card" style={{ marginBottom: 20 }}>
-                <h2 style={{ fontSize: 16, fontWeight: 700, marginBottom: 18 }}>ðŸ” Diagnosis & Investigations</h2>
+                <h2 style={{ fontSize: 16, fontWeight: 700, marginBottom: 18 }}>🔍 Diagnosis & Investigations</h2>
                 <div className="form-group">
                   <label className="label">Primary Diagnosis</label>
-                  <input className="input-field" value={diagnosis.primary} onChange={e => setDiagnosis(p => ({ ...p, primary: e.target.value }))} placeholder="Most likely diagnosis with justificationâ€¦" />
+                  <input className="input-field" value={diagnosis.primary} onChange={e => setDiagnosis(p => ({ ...p, primary: e.target.value }))} placeholder="Most likely diagnosis with justification…" />
                 </div>
                 <div className="form-group">
                   <label className="label">Differential Diagnoses (rank by likelihood)</label>
-                  <textarea className="input-field" rows={4} value={diagnosis.differentials} onChange={e => setDiagnosis(p => ({ ...p, differentials: e.target.value }))} placeholder="1. Most likely — reasoning&#10;2. Second differential — reasoning&#10;3. Third differential — reasoningâ€¦" />
+                  <textarea className="input-field" rows={4} value={diagnosis.differentials} onChange={e => setDiagnosis(p => ({ ...p, differentials: e.target.value }))} placeholder="1. Most likely — reasoning&#10;2. Second differential — reasoning&#10;3. Third differential — reasoning…" />
                 </div>
                 <div className="form-group">
                   <label className="label">Investigations to Order</label>
-                  <textarea className="input-field" rows={4} value={diagnosis.investigations} onChange={e => setDiagnosis(p => ({ ...p, investigations: e.target.value }))} placeholder="First-line: CBC, Metabolic panel, Urinalysis, ECGâ€¦&#10;Second-line: USG, CT, MRIâ€¦&#10;Special: Biopsy, Culture, Scoring systemsâ€¦" />
+                  <textarea className="input-field" rows={4} value={diagnosis.investigations} onChange={e => setDiagnosis(p => ({ ...p, investigations: e.target.value }))} placeholder="First-line: CBC, Metabolic panel, Urinalysis, ECG…&#10;Second-line: USG, CT, MRI…&#10;Special: Biopsy, Culture, Scoring systems…" />
                 </div>
               </div>
               <div style={{ display: 'flex', gap: 10 }}>
-                <button className="btn btn-secondary" onClick={() => setStage('examination')}>â† Back</button>
+                <button className="btn btn-secondary" onClick={() => setStage('examination')}>← Back</button>
                 <button className="btn btn-primary" onClick={() => setStage('management')}>Next: Management →</button>
               </div>
             </div>
@@ -230,10 +230,10 @@ export default function ClinicalCaseSimulatorPage() {
               <div className="card" style={{ marginBottom: 20 }}>
                 <h2 style={{ fontSize: 16, fontWeight: 700, marginBottom: 18 }}>💊 Management Decisions</h2>
                 {[
-                  { key: 'immediate', label: 'Immediate / Emergency Management', placeholder: 'Stabilise ABC, IV access, Oâ‚‚, monitoring, emergency medicationsâ€¦' },
-                  { key: 'medications', label: 'Medications & Definitive Treatment', placeholder: 'Drug name — dose — route — frequency — durationâ€¦' },
-                  { key: 'monitoring', label: 'Monitoring & Parameters', placeholder: 'What to monitor, frequency, target values, alert thresholdsâ€¦' },
-                  { key: 'followup', label: 'Discharge, Follow-up & Long-term Plan', placeholder: 'Discharge criteria, outpatient follow-up schedule, lifestyle advice, referralsâ€¦' },
+                  { key: 'immediate', label: 'Immediate / Emergency Management', placeholder: 'Stabilise ABC, IV access, O₂, monitoring, emergency medications…' },
+                  { key: 'medications', label: 'Medications & Definitive Treatment', placeholder: 'Drug name — dose — route — frequency — duration…' },
+                  { key: 'monitoring', label: 'Monitoring & Parameters', placeholder: 'What to monitor, frequency, target values, alert thresholds…' },
+                  { key: 'followup', label: 'Discharge, Follow-up & Long-term Plan', placeholder: 'Discharge criteria, outpatient follow-up schedule, lifestyle advice, referrals…' },
                 ].map(field => (
                   <div key={field.key} className="form-group">
                     <label className="label">{field.label}</label>
@@ -245,7 +245,7 @@ export default function ClinicalCaseSimulatorPage() {
                 ))}
               </div>
               <div style={{ display: 'flex', gap: 10 }}>
-                <button className="btn btn-secondary" onClick={() => setStage('diagnosis')}>â† Back</button>
+                <button className="btn btn-secondary" onClick={() => setStage('diagnosis')}>← Back</button>
                 <button className="btn btn-primary" onClick={() => setStage('feedback')}>📊 View AI Feedback →</button>
               </div>
             </div>
@@ -254,7 +254,7 @@ export default function ClinicalCaseSimulatorPage() {
           {stage === 'feedback' && (
             <div style={{ maxWidth: 860 }} className="animate-fadeIn">
               <div className="card" style={{ textAlign: 'center', padding: 36, marginBottom: 20 }}>
-                <div style={{ fontSize: 52, marginBottom: 10 }}>ðŸ†</div>
+                <div style={{ fontSize: 52, marginBottom: 10 }}>🏆</div>
                 <h2 className="font-outfit" style={{ fontSize: 22, fontWeight: 800, marginBottom: 6 }}>Case Completed!</h2>
                 <p style={{ color: 'var(--text-secondary)', marginBottom: 24 }}>Patient: <strong>{activeCase}</strong> • {course} — {subject}</p>
                 <div className="grid-4" style={{ marginBottom: 20 }}>
@@ -274,9 +274,9 @@ export default function ClinicalCaseSimulatorPage() {
               <div className="card" style={{ marginBottom: 16 }}>
                 <div style={{ fontWeight: 700, fontSize: 14, marginBottom: 14 }}>🤖 AI Clinical Feedback</div>
                 {[
-                  { title: 'History Taking', icon: 'ðŸ“', feedback: history.chiefComplaint ? 'Chief complaint documented. Ensure SOCRATES framework is applied completely for HPI.' : 'Complete the history sections for full feedback.' },
-                  { title: 'Examination', icon: 'ðŸ©º', feedback: examination.vitals ? 'Vital signs documented. Ensure systematic examination using head-to-toe or system-based approach.' : 'Document all examination findings.' },
-                  { title: 'Diagnosis', icon: 'ðŸ”', feedback: diagnosis.primary ? `Primary: "${diagnosis.primary}". ${diagnosis.differentials ? 'Differentials listed — good approach.' : 'Always provide â‰¥3 ranked differentials.'}` : 'A primary diagnosis is required.' },
+                  { title: 'History Taking', icon: '📝', feedback: history.chiefComplaint ? 'Chief complaint documented. Ensure SOCRATES framework is applied completely for HPI.' : 'Complete the history sections for full feedback.' },
+                  { title: 'Examination', icon: '🩺', feedback: examination.vitals ? 'Vital signs documented. Ensure systematic examination using head-to-toe or system-based approach.' : 'Document all examination findings.' },
+                  { title: 'Diagnosis', icon: '🔍', feedback: diagnosis.primary ? `Primary: "${diagnosis.primary}". ${diagnosis.differentials ? 'Differentials listed — good approach.' : 'Always provide ≥3 ranked differentials.'}` : 'A primary diagnosis is required.' },
                   { title: 'Management', icon: '💊', feedback: management.immediate ? 'Immediate management addressed. Verify drug doses, routes, and follow-up plan completeness.' : 'Complete the management plan.' },
                 ].map((item, i) => (
                   <div key={i} style={{ padding: '10px 0', borderBottom: '1px solid var(--border)' }}>

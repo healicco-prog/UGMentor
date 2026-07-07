@@ -1,7 +1,7 @@
-﻿// React component
+// React component
 import React, { useState, useEffect } from 'react';
 
-// â”€â”€â”€ Course → Subject Mapping â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Course → Subject Mapping ─────────────────────────────────────────────────
 const COURSE_DATA: Record<string, string[]> = {
   MBBS: [
     'Anatomy', 'Physiology', 'Biochemistry', 'Pathology', 'Microbiology',
@@ -66,20 +66,20 @@ export default function MCQGeneratorPage() {
     setGenerating(true);
     setAnswers({});
     setSubmitted(false);
-    await new Promise(r => setTimeout(r, 2500));
-    const generated: MCQ[] = Array.from({ length: parseInt(count) }, (_, i) => ({
-      question: `Question ${i + 1}: Regarding ${topic} in ${subject}, which of the following statements is ${i % 2 === 0 ? 'TRUE' : 'INCORRECT'}?`,
-      options: [
-        `${topic} primarily affects the ${['liver', 'kidney', 'heart', 'lung'][i % 4]}`,
-        `The main mechanism involves receptor-mediated ${['activation', 'inhibition', 'modulation', 'blockade'][i % 4]}`,
-        `First-line treatment includes ${['drug A at standard dose', 'surgical intervention', 'conservative management', 'immunosuppression'][i % 4]}`,
-        `Diagnosis is confirmed by ${['blood test', 'imaging', 'biopsy', 'clinical criteria'][i % 4]}`,
-      ],
-      correct: i % 4,
-      explanation: `The correct answer is option ${['A', 'B', 'C', 'D'][i % 4]}. ${topic} ${i % 2 === 0 ? 'characteristically involves' : 'does NOT involve'} this mechanism because of its underlying pathophysiology involving [detailed explanation here].`
-    }));
-    setMcqs(generated);
-    setGenerating(false);
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || 'https://ugmentor-api-476471947498.asia-south1.run.app'}/api/generate-mcq`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${(await import('@/lib/supabase').then(m => m.supabase.auth.getSession())).data?.session?.access_token || ''}` },
+        body: JSON.stringify({ course, subject, topic: topic.trim(), count: parseInt(count), difficulty }),
+      });
+      const data = await res.json();
+      if (data.error) throw new Error(data.error);
+      setMcqs(data.mcqs || []);
+    } catch (err: any) {
+      alert(err.message || 'Error generating MCQs. Please try again.');
+    } finally {
+      setGenerating(false);
+    }
   };
 
   const score = submitted ? Object.entries(answers).filter(([i, a]) => mcqs[parseInt(i)]?.correct === a).length : 0;
@@ -160,7 +160,7 @@ export default function MCQGeneratorPage() {
           onClick={generate} 
           disabled={generating || !course || !subject || !topic}
         >
-          {generating ? <><span className="spinner" style={{ marginRight: 8 }} />Generating MCQsâ€¦</> : `🤖 Generate ${count} MCQs`}
+          {generating ? <><span className="spinner" style={{ marginRight: 8 }} />Generating MCQs…</> : `🤖 Generate ${count} MCQs`}
         </button>
       </div>
 

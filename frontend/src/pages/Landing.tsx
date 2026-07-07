@@ -1,4 +1,4 @@
-﻿// React component
+// React component
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import styles from './Landing.module.css';
@@ -6,10 +6,10 @@ import styles from './Landing.module.css';
 const features = [
   { icon: '📚', title: 'LMS Notes', desc: 'AI-generated structured study notes aligned with university exam patterns for UG medical students.' },
   { icon: '🧠', title: 'AI MentorPro', desc: 'Your personal AI mentor that guides learning, answers doubts, and helps you master complex concepts.' },
-  { icon: 'ðŸ“', title: 'Essay & MCQ Generator', desc: 'Auto-generate examination questions with answer rubrics for deep self-assessment.' },
+  { icon: '📝', title: 'Essay & MCQ Generator', desc: 'Auto-generate examination questions with answer rubrics for deep self-assessment.' },
   { icon: '🎯', title: 'Assessment Center', desc: 'Essay grading with AI-powered rubric evaluation and Viva Simulator for oral exam practice.' },
   { icon: '📊', title: 'Learning Analytics', desc: 'Track your progress across all modules with visual dashboards and performance insights.' },
-  { icon: 'ðŸ—‚ï¸', title: 'E-Portfolio', desc: 'Build a comprehensive digital portfolio showcasing your academic journey and achievements.' },
+  { icon: '📁', title: 'E-Portfolio', desc: 'Build a comprehensive digital portfolio showcasing your academic journey and achievements.' },
 ];
 
 const plans = [
@@ -43,11 +43,35 @@ const testimonials = [
 export default function LandingPage() {
   const [scrolled, setScrolled] = useState(false);
 
+  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener('scroll', onScroll);
-    return () => window.removeEventListener('scroll', onScroll);
+
+    const handleBeforeInstallPrompt = (e: any) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+    };
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    };
   }, []);
+
+  const handleInstallClick = async () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      if (outcome === 'accepted') {
+        setDeferredPrompt(null);
+      }
+    } else {
+      alert("To install the app, tap the Share icon (iOS) or browser menu (Android/Desktop) and select 'Add to Home Screen' or 'Install App'.");
+    }
+  };
 
   return (
     <div className={styles.landing}>
@@ -81,7 +105,7 @@ export default function LandingPage() {
         </div>
         <div className={styles.heroContent}>
           <div className={styles.heroBadge}>
-            <span>ðŸš€</span> AI-Powered Medical Education Platform
+            <span>🚀</span> AI-Powered Medical Education Platform
           </div>
           <h1 className={`${styles.heroTitle} font-outfit`}>
             Master Your Medical<br />
@@ -98,6 +122,10 @@ export default function LandingPage() {
             <a href="#features" className="btn btn-secondary btn-lg">
               Explore Features
             </a>
+            <button onClick={handleInstallClick} className="btn btn-secondary btn-lg" style={{ borderColor: '#6C3BFF', color: '#6C3BFF', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>
+              Install App
+            </button>
           </div>
           <div className={styles.heroStats}>
             <div className={styles.heroStat}><strong>10,000+</strong><span>Students</span></div>
@@ -182,7 +210,7 @@ export default function LandingPage() {
                 {plan.highlight && <div className={styles.planBadge}>Most Popular</div>}
                 <div className={styles.planName}>{plan.name}</div>
                 <div className={styles.planPrice}>
-                  <span className={styles.planCurrency}>â‚¹</span>
+                  <span className={styles.planCurrency}>₹</span>
                   <span className={styles.planAmount}>{plan.price}</span>
                   <span className={styles.planPeriod}>{plan.period}</span>
                 </div>
@@ -240,7 +268,7 @@ export default function LandingPage() {
           <div className={styles.contactGrid}>
             <div className={styles.contactInfo}>
               <div className={styles.contactItem}>
-                <span className={styles.contactIcon}>ðŸŒ</span>
+                <span className={styles.contactIcon}>🌐</span>
                 <div><strong>Website</strong><br /><a href="https://www.ugmentor.in">www.ugmentor.in</a></div>
               </div>
               <div className={styles.contactItem}>
@@ -248,11 +276,11 @@ export default function LandingPage() {
                 <div><strong>Email</strong><br /><a href="mailto:support@ugmentor.in">support@ugmentor.in</a></div>
               </div>
               <div className={styles.contactItem}>
-                <span className={styles.contactIcon}>ðŸ“ž</span>
+                <span className={styles.contactIcon}>📝</span>
                 <div><strong>Phone</strong><br />+91 9606133967</div>
               </div>
               <div className={styles.contactItem}>
-                <span className={styles.contactIcon}>ðŸ“</span>
+                <span className={styles.contactIcon}>📝</span>
                 <div><strong>Location</strong><br />Bengaluru, Karnataka, India</div>
               </div>
             </div>
@@ -285,7 +313,7 @@ export default function LandingPage() {
             <span className={styles.logoText}>UGMentor</span>
           </div>
           <p className={styles.footerDesc}>AI-powered learning platform for undergraduate medical students.</p>
-          <p className={styles.footerCopy}>Â© 2026 UGMentor Platform. Built for the future of Medical Education.</p>
+          <p className={styles.footerCopy}>© 2026 UGMentor Platform. Built for the future of Medical Education.</p>
         </div>
       </footer>
     </div>

@@ -1,4 +1,4 @@
-﻿// React component
+// React component
 import React, { useState } from 'react';
 
 function parseMCQText(text: string) {
@@ -14,7 +14,7 @@ function parseMCQText(text: string) {
 
     const getOption = (letter: string, nextLetter: string) => {
       // Matches a), A., * a), (a), etc.
-      const regexStr = '(?:^|\n)\s*[-*]?\s*\(?' + letter + '[).]\s+([\s\S]*?)(?=(?:^|\n)\s*[-*]?\s*\(?' + nextLetter + '[).\s]|(?:^|\n)\s*\*?\*?Answer:|$)';
+      const regexStr = `(?:^|\\n)\\s*[-*]?\\s*\\(?${letter}[).]\\s+([\\s\\S]*?)(?=(?:^|\\n)\\s*[-*]?\\s*\\(?${nextLetter}[).\\s]|(?:^|\\n)\\s*\\*?\\*?Answer:|$)`;
       const regex = new RegExp(regexStr, 'i');
       return block.match(regex)?.[1]?.trim() || '';
     };
@@ -24,11 +24,11 @@ function parseMCQText(text: string) {
     const optC = getOption('c', 'd');
     const optD = getOption('d', 'Answer:');
 
-    // Answer: C or Answer: c) or **Answer:** C
-    const answerMatch = block.match(/(?:^|\n)\s*\*?\*?Answer:\s*\*?\*?\s*([a-d])/i);
+    // Answer: C or Answer: c) or **Answer:** C or **Correct Answer:** C
+    const answerMatch = block.match(/(?:^|\n)\s*\*?\*?(?:Correct )?Answer:\s*\*?\*?\s*([a-d])/i);
     const correctLetter = answerMatch?.[1]?.toLowerCase() || '';
 
-    const reasonMatch = block.match(/(?:^|\n)\s*\*?\*?Reason:\s*\*?\*?\s*([\s\S]*)/i);
+    const reasonMatch = block.match(/(?:^|\n)\s*\*?\*?(?:Reason|Explanation):\s*\*?\*?\s*([\s\S]*)/i);
     const reason = reasonMatch?.[1]?.trim() || '';
 
     return { 
@@ -46,7 +46,12 @@ export default function MCQRenderer({ text }: { text: string }) {
   
   if (!text) return <p>No MCQs available.</p>;
 
-  const questions = parseMCQText(text);
+  let questions: any[] = [];
+  try {
+    questions = parseMCQText(text);
+  } catch (err) {
+    console.error("Failed to parse MCQs:", err);
+  }
 
   if (questions.length === 0) {
     // If no valid questions were parsed, fallback to markdown rendering or plain text
@@ -65,7 +70,7 @@ export default function MCQRenderer({ text }: { text: string }) {
         const isAnswered = !!selected;
         
         return (
-          <div key={idx} style={{ background: 'var(--bg-surface)', padding: '24px', borderRadius: '12px', border: '1px solid var(--border)' }}>
+          <div key={idx} style={{ background: 'var(--bg-surface)', padding: '24px', borderRadius: '12px', border: '1px solid #E2E8F0', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
             <h3 style={{ fontSize: '16px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '16px', lineHeight: 1.6 }}>
               {idx + 1}. {q.question}
             </h3>
@@ -77,19 +82,19 @@ export default function MCQRenderer({ text }: { text: string }) {
                 const isSelected = selected === letter;
                 const isCorrect = q.correctLetter === letter;
                 
-                let bgColor = 'var(--bg-base)';
-                let borderColor = 'var(--border)';
-                let color = 'var(--text-secondary)';
+                let bgColor = '#F8FAFC';
+                let borderColor = '#CBD5E1';
+                let color = '#334155';
                 
                 if (isAnswered) {
                   if (isCorrect) {
-                    bgColor = 'rgba(34, 197, 94, 0.1)';
-                    borderColor = '#22c55e';
-                    color = '#16a34a';
+                    bgColor = '#DCFCE7';
+                    borderColor = '#22C55E';
+                    color = '#16A34A';
                   } else if (isSelected && !isCorrect) {
-                    bgColor = 'rgba(239, 68, 68, 0.1)';
-                    borderColor = '#ef4444';
-                    color = '#dc2626';
+                    bgColor = '#FEE2E2';
+                    borderColor = '#EF4444';
+                    color = '#DC2626';
                   }
                 }
 
@@ -100,13 +105,13 @@ export default function MCQRenderer({ text }: { text: string }) {
                     disabled={isAnswered}
                     style={{
                       display: 'flex', alignItems: 'center', gap: '12px',
-                      width: '100%', padding: '12px 16px', textAlign: 'left',
+                      width: '100%', padding: '14px 16px', textAlign: 'left',
                       background: bgColor, border: `1px solid ${borderColor}`,
                       borderRadius: '8px', cursor: isAnswered ? 'default' : 'pointer',
-                      transition: 'all 0.2s ease', color, fontSize: '14px'
+                      transition: 'all 0.2s ease', color, fontSize: '15px'
                     }}
                   >
-                    <span style={{ fontWeight: 700, textTransform: 'uppercase' }}>{letter}.</span>
+                    <span style={{ fontWeight: 700, textTransform: 'uppercase', minWidth: '24px' }}>{letter}.</span>
                     <span>{q.options[letter]}</span>
                   </button>
                 );

@@ -103,10 +103,10 @@ export default function ClinicalReasoningPage(){
 
   const PROB_COLOR:Record<string,string>={High:'#EF4444',Medium:'#F59E0B',Low:'#10B981'};
   const DRUG_SECTIONS=[
-    {key:'moa',label:'Mechanism of Action',icon:'âš™ï¸',color:'#6C3BFF'},
+    {key:'moa',label:'Mechanism of Action',icon:'⚙️',color:'#6C3BFF'},
     {key:'indications',label:'Indications & Dosage',icon:'✅',color:'#10B981'},
-    {key:'adverse',label:'Adverse Effects',icon:'âš ï¸',color:'#EF4444'},
-    {key:'interactions',label:'Drug Interactions',icon:'ðŸ”—',color:'#F59E0B'},
+    {key:'adverse',label:'Adverse Effects',icon:'⚠️',color:'#EF4444'},
+    {key:'interactions',label:'Drug Interactions',icon:'🔗',color:'#F59E0B'},
     {key:'dosing',label:'Dosing Guidelines',icon:'💊',color:'#0EA5E9'},
     {key:'monitoring',label:'Monitoring',icon:'📊',color:'#8B5CF6'},
   ];
@@ -120,7 +120,7 @@ export default function ClinicalReasoningPage(){
 
       {/* Tool Selector */}
       <div style={{display:'flex',gap:12,marginBottom:28,maxWidth:700}}>
-        {[{key:'ddx',icon:'ðŸ”',label:'Differential Diagnosis Builder',desc:'Generate ranked DDx with reasoning'},{key:'drug',icon:'💊',label:'Drug Learning Assistant',desc:'Full drug profile in seconds'}].map(t=>(
+        {[{key:'ddx',icon:'🔍',label:'Differential Diagnosis Builder',desc:'Generate ranked DDx with reasoning'},{key:'drug',icon:'💊',label:'Drug Learning Assistant',desc:'Full drug profile in seconds'}].map(t=>(
           <button key={t.key} onClick={()=>setTool(t.key as 'ddx'|'drug')}
             style={{flex:1,padding:'18px 20px',borderRadius:'var(--radius-lg)',border:`2px solid ${tool===t.key?'var(--primary)':'var(--border)'}`,background:tool===t.key?'linear-gradient(135deg,rgba(108,59,255,0.12),rgba(139,92,246,0.06))':'var(--bg-card)',cursor:'pointer',textAlign:'left',transition:'all 0.2s',boxShadow:tool===t.key?'0 4px 20px rgba(108,59,255,0.15)':'none'}}>
             <div style={{fontSize:24,marginBottom:6}}>{t.icon}</div>
@@ -135,7 +135,7 @@ export default function ClinicalReasoningPage(){
         <div style={{maxWidth:900}} className="animate-fadeIn">
           <div className="card" style={{marginBottom:20,background:'linear-gradient(135deg,rgba(108,59,255,0.04),rgba(14,165,233,0.02))'}}>
             <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:18}}>
-              <div style={{width:38,height:38,borderRadius:'var(--radius-md)',background:'linear-gradient(135deg,#6C3BFF,#8B5CF6)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:18}}>ðŸ”</div>
+              <div style={{width:38,height:38,borderRadius:'var(--radius-md)',background:'linear-gradient(135deg,#6C3BFF,#8B5CF6)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:18}}>🔍</div>
               <div><div style={{fontWeight:700,fontSize:15}}>Differential Diagnosis Builder</div><div style={{fontSize:12,color:'var(--text-muted)'}}>Select a clinical case to generate AI-ranked differentials with reasoning</div></div>
             </div>
             <div style={{display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:12,marginBottom:14}}>
@@ -162,12 +162,12 @@ export default function ClinicalReasoningPage(){
             </div>
             <div className="form-group" style={{marginBottom:16}}>
               <label className="label">Or Add Custom Case / Presentation</label>
-              <input className="input-field" value={customCase} onChange={e=>{setCustomCase(e.target.value);setClinCase('');setDdxResult(null);}} placeholder="e.g., 35-year-old with progressive dyspnoea and bilateral leg swellingâ€¦"/>
+              <input className="input-field" value={customCase} onChange={e=>{setCustomCase(e.target.value);setClinCase('');setDdxResult(null);}} placeholder="e.g., 35-year-old with progressive dyspnoea and bilateral leg swelling…"/>
             </div>
-            {activeCase&&<div style={{marginBottom:14,padding:'8px 14px',background:'rgba(108,59,255,0.07)',border:'1px solid rgba(108,59,255,0.18)',borderRadius:'var(--radius-sm)',fontSize:13,color:'var(--primary-light)'}}>ðŸ¥ Generating DDx for: <strong>{activeCase}</strong></div>}
+            {activeCase&&<div style={{marginBottom:14,padding:'8px 14px',background:'rgba(108,59,255,0.07)',border:'1px solid rgba(108,59,255,0.18)',borderRadius:'var(--radius-sm)',fontSize:13,color:'var(--primary-light)'}}>🏥 Generating DDx for: <strong>{activeCase}</strong></div>}
             <div style={{display:'flex',gap:10}}>
               <button className="btn btn-primary" style={{flex:1,justifyContent:'center',padding:14,fontSize:15}} onClick={handleGenDDx} disabled={genDDxLoading||!activeCase}>
-                {genDDxLoading?<><span className="spinner" style={{marginRight:8}}/>Generating AI Differentialsâ€¦</>:'🤖 Generate Differential Diagnosis'}
+                {genDDxLoading?<><span className="spinner" style={{marginRight:8}}/>Generating AI Differentials…</>:'🤖 Generate Differential Diagnosis'}
               </button>
               <button className="btn btn-secondary" onClick={()=>setShowDdxLib(v=>!v)}>📚 Library ({ddxLib.length})</button>
             </div>
@@ -220,13 +220,13 @@ export default function ClinicalReasoningPage(){
                     return(
                       <div key={e.id} style={{background:'var(--bg-card)',borderRadius:'var(--radius-lg)',border:`1px solid ${col}25`,overflow:'hidden',boxShadow:`0 2px 8px ${col}10`}}>
                         <div style={{background:`linear-gradient(135deg,${col}18,${col}06)`,padding:'12px 16px',borderBottom:`2px solid ${col}25`,display:'flex',justifyContent:'space-between',alignItems:'center'}}>
-                          <div style={{fontWeight:800,fontSize:13,color:col}}>ðŸ” {e.case}</div>
-                          <button onClick={()=>{const u=ddxLib.filter(x=>x.id!==e.id);save(DB_DDX,u);setDdxLib(u);}} style={{background:'rgba(239,68,68,0.1)',border:'none',color:'var(--danger)',borderRadius:4,padding:'2px 8px',cursor:'pointer',fontSize:11}}>âœ•</button>
+                          <div style={{fontWeight:800,fontSize:13,color:col}}>🔍 {e.case}</div>
+                          <button onClick={()=>{const u=ddxLib.filter(x=>x.id!==e.id);save(DB_DDX,u);setDdxLib(u);}} style={{background:'rgba(239,68,68,0.1)',border:'none',color:'var(--danger)',borderRadius:4,padding:'2px 8px',cursor:'pointer',fontSize:11}}>✖</button>
                         </div>
                         <div style={{padding:'10px 16px'}}>
                           <div style={{fontSize:11,color:'var(--text-muted)',marginBottom:6}}>{e.course} • {e.subject}</div>
                           <div style={{fontSize:12,color:'var(--text-secondary)',marginBottom:8}}>{e.items.length} differentials generated</div>
-                          <div style={{fontSize:11,color:'var(--text-muted)'}}>ðŸ• {e.savedAt}</div>
+                          <div style={{fontSize:11,color:'var(--text-muted)'}}>🕙 {e.savedAt}</div>
                         </div>
                       </div>
                     );
@@ -248,7 +248,7 @@ export default function ClinicalReasoningPage(){
             </div>
             <div className="form-group" style={{marginBottom:16}}>
               <label className="label">Drug Name</label>
-              <input className="input-field" style={{fontSize:16}} value={drugName} onChange={e=>{setDrugName(e.target.value);setDrugResult(null);}} placeholder="e.g., Metformin, Amlodipine, Amoxicillin, Atorvastatinâ€¦" onKeyDown={e=>e.key==='Enter'&&handleGenDrug()}/>
+              <input className="input-field" style={{fontSize:16}} value={drugName} onChange={e=>{setDrugName(e.target.value);setDrugResult(null);}} placeholder="e.g., Metformin, Amlodipine, Amoxicillin, Atorvastatin…" onKeyDown={e=>e.key==='Enter'&&handleGenDrug()}/>
               <div style={{marginTop:10,display:'flex',flexWrap:'wrap',gap:6}}>
                 {['Metformin','Amlodipine','Atorvastatin','Amoxicillin','Omeprazole','Atenolol','Furosemide','Warfarin','Morphine','Paracetamol'].map(d=>(
                   <button key={d} onClick={()=>{setDrugName(d);setDrugResult(null);}} style={{padding:'4px 12px',borderRadius:999,border:'1px solid var(--border)',background:'var(--bg-surface)',fontSize:12,cursor:'pointer',color:'var(--text-secondary)',transition:'all 0.15s'}}
@@ -259,7 +259,7 @@ export default function ClinicalReasoningPage(){
             </div>
             <div style={{display:'flex',gap:10}}>
               <button className="btn btn-primary" style={{flex:1,justifyContent:'center',padding:14,fontSize:15}} onClick={handleGenDrug} disabled={drugLoading||!drugName.trim()}>
-                {drugLoading?<><span className="spinner" style={{marginRight:8}}/>Generating Drug Profileâ€¦</>:'🤖 Generate Drug Details'}
+                {drugLoading?<><span className="spinner" style={{marginRight:8}}/>Generating Drug Profile…</>:'🤖 Generate Drug Details'}
               </button>
               <button className="btn btn-secondary" onClick={()=>setShowDrugLib(v=>!v)}>📚 Library ({drugLib.length})</button>
             </div>
@@ -304,11 +304,11 @@ export default function ClinicalReasoningPage(){
                       <div key={e.id} style={{background:'var(--bg-card)',borderRadius:'var(--radius-lg)',border:`1px solid ${col}25`,overflow:'hidden'}}>
                         <div style={{background:`linear-gradient(135deg,${col}18,${col}06)`,padding:'12px 16px',borderBottom:`2px solid ${col}25`,display:'flex',justifyContent:'space-between',alignItems:'center'}}>
                           <div style={{fontWeight:800,fontSize:13,color:col}}>💊 {e.name}</div>
-                          <button onClick={()=>{const u=drugLib.filter(x=>x.id!==e.id);save(DB_DRUG,u);setDrugLib(u);}} style={{background:'rgba(239,68,68,0.1)',border:'none',color:'var(--danger)',borderRadius:4,padding:'2px 8px',cursor:'pointer',fontSize:11}}>âœ•</button>
+                          <button onClick={()=>{const u=drugLib.filter(x=>x.id!==e.id);save(DB_DRUG,u);setDrugLib(u);}} style={{background:'rgba(239,68,68,0.1)',border:'none',color:'var(--danger)',borderRadius:4,padding:'2px 8px',cursor:'pointer',fontSize:11}}>✖</button>
                         </div>
                         <div style={{padding:'10px 16px'}}>
                           <div style={{fontSize:12,color:'var(--text-secondary)',marginBottom:6}}>6-section pharmacology profile</div>
-                          <div style={{fontSize:11,color:'var(--text-muted)'}}>ðŸ• {e.savedAt}</div>
+                          <div style={{fontSize:11,color:'var(--text-muted)'}}>🕙 {e.savedAt}</div>
                         </div>
                       </div>
                     );

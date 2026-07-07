@@ -1,7 +1,7 @@
 ﻿// React component
 import React, { useState, useEffect, useRef } from 'react';
 
-// â”€â”€â”€ Course → Subject Mapping â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Course → Subject Mapping ─────────────────────────────────────────────────
 const COURSE_DATA: Record<string, string[]> = {
   MBBS: [
     'Anatomy', 'Physiology', 'Biochemistry', 'Pathology', 'Microbiology',
@@ -207,7 +207,7 @@ The reviewed literature indicates a gap in long-term observational data. Future 
               <div style={{ color: 'var(--primary)', fontWeight: 600 }}>📄 {file.name}</div>
             ) : (
               <div>
-                <div style={{ fontSize: 24, marginBottom: 8 }}>ðŸ“</div>
+                <div style={{ fontSize: 24, marginBottom: 8 }}>📝</div>
                 <div style={{ color: 'var(--text-secondary)' }}>Click to upload literature document</div>
                 <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 4 }}>Maximum file size: 10MB</div>
               </div>
@@ -221,7 +221,7 @@ The reviewed literature indicates a gap in long-term observational data. Future 
           onClick={handleGenerate} 
           disabled={generating || !course || !subject || !topic || !file}
         >
-          {generating ? <><span className="spinner" style={{ marginRight: 8 }} />Analyzing Literatureâ€¦</> : 'âœ¨ Generate Brief Notes & PPT Slides'}
+          {generating ? <><span className="spinner" style={{ marginRight: 8 }} />Analyzing Literature…</> : '✨ Generate Brief Notes & PPT Slides'}
         </button>
       </div>
 
@@ -242,7 +242,7 @@ The reviewed literature indicates a gap in long-term observational data. Future 
               <h2 style={{ fontSize: 18, fontWeight: 700, color: 'var(--text-primary)' }}>Presentation Slides (10 Slides)</h2>
               <div style={{ display: 'flex', gap: 8 }}>
                 <button className="btn btn-secondary btn-sm">📋 Copy Layout</button>
-                <button className="btn btn-primary btn-sm" style={{ padding: '6px 14px' }}>ðŸ“¥ Download PPTX</button>
+                <button className="btn btn-primary btn-sm" style={{ padding: '6px 14px' }}>📝¥ Download PPTX</button>
               </div>
             </div>
             <div className="ai-response" style={{ fontFamily: 'monospace', fontSize: 13, background: 'var(--bg-elevated)' }}>

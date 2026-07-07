@@ -1,7 +1,7 @@
 ﻿// React component
 import React, { useState, useEffect } from 'react';
 
-// â”€â”€â”€ Course → Subject Mapping â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Course → Subject Mapping ─────────────────────────────────────────────────
 const COURSE_DATA: Record<string, string[]> = {
   MBBS: [
     'Anatomy', 'Physiology', 'Biochemistry', 'Pathology', 'Microbiology',
@@ -186,7 +186,7 @@ ${conclusion || 'This experience has significantly enhanced my clinical acumen a
             onClick={handleGenerate} 
             disabled={generating || !topic || !description}
           >
-            {generating ? <><span className="spinner" style={{ marginRight: 8 }} />Structuring Reflectionâ€¦</> : 'âœ¨ Generate Reflection'}
+            {generating ? <><span className="spinner" style={{ marginRight: 8 }} />Structuring Reflection…</> : '✨ Generate Reflection'}
           </button>
         </div>
       </div>

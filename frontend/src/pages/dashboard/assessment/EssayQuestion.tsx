@@ -114,33 +114,33 @@ export default function EssayQuestionPage() {
     await new Promise(r => setTimeout(r, 3000));
     
     setRubricsData({
-      title: `Answer Rubrics for ${qtype} â€“ ${topic}`,
+      title: `Answer Rubrics for ${qtype} – ${topic}`,
       scheme: `Total: ${marks} Marks`,
       sections: [
         {
           title: 'Definition & Introduction',
           marks: `${Math.ceil(parseInt(marks) * 0.2)} marks`,
-          criteria: ['Accurate, concise definition â€“ 1 mark', 'Brief historical context (if applicable) â€“ 0.5 marks', 'Scope and importance â€“ 0.5 marks']
+          criteria: ['Accurate, concise definition – 1 mark', 'Brief historical context (if applicable) – 0.5 marks', 'Scope and importance – 0.5 marks']
         },
         {
           title: 'Classification',
           marks: `${Math.ceil(parseInt(marks) * 0.2)} marks`,
-          criteria: ['Correct classification system used â€“ 1 mark', 'At least 3 categories with examples â€“ 1 mark', 'Clinical relevance of each category â€“ 1 mark']
+          criteria: ['Correct classification system used – 1 mark', 'At least 3 categories with examples – 1 mark', 'Clinical relevance of each category – 1 mark']
         },
         {
           title: 'Pathophysiology / Mechanism',
           marks: `${Math.ceil(parseInt(marks) * 0.3)} marks`,
-          criteria: ['Correct mechanism described â€“ 2 marks', 'Molecular/cellular level detail â€“ 1 mark', 'Diagrams/flowcharts (if drawn) â€“ 1 mark']
+          criteria: ['Correct mechanism described – 2 marks', 'Molecular/cellular level detail – 1 mark', 'Diagrams/flowcharts (if drawn) – 1 mark']
         },
         {
           title: 'Clinical Features',
           marks: `${Math.ceil(parseInt(marks) * 0.15)} marks`,
-          criteria: ['Symptoms listed correctly â€“ 0.5 marks', 'Signs described accurately â€“ 0.5 marks', 'Staging/grading if applicable â€“ 0.5 marks']
+          criteria: ['Symptoms listed correctly – 0.5 marks', 'Signs described accurately – 0.5 marks', 'Staging/grading if applicable – 0.5 marks']
         },
         {
           title: 'Investigations & Management',
           marks: `${Math.ceil(parseInt(marks) * 0.15)} marks`,
-          criteria: ['Relevant investigations â€“ 0.5 marks', 'Conservative management â€“ 0.5 marks', 'Medical/surgical management â€“ 0.5 marks']
+          criteria: ['Relevant investigations – 0.5 marks', 'Conservative management – 0.5 marks', 'Medical/surgical management – 0.5 marks']
         }
       ],
       bonus: 'Bonus Marks: Diagrams, flowcharts, tables, clinical pearls (+0.5 each, max 1 bonus)'
@@ -209,16 +209,16 @@ export default function EssayQuestionPage() {
         'Neat handwriting and organized layout improved readability',
       ],
       negative: [
-        'Management section was incomplete â€“ surgical options not discussed',
+        'Management section was incomplete – surgical options not discussed',
         'No diagrams or flowcharts drawn despite being a LEQ format',
         'Investigation list missing some key tests (e.g., imaging modalities)',
         'Bonus clinical pearls were not included',
       ],
       improve: [
-        'Always include a labeled diagram â€“ it can earn you bonus marks',
+        'Always include a labeled diagram – it can earn you bonus marks',
         'Use a flowchart for management algorithms to demonstrate clarity',
         'For each investigation listed, briefly justify why it is ordered',
-        'Practice writing within time limits â€“ add a mock table for quick recall',
+        'Practice writing within time limits – add a mock table for quick recall',
         'Review the latest treatment guidelines for this topic',
       ],
       marks: scored.toString(),
@@ -315,7 +315,7 @@ export default function EssayQuestionPage() {
             </div>
             <button className="btn btn-primary btn-lg" style={{ width: '100%', justifyContent: 'center', marginTop: 8 }}
               onClick={handleGenerate} disabled={generating || !subject || !topic}>
-              {generating ? <><span className="spinner" /> Generating Questionâ€¦</> : '🤖 Generate Essay Question'}
+              {generating ? <><span className="spinner" /> Generating Question…</> : '🤖 Generate Essay Question'}
             </button>
           </div>
         </div>
@@ -336,7 +336,7 @@ export default function EssayQuestionPage() {
               {question}
             </div>
             <div style={{ display: 'flex', gap: 10 }}>
-              <button className="btn btn-secondary" onClick={() => setStep('generate')}>â† Regenerate</button>
+              <button className="btn btn-secondary" onClick={() => setStep('generate')}>← Regenerate</button>
               <button className="btn btn-primary btn-lg" style={{ flex: 1, justifyContent: 'center' }} onClick={handleApprove}>
                 ✅ Approve & Generate Rubrics
               </button>
@@ -383,7 +383,7 @@ export default function EssayQuestionPage() {
                   ))}
                   
                   <div style={{ background: 'rgba(16,185,129,0.1)', padding: '12px 16px', borderRadius: 'var(--radius-md)', border: '1px dashed rgba(16,185,129,0.4)' }}>
-                    <div style={{ fontSize: 13, color: 'var(--success)', fontWeight: 600 }}>ðŸŽ {rubricsData.bonus}</div>
+                    <div style={{ fontSize: 13, color: 'var(--success)', fontWeight: 600 }}>🎁 {rubricsData.bonus}</div>
                   </div>
                 </div>
               ) : null}
@@ -392,7 +392,7 @@ export default function EssayQuestionPage() {
 
           <div style={{ flex: 1, minWidth: 300 }}>
             <div className="card">
-              <div style={{ fontSize: 16, fontWeight: 700, marginBottom: 6 }}>ðŸ“¸ Upload Answer Script</div>
+              <div style={{ fontSize: 16, fontWeight: 700, marginBottom: 6 }}>📝¸ Upload Answer Script</div>
               <p style={{ fontSize: 13, color: 'var(--text-secondary)', marginBottom: 16 }}>Write your essay on paper and upload an image. You can crop it from all sides.</p>
 
               <div onClick={() => fileRef.current?.click()} style={{
@@ -420,7 +420,7 @@ export default function EssayQuestionPage() {
               <button className="btn btn-primary btn-lg" style={{ width: '100%', justifyContent: 'center' }}
                 onClick={handleAnalyze}
                 disabled={uploadedImages.length === 0 || analyzing || generatingRubrics}>
-                {analyzing ? <><span className="spinner" /> AI is analysing your answerâ€¦</> : '🤖 Analyse & Grade Answer Script'}
+                {analyzing ? <><span className="spinner" /> AI is analysing your answer…</> : '🤖 Analyse & Grade Answer Script'}
               </button>
             </div>
           </div>
@@ -493,7 +493,7 @@ export default function EssayQuestionPage() {
 
             {/* Negatives */}
             <div className="card" style={{ borderColor: 'rgba(239,68,68,0.3)' }}>
-              <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--danger)', marginBottom: 14 }}>âŒ Areas Needing Work</div>
+              <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--danger)', marginBottom: 14 }}>❌ Areas Needing Work</div>
               <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 10 }}>
                 {result.negative.map((p, i) => (
                   <li key={i} style={{ display: 'flex', gap: 10, fontSize: 13, color: 'var(--text-secondary)', alignItems: 'flex-start', lineHeight: 1.5 }}>
@@ -519,7 +519,7 @@ export default function EssayQuestionPage() {
           <div style={{ display: 'flex', gap: 12 }}>
             <button className="btn btn-primary btn-lg" onClick={reset}>📄 New Essay Question</button>
             <button className="btn btn-secondary">💾 Save to Portfolio</button>
-            <button className="btn btn-secondary">ðŸ–¨ï¸ Print Report</button>
+            <button className="btn btn-secondary">🖨️ Print Report</button>
           </div>
         </div>
       )}

@@ -1,4 +1,4 @@
-﻿// React component
+// React component
 import React, { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -40,9 +40,10 @@ export default function QuestionRenderer({ text, course, subject, section, topic
   const handleGenerateAnswer = async (qIndex: number, questionText: string) => {
     setLoadingMap(prev => ({ ...prev, [qIndex]: true }));
     try {
-      const res = await fetch('/api/generate-answer', {
+      const apiUrl = import.meta.env.VITE_API_URL || 'https://ugmentor-api-476471947498.asia-south1.run.app';
+      const res = await fetch(`${apiUrl}/api/generate-answer`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${(await import('@/lib/supabase').then(m => m.supabase.auth.getSession())).data?.session?.access_token || ''}` },
         body: JSON.stringify({
           course,
           subject,
@@ -157,7 +158,7 @@ export default function QuestionRenderer({ text, course, subject, section, topic
                 className="btn btn-primary btn-sm"
                 style={{ marginTop: '8px', opacity: isLoading ? 0.7 : 1, transition: 'all 0.2s' }}
               >
-                {isLoading ? 'â³ Generating AI Answer...' : 'âœ¨ Generate Answer'}
+                {isLoading ? '⏳ Generating AI Answer...' : '✨ Generate Answer'}
               </button>
             )}
 

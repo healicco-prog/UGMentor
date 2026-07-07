@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import PptxGenJS from 'pptxgenjs';
 
-// â”€â”€â”€ Course → Subject Mapping â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Course → Subject Mapping ─────────────────────────────────────────────────
 const COURSE_DATA: Record<string, string[]> = {
   MBBS: [
     'Anatomy', 'Physiology', 'Biochemistry', 'Pathology', 'Microbiology',
@@ -63,9 +63,9 @@ export default function SeminarBuilderPage() {
     setResult(null);
     
     try {
-      const response = await fetch('/api/generate-seminar', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://ugmentor-api-476471947498.asia-south1.run.app'}/api/generate-seminar`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${(await import('@/lib/supabase').then(m => m.supabase.auth.getSession())).data?.session?.access_token || ''}` },
         body: JSON.stringify({ course, subject, topic, criteria }),
       });
       
@@ -251,7 +251,7 @@ export default function SeminarBuilderPage() {
           onClick={handleGenerate} 
           disabled={generating || !topic}
         >
-          {generating ? <><span className="spinner" style={{ marginRight: 8 }} />Building Seminarâ€¦</> : 'âœ¨ Generate Seminar PPT & Notes'}
+          {generating ? <><span className="spinner" style={{ marginRight: 8 }} />Building Seminar…</> : '✨ Generate Seminar PPT & Notes'}
         </button>
       </div>
 
@@ -260,10 +260,10 @@ export default function SeminarBuilderPage() {
           {/* Notes Card */}
           <div className="card animate-fadeIn" style={{ display: printingSection === 'slides' ? 'none' : 'block' }}>
             <div className="print-hide" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
-              <h2 style={{ fontSize: 20, fontWeight: 800, color: 'var(--primary)', fontFamily: 'Outfit' }}>ðŸ—£ï¸ Speaker Notes</h2>
+              <h2 style={{ fontSize: 20, fontWeight: 800, color: 'var(--primary)', fontFamily: 'Outfit' }}>🗣️ Speaker Notes</h2>
               <div style={{ display: 'flex', gap: 10 }}>
                 <button className="btn btn-secondary btn-sm" onClick={() => navigator.clipboard.writeText(result.notes)}>📋 Copy</button>
-                <button className="btn btn-primary btn-sm" onClick={handleDownloadNotesPDF}>ðŸ“¥ Save as PDF</button>
+                <button className="btn btn-primary btn-sm" onClick={handleDownloadNotesPDF}>📝¥ Save as PDF</button>
               </div>
             </div>
             <div style={{ padding: '24px', background: '#F8FAFC', borderRadius: 12, border: '1px solid #E2E8F0' }}>
@@ -275,10 +275,10 @@ export default function SeminarBuilderPage() {
           {/* Slides Card */}
           <div className="card animate-fadeIn" style={{ display: printingSection === 'notes' ? 'none' : 'block' }}>
             <div className="print-hide" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
-              <h2 style={{ fontSize: 20, fontWeight: 800, color: 'var(--primary)', fontFamily: 'Outfit' }}>ðŸ–¥ï¸ Presentation Slides Structure</h2>
+              <h2 style={{ fontSize: 20, fontWeight: 800, color: 'var(--primary)', fontFamily: 'Outfit' }}>🖥️ Presentation Slides Structure</h2>
               <div style={{ display: 'flex', gap: 10 }}>
-                <button className="btn btn-secondary btn-sm" onClick={handleDownloadSlidesPDF}>ðŸ“¥ Save as PDF</button>
-                <button className="btn btn-primary btn-sm" style={{ padding: '6px 14px' }} onClick={handleDownloadPPT}>ðŸ“¥ Download .PPTX</button>
+                <button className="btn btn-secondary btn-sm" onClick={handleDownloadSlidesPDF}>📝¥ Save as PDF</button>
+                <button className="btn btn-primary btn-sm" style={{ padding: '6px 14px' }} onClick={handleDownloadPPT}>📝¥ Download .PPTX</button>
               </div>
             </div>
             <div style={{ padding: '0px' }}>

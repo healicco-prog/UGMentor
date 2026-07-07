@@ -3,6 +3,13 @@ import React from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 
+const COURSE_DATA: Record<string, { versions: string[] }> = {
+  MBBS: { versions: ['Standard Curriculum', '2026'] },
+  BDS: { versions: ['Standard Curriculum', '2026'] },
+  'BSc Nursing': { versions: ['2026'] },
+};
+const COURSES = Object.keys(COURSE_DATA);
+
 const StatCard = ({ icon, label, value, change, color }: { icon: string; label: string; value: string; change?: string; color: string }) => (
   <div className="stat-card" style={{ '--gradient': `linear-gradient(90deg, ${color}, ${color}88)` } as React.CSSProperties}>
     <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 12 }}>
@@ -46,6 +53,45 @@ export default function DashboardPage() {
   const { user } = useAuth();
   const tier = user?.tier || 'basic';
 
+  const [fixedCourse, setFixedCourse] = React.useState('MBBS');
+  const [fixedVersion, setFixedVersion] = React.useState('Standard Curriculum');
+
+  React.useEffect(() => {
+    if (user?.id) {
+      const savedCourse = localStorage.getItem(`course_${user.id}`);
+      const savedVersion = localStorage.getItem(`version_${user.id}`);
+      if (savedCourse && COURSES.includes(savedCourse)) {
+        setFixedCourse(savedCourse);
+        if (savedVersion && COURSE_DATA[savedCourse].versions.includes(savedVersion)) {
+          setFixedVersion(savedVersion);
+        } else {
+          setFixedVersion(COURSE_DATA[savedCourse].versions[0]);
+          localStorage.setItem(`version_${user.id}`, COURSE_DATA[savedCourse].versions[0]);
+        }
+      } else {
+        localStorage.setItem(`course_${user.id}`, 'MBBS');
+        localStorage.setItem(`version_${user.id}`, 'Standard Curriculum');
+      }
+    }
+  }, [user]);
+
+  const handleCourseChange = (c: string) => {
+    setFixedCourse(c);
+    const newVersion = COURSE_DATA[c].versions[0];
+    setFixedVersion(newVersion);
+    if (user?.id) {
+      localStorage.setItem(`course_${user.id}`, c);
+      localStorage.setItem(`version_${user.id}`, newVersion);
+    }
+  };
+
+  const handleVersionChange = (v: string) => {
+    setFixedVersion(v);
+    if (user?.id) {
+      localStorage.setItem(`version_${user.id}`, v);
+    }
+  };
+
   const tierColors: Record<string, string> = { basic: '#0EA5E9', standard: '#6C3BFF', premium: '#F59E0B' };
   const tc = tierColors[tier];
 
@@ -65,24 +111,52 @@ export default function DashboardPage() {
         padding: '28px 32px', marginBottom: 28,
         display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16
       }}>
-        <div>
+        <div style={{ flex: '1 1 auto', minWidth: 250 }}>
           <h1 className="font-outfit" style={{ fontSize: 26, fontWeight: 800, marginBottom: 6 }}>
-            Good day, {user?.name?.split(' ')[0]}! 👋
+            Good day, {user?.name || 'User'}! 👋
           </h1>
           <p style={{ color: 'var(--text-secondary)', fontSize: 15 }}>
             Track your learning progress, explore your modules, and keep growing every day.
           </p>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <div style={{ textAlign: 'right' }}>
-            <div style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 4 }}>Current Plan</div>
-            <div style={{ fontSize: 16, fontWeight: 700, color: tc, fontFamily: 'Outfit' }}>
-              {tier.charAt(0).toUpperCase() + tier.slice(1)} Plan
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: 20, flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12, background: 'var(--bg-surface)', padding: '10px 16px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border)' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+              <label style={{ fontSize: 10, fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: 0.5 }}>Fixed Course</label>
+              <select 
+                className="input-field" 
+                style={{ padding: '4px 24px 4px 8px', fontSize: 13, height: 'auto', minHeight: '30px', backgroundPosition: 'right 4px center' }}
+                value={fixedCourse}
+                onChange={(e) => handleCourseChange(e.target.value)}
+              >
+                {COURSES.map(c => <option key={c} value={c}>{c}</option>)}
+              </select>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+              <label style={{ fontSize: 10, fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: 0.5 }}>Fixed Version</label>
+              <select 
+                className="input-field" 
+                style={{ padding: '4px 24px 4px 8px', fontSize: 13, height: 'auto', minHeight: '30px', backgroundPosition: 'right 4px center' }}
+                value={fixedVersion}
+                onChange={(e) => handleVersionChange(e.target.value)}
+              >
+                {COURSE_DATA[fixedCourse]?.versions.map(v => <option key={v} value={v}>{v}</option>)}
+              </select>
             </div>
           </div>
-          {tier !== 'premium' && (
-            <Link to="/dashboard/upgrade" className="btn btn-primary btn-sm">Upgrade ✨</Link>
-          )}
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12, paddingLeft: 10, borderLeft: '1px solid var(--border)' }}>
+            <div style={{ textAlign: 'right' }}>
+              <div style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 4 }}>Current Plan</div>
+              <div style={{ fontSize: 16, fontWeight: 700, color: tc, fontFamily: 'Outfit' }}>
+                {tier.charAt(0).toUpperCase() + tier.slice(1)} Plan
+              </div>
+            </div>
+            {tier !== 'premium' && (
+              <Link to="/dashboard/upgrade" className="btn btn-primary btn-sm">Upgrade ✨</Link>
+            )}
+          </div>
         </div>
       </div>
 

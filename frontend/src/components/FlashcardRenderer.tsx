@@ -50,7 +50,7 @@ const Flashcard = ({ front, back, index }: { front: string; back: string; index:
             {front}
           </p>
           <div style={{ position: 'absolute', bottom: 12, fontSize: 11, color: 'var(--primary)', fontWeight: 700, opacity: 0.8, textTransform: 'uppercase', letterSpacing: 0.5 }}>
-            Click to flip â†º
+            Click to flip ↺
           </div>
         </div>
         

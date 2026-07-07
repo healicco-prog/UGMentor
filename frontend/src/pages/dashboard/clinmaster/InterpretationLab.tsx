@@ -1,4 +1,4 @@
-﻿// React component
+// React component
 import React, { useState, useRef } from 'react';
 
 type ScanType = 'ECG' | 'X-Ray' | 'CT Scan' | 'MRI' | 'Laboratory Report' | 'Other';
@@ -6,11 +6,11 @@ type ScanType = 'ECG' | 'X-Ray' | 'CT Scan' | 'MRI' | 'Laboratory Report' | 'Oth
 const SCAN_GUIDES: Record<ScanType, { steps: string[]; findings: string[]; color: string; icon: string }> = {
   ECG: {
     icon: '💭“', color: '#EF4444',
-    steps: ['Check rate (HR = 300 Ã· RR interval in large squares)', 'Determine rhythm (regular/irregular)', 'Assess axis (normal: -30Â° to +90Â°)', 'P wave morphology (shape, PR interval 0.12-0.20s)', 'QRS complex (width <0.12s, morphology)', 'ST segment (elevation/depression, J point)', 'T wave (inversion, peaked)', 'QT interval (QTc = QT/âˆšRR)', 'Look for specific patterns (LBBB, RBBB, WPW, AV blocks)'],
+    steps: ['Check rate (HR = 300 ÷ RR interval in large squares)', 'Determine rhythm (regular/irregular)', 'Assess axis (normal: -30° to +90°)', 'P wave morphology (shape, PR interval 0.12-0.20s)', 'QRS complex (width <0.12s, morphology)', 'ST segment (elevation/depression, J point)', 'T wave (inversion, peaked)', 'QT interval (QTc = QT/√RR)', 'Look for specific patterns (LBBB, RBBB, WPW, AV blocks)'],
     findings: ['Normal Sinus Rhythm','Sinus Tachycardia','Sinus Bradycardia','Atrial Fibrillation','ST Elevation MI (STEMI)','Non-STEMI / ST Depression','Left Bundle Branch Block','Right Bundle Branch Block','Complete Heart Block','Ventricular Tachycardia','Left Ventricular Hypertrophy'],
   },
   'X-Ray': {
-    icon: 'ðŸ«', color: '#6C3BFF',
+    icon: '🫂', color: '#6C3BFF',
     steps: ['Check: Patient name, date, projection (PA/AP), rotation', 'Adequacy: 10 posterior ribs visible', 'Trachea: midline, any deviation?', 'Bones: Ribs, clavicles, scapulae, vertebrae — fractures?', 'Cardiac size: CTR <0.5, silhouette, border clarity', 'Mediastinum: Width <8cm, hilar positions', 'Lungs: Opacity, lucency, compare both sides', 'Pleura: Costophrenic angles (effusion?), pneumothorax?', 'Diaphragm: Clear domes, air under diaphragm?', 'Soft tissues: Subcutaneous emphysema?'],
     findings: ['Normal CXR','Cardiomegaly','Pleural Effusion','Pneumothorax','Consolidation / Pneumonia','Pulmonary Oedema','Collapse / Atelectasis','Cavitation / Abscess','Mediastinal Widening','Rib Fractures','Free Air Under Diaphragm'],
   },
@@ -20,12 +20,12 @@ const SCAN_GUIDES: Record<ScanType, { steps: string[]; findings: string[]; color
     findings: ['Normal CT Brain','Intracerebral Haemorrhage','Ischaemic Infarct','Subdural Haematoma','Extradural Haematoma','Subarachnoid Haemorrhage','Pulmonary Embolism','Aortic Dissection','Bowel Obstruction','Pneumonia on CT','Liver Lesion / Mass'],
   },
   MRI: {
-    icon: 'ðŸ§²', color: '#10B981',
+    icon: '🧪', color: '#10B981',
     steps: ['Identify: Sequence (T1, T2, FLAIR, DWI, ADC)', 'T1: Fat = bright, CSF = dark, blood (subacute) = bright', 'T2: CSF = bright, fat = dark, pathology often bright', 'FLAIR: CSF suppressed, useful for periventricular lesions', 'DWI: Restricted diffusion = bright (acute infarct)', 'ADC: Bright in vasogenic oedema, dark in cytotoxic oedema', 'Review all planes: Axial, sagittal, coronal', 'Gadolinium enhancement: Blood-brain barrier breakdown', 'Musculoskeletal MRI: Tendons, ligaments, cartilage, bone marrow'],
     findings: ['Normal MRI Brain','Acute Ischaemic Infarct (DWI)','Demyelinating Lesions (MS)','Brain Tumour / Glioma','Disc Prolapse','Spinal Cord Compression','Ligament Tear (MSK)','Meniscal Tear (Knee)','Avascular Necrosis'],
   },
   'Laboratory Report': {
-    icon: 'ðŸ§ª', color: '#F59E0B',
+    icon: '🧬', color: '#F59E0B',
     steps: ['Check patient details and date on report', 'Identify the test (CBC, LFT, RFT, TFT, etc.)', 'Compare each value against reference range', 'CBC: Hb, WBC (differential), Platelets', 'RFT: Creatinine, BUN, eGFR, electrolytes', 'LFT: Bilirubin (total/direct), AST, ALT, ALP, GGT, albumin', 'Interpret in clinical context', 'Identify critical values requiring immediate action', 'Look for patterns (hepatocellular vs cholestatic jaundice)'],
     findings: ['Normal CBC','Anaemia (microcytic/macrocytic/normocytic)','Leukocytosis / Leukopenia','Thrombocytopenia','Elevated Creatinine (AKI/CKD)','Elevated Liver Enzymes','Hyponatraemia / Hypernatraemia','Hypokalaemia / Hyperkalaemia','Elevated Troponin','Elevated D-Dimer','Abnormal TFT (Hypo/Hyperthyroid)'],
   },
@@ -96,7 +96,7 @@ export default function InterpretationLabPage() {
       formData.append('file', uploadedFile.file);
       formData.append('scanType', scanType);
 
-      const res = await fetch('/api/generate-report', {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || 'https://ugmentor-api-476471947498.asia-south1.run.app'}/api/generate-report`, {
         method: 'POST',
         body: formData,
       });
@@ -217,12 +217,12 @@ export default function InterpretationLabPage() {
                 >
                   {generatingReport ? (
                     <>
-                      <span style={{ display: 'inline-block', animation: 'spin 1s linear infinite', fontSize: 16 }}>â³</span>
-                      Gemini AI is analyzingâ€¦
+                      <span style={{ display: 'inline-block', animation: 'spin 1s linear infinite', fontSize: 16 }}>⏳</span>
+                      Gemini AI is analyzing…
                     </>
                   ) : (
                     <>
-                      <span style={{ fontSize: 18 }}>âœ¨</span>
+                      <span style={{ fontSize: 18 }}>✨</span>
                       Generate Report
                     </>
                   )}
@@ -239,7 +239,7 @@ export default function InterpretationLabPage() {
                   alignItems: 'flex-start',
                   gap: 8,
                 }}>
-                  <span style={{ fontSize: 14, flexShrink: 0, marginTop: 1 }}>âš ï¸</span>
+                  <span style={{ fontSize: 14, flexShrink: 0, marginTop: 1 }}>⚠️</span>
                   <p style={{ fontSize: 11.5, color: '#92400E', margin: 0, lineHeight: 1.6 }}>
                     <strong>Educational Purpose Only.</strong> This is an AI-generated report powered by Google Gemini, designed to support learning and self-assessment. It is <strong>not</strong> a clinical diagnosis and must <strong>not</strong> be used for patient management decisions. Always consult a qualified clinician.
                   </p>
@@ -259,15 +259,10 @@ export default function InterpretationLabPage() {
                 alignItems: 'flex-start',
                 gap: 8,
               }}>
-                <span style={{ fontSize: 16, flexShrink: 0 }}>âŒ</span>
+                <span style={{ fontSize: 16, flexShrink: 0 }}>❌</span>
                 <div>
                   <div style={{ fontSize: 12, fontWeight: 700, color: '#991B1B', marginBottom: 3 }}>Report Generation Failed</div>
                   <div style={{ fontSize: 11.5, color: '#7F1D1D' }}>{reportError}</div>
-                  {reportError.includes('GEMINI_API_KEY') && (
-                    <div style={{ fontSize: 11, color: '#B91C1C', marginTop: 6, padding: '6px 8px', background: '#fff', borderRadius: 6, border: '1px solid #FECACA' }}>
-                      ðŸ‘‰ Add your key to <code style={{ fontFamily: 'monospace', fontSize: 10 }}>.env.local</code> → <code style={{ fontFamily: 'monospace', fontSize: 10 }}>GEMINI_API_KEY=AIza...</code> and restart the server.
-                    </div>
-                  )}
                 </div>
               </div>
             )}
@@ -306,10 +301,10 @@ export default function InterpretationLabPage() {
                     justifyContent: 'center',
                     fontSize: 18,
                     flexShrink: 0,
-                  }}>âœ¨</div>
+                  }}>✨</div>
                   <div>
                     <div style={{ fontWeight: 700, fontSize: 14, color: guide.color }}>Gemini AI Report</div>
-                    <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>{scanType} Â· {uploadedFile?.name}</div>
+                    <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>{scanType}  {uploadedFile?.name}</div>
                   </div>
                 </div>
                 <span style={{
@@ -364,13 +359,13 @@ export default function InterpretationLabPage() {
 
 
           <div className="card" style={{ marginBottom: 16 }}>
-            <div style={{ fontWeight: 700, fontSize: 14, marginBottom: 12 }}>âœï¸ My Interpretation</div>
+            <div style={{ fontWeight: 700, fontSize: 14, marginBottom: 12 }}>œ️ My Interpretation</div>
             <textarea className="input-field" rows={6} value={interpretation} onChange={e => setInterpretation(e.target.value)}
-              placeholder={`Describe your systematic interpretation of this ${scanType}â€¦\n\nExample:\n• Rate/Quality: â€¦\n• Key findings: â€¦\n• Abnormalities: â€¦\n• Impression: â€¦`} />
+              placeholder={`Describe your systematic interpretation of this ${scanType}…\n\nExample:\n• Rate/Quality: …\n• Key findings: …\n• Abnormalities: …\n• Impression: …`} />
           </div>
 
           <div className="card" style={{ marginBottom: 16 }}>
-            <div style={{ fontWeight: 700, fontSize: 14, marginBottom: 12 }}>ðŸ¥ Clinical Correlation & Plan</div>
+            <div style={{ fontWeight: 700, fontSize: 14, marginBottom: 12 }}>🏥 Clinical Correlation & Plan</div>
             <textarea className="input-field" rows={4} value={clinicalCorrelation} onChange={e => setClinicalCorrelation(e.target.value)}
               placeholder="How do these findings correlate with the clinical presentation? What is your management plan?" />
           </div>

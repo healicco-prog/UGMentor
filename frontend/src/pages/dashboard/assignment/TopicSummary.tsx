@@ -1,7 +1,7 @@
 ﻿// React component
 import React, { useState, useEffect } from 'react';
 
-// â”€â”€â”€ Course → Subject Mapping â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Course → Subject Mapping ─────────────────────────────────────────────────
 const COURSE_DATA: Record<string, string[]> = {
   MBBS: [
     'Anatomy', 'Physiology', 'Biochemistry', 'Pathology', 'Microbiology',
@@ -58,9 +58,9 @@ export default function TopicSummaryPage() {
     setSummary('');
     
     try {
-      const response = await fetch('/api/generate-topic-summary', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://ugmentor-api-476471947498.asia-south1.run.app'}/api/generate-topic-summary`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${(await import('@/lib/supabase').then(m => m.supabase.auth.getSession())).data?.session?.access_token || ''}` },
         body: JSON.stringify({ course, subject, topic }),
       });
       
@@ -151,7 +151,7 @@ export default function TopicSummaryPage() {
           onClick={handleGenerate} 
           disabled={generating || !course || !subject || !topic}
         >
-          {generating ? <><span className="spinner" style={{ marginRight: 8 }} />Generating Summaryâ€¦</> : 'âœ¨ Generate Topic Summary'}
+          {generating ? <><span className="spinner" style={{ marginRight: 8 }} />Generating Summary…</> : '✨ Generate Topic Summary'}
         </button>
       </div>
 
@@ -164,7 +164,7 @@ export default function TopicSummaryPage() {
                 <span style={{ marginRight: 6 }}>📋</span> Copy Text
               </button>
               <button className="btn btn-primary" style={{ padding: '8px 16px', borderRadius: 8, fontSize: 14, fontWeight: 600 }} onClick={() => window.print()}>
-                <span style={{ marginRight: 6 }}>ðŸ“¥</span> Save as PDF
+                <span style={{ marginRight: 6 }}>📝¥</span> Save as PDF
               </button>
             </div>
           </div>

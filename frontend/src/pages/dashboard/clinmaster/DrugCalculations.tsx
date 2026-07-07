@@ -123,7 +123,7 @@ export default function DrugCalculationsPage() {
     if (selectedCalc === 'weight_dose' || selectedCalc === 'pediatric_dose') {
       const dose = parseFloat(dosePerKg) || (selectedDrugId === 'paracetamol' ? 15 : 5);
       const total = W * dose;
-      calcData.formula = `Dose = Weight (${W} kg) Ã— Recommended Dose/kg (${dose} mg/kg)`;
+      calcData.formula = `Dose = Weight (${W} kg) — Recommended Dose/kg (${dose} mg/kg)`;
       calcData.resultStr = `${total.toFixed(1)} mg`;
       calcData.details = [
         { label: 'Recommended Dose', value: `${dose} mg/kg` },
@@ -136,7 +136,7 @@ export default function DrugCalculationsPage() {
       const targetDose = parseFloat(customDose); // mcg/kg/min
       const conc = parseFloat(concentration); // mcg/mL
       const rate = (targetDose * W * 60) / conc;
-      calcData.formula = `Rate (mL/hr) = [Dose (${targetDose} mcg/kg/min) Ã— Weight (${W} kg) Ã— 60 min] Ã· Concentration (${conc} mcg/mL)`;
+      calcData.formula = `Rate (mL/hr) = [Dose (${targetDose} mcg/kg/min) — Weight (${W} kg) — 60 min] ÷ Concentration (${conc} mcg/mL)`;
       calcData.resultStr = `${rate.toFixed(1)} mL/hr`;
       calcData.details = [
         { label: 'Target Dose', value: `${targetDose} mcg/kg/min` },
@@ -146,7 +146,7 @@ export default function DrugCalculationsPage() {
     }
     else if (selectedCalc === 'crcl') {
       const crcl = ((140 - A) * W) / (72 * Cr) * (gender === 'female' ? 0.85 : 1);
-      calcData.formula = `CrCl = [((140 - Age) Ã— Weight) / (72 Ã— Serum Cr)] ${gender === 'female' ? 'Ã— 0.85' : ''}`;
+      calcData.formula = `CrCl = [((140 - Age) — Weight) / (72 — Serum Cr)] ${gender === 'female' ? '— 0.85' : ''}`;
       calcData.resultStr = `${crcl.toFixed(1)} mL/min`;
       if (crcl < 30) warnings.push('Severe renal impairment (CrCl < 30). Renal dose adjustments mandatory.');
     }
@@ -160,8 +160,8 @@ export default function DrugCalculationsPage() {
     }
     else if (selectedCalc === 'bsa') {
       const bsa = Math.sqrt((H * W) / 3600);
-      calcData.formula = 'Mosteller Formula: BSA = âˆš([Height(cm) Ã— Weight(kg)] / 3600)';
-      calcData.resultStr = `${bsa.toFixed(2)} mÂ²`;
+      calcData.formula = 'Mosteller Formula: BSA = √([Height(cm) — Weight(kg)] / 3600)';
+      calcData.resultStr = `${bsa.toFixed(2)} m²`;
     }
 
     setResults({ ...calcData, warnings });
@@ -245,7 +245,7 @@ export default function DrugCalculationsPage() {
                   </div>
                 )}
                 <button className="btn btn-primary" style={{ marginTop: 24, width: '100%', justifyContent: 'center' }} disabled={isAddingCustom ? !customDrug.name : !selectedDrugId} onClick={() => setStep(2)}>
-                  Next: Select Calculation âž”
+                  Next: Select Calculation ➔
                 </button>
               </div>
             )}
@@ -273,7 +273,7 @@ export default function DrugCalculationsPage() {
                 </div>
                 <div style={{ display: 'flex', gap: 12, marginTop: 24 }}>
                   <button className="btn btn-secondary" style={{ flex: 1, justifyContent: 'center' }} onClick={() => setStep(1)}>Back</button>
-                  <button className="btn btn-primary" style={{ flex: 2, justifyContent: 'center' }} disabled={!selectedCalc} onClick={() => setStep(3)}>Next: Patient Details âž”</button>
+                  <button className="btn btn-primary" style={{ flex: 2, justifyContent: 'center' }} disabled={!selectedCalc} onClick={() => setStep(3)}>Next: Patient Details ➔</button>
                 </div>
               </div>
             )}
@@ -340,7 +340,7 @@ export default function DrugCalculationsPage() {
 
                 <div style={{ display: 'flex', gap: 12, marginTop: 24 }}>
                   <button className="btn btn-secondary" style={{ flex: 1, justifyContent: 'center' }} onClick={() => setStep(2)}>Back</button>
-                  <button className="btn btn-primary" style={{ flex: 2, justifyContent: 'center', background: '#10B981', borderColor: '#10B981' }} onClick={handleCalculate}>ðŸ§® Calculate Dose</button>
+                  <button className="btn btn-primary" style={{ flex: 2, justifyContent: 'center', background: '#10B981', borderColor: '#10B981' }} onClick={handleCalculate}>🧮 Calculate Dose</button>
                 </div>
               </div>
             )}
@@ -387,7 +387,7 @@ export default function DrugCalculationsPage() {
           <div className="animate-fadeIn">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
               <h2 style={{ fontSize: 22, margin: 0 }}>Calculation Report</h2>
-              <button className="btn btn-secondary" onClick={() => setStep(3)}>â†º Recalculate</button>
+              <button className="btn btn-secondary" onClick={() => setStep(3)}>↺ Recalculate</button>
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: 20, alignItems: 'start' }}>
@@ -407,7 +407,7 @@ export default function DrugCalculationsPage() {
                 {results.warnings.length > 0 && (
                   <div className="card" style={{ background: '#FEF2F2', border: '1px solid #FECACA', padding: 16 }}>
                     <div style={{ fontSize: 13, fontWeight: 700, color: '#991B1B', marginBottom: 8, display: 'flex', alignItems: 'center', gap: 6 }}>
-                      <span>âš ï¸</span> Safety Alerts
+                      <span>⚠️</span> Safety Alerts
                     </div>
                     <ul style={{ margin: 0, paddingLeft: 20, color: '#7F1D1D', fontSize: 13 }}>
                       {results.warnings.map((w: string, i: number) => <li key={i}>{w}</li>)}
@@ -435,7 +435,7 @@ export default function DrugCalculationsPage() {
                 
                 <div className="card shadow-sm">
                   <h3 style={{ fontSize: 15, marginBottom: 14, display: 'flex', alignItems: 'center', gap: 8 }}>
-                    <span style={{ fontSize: 18 }}>âœ¨</span> AI Clinical Assistant
+                    <span style={{ fontSize: 18 }}>✨</span> AI Clinical Assistant
                   </h3>
                   
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 10, marginBottom: 16 }}>
@@ -443,16 +443,16 @@ export default function DrugCalculationsPage() {
                       🧠 Explain this dose & rationale
                     </button>
                     <button className="btn btn-secondary" style={{ width: '100%', justifyContent: 'center', background: '#F8FAFC' }} onClick={() => handleAIAction('viva')}>
-                      ðŸ“ Generate Viva Questions on {drug?.name || 'this drug'}
+                      📝 Generate Viva Questions on {drug?.name || 'this drug'}
                     </button>
                     <button className="btn btn-secondary" style={{ width: '100%', justifyContent: 'center', background: '#F8FAFC' }}>
-                      ðŸ¥ Generate Clinical Case
+                      🏥 Generate Clinical Case
                     </button>
                   </div>
 
                   {aiGenerating && (
                     <div style={{ padding: 16, textAlign: 'center', color: 'var(--primary)', fontSize: 13, background: '#F0F9FF', borderRadius: 8 }}>
-                      <span style={{ display: 'inline-block', animation: 'spin 1s linear infinite', marginRight: 8 }}>âŒ›</span>
+                      <span style={{ display: 'inline-block', animation: 'spin 1s linear infinite', marginRight: 8 }}>⌛</span>
                       AI is generating insights...
                     </div>
                   )}

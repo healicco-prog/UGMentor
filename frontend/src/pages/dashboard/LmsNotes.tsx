@@ -1,6 +1,7 @@
 // React component
 import React, { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
+import { useAuth } from '@/context/AuthContext';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { ChevronDown, ChevronRight, Menu, Sparkles } from 'lucide-react';
@@ -8,50 +9,45 @@ import MCQRenderer from '@/components/MCQRenderer';
 import FlashcardRenderer from '@/components/FlashcardRenderer';
 import QuestionRenderer from '@/components/QuestionRenderer';
 
-// â”€â”€â”€ Course → Subject Mapping (mirroring MedEduAI) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Course → Subject Mapping (mirroring MedEduAI) ──────────────────────────
 const COURSE_DATA: Record<string, { subjects: string[]; versions: string[] }> = {
   MBBS: {
     subjects: [
-      'Anatomy', 'Physiology', 'Biochemistry', 'Pathology', 'Microbiology',
-      'Pharmacology', 'Forensic Medicine & Toxicology (FMT)',
-      'Community Medicine (PSM)', 'Ophthalmology', 'ENT (Otorhinolaryngology)',
-      'General Medicine', 'Pediatrics', 'Dermatology', 'Psychiatry',
-      'General Surgery', 'Orthopedics', 'Obstetrics & Gynaecology (OBG)',
-      'Anesthesia', 'Radiology', 'Emergency Medicine',
+      'Anaesthesia', 'Anatomy', 'Anesthesia', 'Biochemistry', 'Community Medicine (PSM)',
+      'Dermatology', 'ENT (Otorhinolaryngology)', 'Emergency Medicine',
+      'Forensic Medicine & Toxicology (FMT)', 'General Medicine', 'General Surgery',
+      'Microbiology', 'Obstetrics & Gynaecology (OBG)', 'Ophthalmology',
+      'Orthopaedics', 'Paediatrics', 'Pathology', 'Pharmacology',
+      'Physiology', 'Psychiatry', 'Radiology'
     ],
     versions: ['Standard Curriculum', '2026'],
   },
   BDS: {
     subjects: [
-      'General Human Anatomy incl. Embryology, Osteology & Histology',
-      'General Physiology', 'Biochemistry, Nutrition and Dietetics',
-      'Dental Anatomy, Embryology and Oral Histology',
-      'General Pathology', 'Microbiology',
-      'General and Dental Pharmacology and Therapeutics',
-      'Dental Materials', 'Preclinical Prosthodontics and Crown & Bridge',
-      'Preclinical Conservative Dentistry', 'General Medicine', 'General Surgery',
-      'Oral and Maxillofacial Pathology & Oral Microbiology',
-      'Oral Medicine and Radiology', 'Oral & Maxillofacial Surgery',
-      'Periodontology', 'Pediatric and Preventive Dentistry',
-      'Conservative Dentistry and Endodontics',
-      'Prosthodontics and Crown & Bridge',
-      'Orthodontics & Dentofacial Orthopaedics',
+      'Aesthetic Dentistry', 'Behavioural Sciences', 'Biochemistry, Nutrition and Dietetics',
+      'Cariology', 'Conservative Dentistry and Endodontics', 'Dental Anatomy, Embryology and Oral Histology',
+      'Dental Armamentarium and Usage', 'Dental Materials', 'Diagnosis & Treatment Planning',
+      'Ethics', 'Forensic Odontology', 'General Human Anatomy including Embryology, Osteology & Histology',
+      'General Medicine', 'General Pathology', 'General Physiology', 'General Surgery',
+      'General and Dental Pharmacology and Therapeutics', 'Implantology', 'Microbiology',
+      'Oral & Maxillofacial Surgery', 'Oral Medicine and Radiology', 'Oral and Maxillofacial Pathology & Oral Microbiology',
+      'Orthodontics & Dentofacial Orthopaedics', 'Pediatric and Preventive Dentistry', 'Periodontology',
+      'Preclinical Conservative Dentistry', 'Preclinical Prosthodontics and Crown & Bridge',
+      'Prosthodontics and Crown & Bridge', 'Public Health Dentistry', 'Pulpoperiapical Lesions',
+      'Sterilization & Disinfection'
     ],
     versions: ['Standard Curriculum', '2026'],
   },
   'BSc Nursing': {
     subjects: [
-      'Adult Health Nursing (Medical Surgical Nursing) I',
-      'Adult Health Nursing II', 'Applied Anatomy', 'Applied Biochemistry',
-      'Applied Microbiology & Infection Control including Safety',
-      'Applied Nutrition & Dietetics', 'Applied Physiology',
-      'Applied Psychology', 'Applied Sociology',
-      'Child Health Nursing I & II', 'Community Health Nursing I & II',
-      'Educational Technology / Nursing Education', 'Genetics',
-      'Mental Health Nursing I & II', 'Midwifery / OBG Nursing I & II',
-      'Nursing Foundations I', 'Nursing Foundations II',
-      'Nursing Management & Leadership', 'Nursing Research & Statistics',
-      'Pathology I & II', 'Pharmacology I & II',
+      'Adult Health Nursing (Medical Surgical Nursing) I', 'Adult Health Nursing II',
+      'Applied Anatomy', 'Applied Biochemistry', 'Applied Microbiology & Infection Control including Safety',
+      'Applied Nutrition & Dietetics', 'Applied Physiology', 'Applied Psychology',
+      'Applied Sociology', 'Child Health Nursing I & II', 'Community Health Nursing I & II',
+      'Educational Technology / Nursing Education', 'Genetics', 'Mental Health Nursing I & II',
+      'Midwifery / OBG Nursing I & II', 'Nursing Foundations I', 'Nursing Foundations II',
+      'Nursing Management & Leadership', 'Nursing Research & Statistics', 'Pathology I & II',
+      'Pharmacology I & II'
     ],
     versions: ['2026'],
   },
@@ -77,14 +73,27 @@ const TABS = [
 ];
 
 export default function LMSNotesPage() {
+  const { user } = useAuth();
   const [course, setCourse] = useState('MBBS');
   const [subjects, setSubjects] = useState(COURSE_DATA['MBBS'].subjects);
-  const [versions, setVersions] = useState(COURSE_DATA['MBBS'].versions);
   const [subject, setSubject] = useState(COURSE_DATA['MBBS'].subjects[0]);
   const [version, setVersion] = useState(COURSE_DATA['MBBS'].versions[0]);
   const [searchTopic, setSearchTopic] = useState('');
   const [topics, setTopics] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (user?.id) {
+      const savedCourse = localStorage.getItem(`course_${user.id}`);
+      const savedVersion = localStorage.getItem(`version_${user.id}`);
+      const c = savedCourse && COURSES.includes(savedCourse) ? savedCourse : 'MBBS';
+      const v = savedVersion && COURSE_DATA[c].versions.includes(savedVersion) ? savedVersion : COURSE_DATA[c].versions[0];
+      setCourse(c);
+      setVersion(v);
+      setSubjects(COURSE_DATA[c].subjects);
+      setSubject(prev => COURSE_DATA[c].subjects.includes(prev) ? prev : COURSE_DATA[c].subjects[0]);
+    }
+  }, [user]);
 
   const [activeTopicId, setActiveTopicId] = useState('');
   const [activeTab, setActiveTab] = useState('Introduction');
@@ -114,7 +123,7 @@ export default function LMSNotesPage() {
       const endpoint = apiUrl ? `${apiUrl}/api/generate-answer` : '/api/generate-answer';
       const response = await fetch(endpoint, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${(await import('@/lib/supabase').then(m => m.supabase.auth.getSession())).data?.session?.access_token || ''}` },
         body: JSON.stringify({
           course,
           subject,
@@ -169,15 +178,6 @@ export default function LMSNotesPage() {
     }
     fetchTopics();
   }, [course, subject, version]);
-
-  // When course changes → update subjects & versions, reset selections
-  useEffect(() => {
-    const data = COURSE_DATA[course];
-    setSubjects(data.subjects);
-    setVersions(data.versions);
-    setSubject(data.subjects[0]);
-    setVersion(data.versions[0]);
-  }, [course]);
 
   const activeTopic = topics.find(t => t.id === activeTopicId);
   const filteredTopics = topics.filter(t =>
@@ -272,22 +272,17 @@ export default function LMSNotesPage() {
 
       <div className="notes-layout">
 
-        {/* â”€â”€ LEFT: Navigation & Topics â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+        {/* ── LEFT: Navigation & Topics ─────────────────────────── */}
         <div className={`notes-left ${!isLeftOpen ? 'collapsed' : ''}`}>
           <div style={{ padding: '16px 16px 12px', display: 'flex', flexDirection: 'column', gap: 10, borderBottom: '1px solid var(--border)' }}>
 
             {/* Course + Subject row */}
             <div style={{ display: 'flex', gap: 8 }}>
               <div style={{ flex: 1 }}>
-                <label style={{ fontSize: 10, color: 'var(--text-muted)', fontWeight: 700, textTransform: 'uppercase', marginBottom: 4, display: 'block', letterSpacing: 0.5 }}>Course</label>
-                <select
-                  className="input-field"
-                  style={{ padding: '7px 8px', fontSize: 13 }}
-                  value={course}
-                  onChange={e => setCourse(e.target.value)}
-                >
-                  {COURSES.map(c => <option key={c} value={c}>{c}</option>)}
-                </select>
+                <label style={{ fontSize: 10, color: 'var(--text-muted)', fontWeight: 700, textTransform: 'uppercase', marginBottom: 4, display: 'block', letterSpacing: 0.5 }}>Fixed Course</label>
+                <div style={{ padding: '7px 8px', fontSize: 13, background: 'var(--bg-elevated)', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)', color: 'var(--text-secondary)' }}>
+                  {course}
+                </div>
               </div>
               <div style={{ flex: 1 }}>
                 <label style={{ fontSize: 10, color: 'var(--text-muted)', fontWeight: 700, textTransform: 'uppercase', marginBottom: 4, display: 'block', letterSpacing: 0.5 }}>Subject</label>
@@ -304,15 +299,10 @@ export default function LMSNotesPage() {
 
             {/* Curriculum Version */}
             <div>
-              <label style={{ fontSize: 10, color: 'var(--text-muted)', fontWeight: 700, textTransform: 'uppercase', marginBottom: 4, display: 'block', letterSpacing: 0.5 }}>Curriculum Version</label>
-              <select
-                className="input-field"
-                style={{ padding: '7px 8px', fontSize: 13 }}
-                value={version}
-                onChange={e => setVersion(e.target.value)}
-              >
-                {versions.map(v => <option key={v} value={v}>{v}</option>)}
-              </select>
+              <label style={{ fontSize: 10, color: 'var(--text-muted)', fontWeight: 700, textTransform: 'uppercase', marginBottom: 4, display: 'block', letterSpacing: 0.5 }}>Fixed Version</label>
+              <div style={{ padding: '7px 8px', fontSize: 13, background: 'var(--bg-elevated)', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)', color: 'var(--text-secondary)' }}>
+                {version}
+              </div>
             </div>
 
             {/* Search */}
@@ -407,7 +397,7 @@ export default function LMSNotesPage() {
           </div>
         </div>
 
-        {/* â”€â”€ MIDDLE: Note Content â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+        {/* ── MIDDLE: Note Content ───────────────────────────────── */}
         <div className="notes-middle">
           {/* Header + breadcrumb + tabs */}
           <div style={{ padding: '16px 24px 0', borderBottom: '1px solid var(--border)', background: 'var(--bg-surface)' }}>
@@ -557,7 +547,7 @@ export default function LMSNotesPage() {
           </div>
         </div>
 
-        {/* â”€â”€ RIGHT: AI Mentor â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+        {/* ── RIGHT: AI Mentor ──────────────────────────────────── */}
         <div className={`notes-right ${!isRightOpen ? 'collapsed' : ''}`}>
           <div style={{ padding: '18px 20px', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>

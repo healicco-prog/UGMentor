@@ -29,7 +29,7 @@ function generateContent(caseName: string, subject: string) {
     `  • Associations: Associated symptoms (fever, vomiting, dyspnoea, etc.)\n` +
     `  • Time course: Constant / intermittent / progressive / episodic\n` +
     `  • Exacerbating & relieving factors: What makes it worse or better?\n` +
-    `  • Severity: Score on a 1â€“10 scale; impact on daily activities\n\n` +
+    `  • Severity: Score on a 1–10 scale; impact on daily activities\n\n` +
     `PAST MEDICAL HISTORY:\n` +
     `  • Previous episodes of ${caseName}\n` +
     `  • Chronic illnesses: DM, HTN, CKD, cardiac disease, TB\n` +
@@ -50,13 +50,13 @@ function generateContent(caseName: string, subject: string) {
 
   const checklist = [
     `General: Conscious, oriented to time/place/person`,
-    `Vital Signs: BP (both arms), HR, RR, Temperature, SpOâ‚‚`,
+    `Vital Signs: BP (both arms), HR, RR, Temperature, SpO₂`,
     `Anthropometry: Weight, Height, BMI, Waist circumference`,
     `Build & Nutrition: Adequately built / malnourished`,
     `Pallor: Conjunctiva, palm, tongue`,
     `Icterus: Sclera, skin`,
     `Cyanosis: Peripheral & central — lips, tongue, fingertips`,
-    `Clubbing: Grade Iâ€“IV, bilateral/unilateral`,
+    `Clubbing: Grade I–IV, bilateral/unilateral`,
     `Lymphadenopathy: Cervical, axillary, inguinal — size, consistency, tenderness`,
     `Oedema: Pitting / non-pitting, distribution (ankle → sacral)`,
     `JVP: Height above sternal angle; waveform`,
@@ -71,12 +71,12 @@ function generateContent(caseName: string, subject: string) {
   ];
 
   const pearls = [
-    `ðŸ”‘ In ${caseName}: Always take a complete, systematic history — the diagnosis is often made from history alone.`,
+    `🔑 In ${caseName}: Always take a complete, systematic history — the diagnosis is often made from history alone.`,
     `💊 Correlate presenting symptoms with signs before forming a differential diagnosis.`,
-    `ðŸ©º Use the SOCRATES framework for any pain-related complaint to avoid missing key features.`,
-    `âš•ï¸ Always ask about drug history — many presentations are iatrogenic or drug-modified.`,
+    `🩺 Use the SOCRATES framework for any pain-related complaint to avoid missing key features.`,
+    `⚕️ Always ask about drug history — many presentations are iatrogenic or drug-modified.`,
     `📊 For ${caseName} — key investigations: confirm with appropriate first-line tests before escalating.`,
-    `âš ï¸ Identify and document red-flag symptoms that require urgent escalation or specialist referral.`,
+    `⚠️ Identify and document red-flag symptoms that require urgent escalation or specialist referral.`,
     `📋 Document all findings in structured SOAP format: Subjective → Objective → Assessment → Plan.`,
     `🧠 Use clinical reasoning to distinguish ${caseName} from its closest differentials by key discriminating features.`,
     `🔬 Gold standard investigation for confirmation should always be documented with rationale.`,
@@ -173,19 +173,19 @@ export default function BedsideCompanionPage() {
           <p className="page-desc">AI-generated History Templates, Examination Checklists & Clinical Pearls — saved to your library</p>
         </div>
         <div style={{ display: 'flex', gap: 8 }}>
-          <button className={`btn ${view === 'generate' ? 'btn-primary' : 'btn-secondary'}`} onClick={() => setView('generate')}>âœ¨ Generate</button>
+          <button className={`btn ${view === 'generate' ? 'btn-primary' : 'btn-secondary'}`} onClick={() => setView('generate')}>✨ Generate</button>
           <button className={`btn ${view === 'library' ? 'btn-primary' : 'btn-secondary'}`} onClick={() => { setView('library'); setViewEntry(null); }}>
             📚 Library {library.length > 0 && <span style={{ background: 'rgba(255,255,255,0.25)', borderRadius: 999, padding: '1px 7px', fontSize: 11, marginLeft: 4 }}>{library.length}</span>}
           </button>
         </div>
       </div>
 
-      {/* â”€â”€ GENERATE VIEW â”€â”€ */}
+      {/* ── GENERATE VIEW ── */}
       {view === 'generate' && (
         <div style={{ maxWidth: 880 }}>
           {/* Config */}
           <div className="card" style={{ marginBottom: 20 }}>
-            <h2 style={{ fontSize: 15, fontWeight: 700, marginBottom: 16 }}>âš™ï¸ Select Clinical Case</h2>
+            <h2 style={{ fontSize: 15, fontWeight: 700, marginBottom: 16 }}>⚙️ Select Clinical Case</h2>
             <div className="grid-2" style={{ marginBottom: 14 }}>
               <div className="form-group" style={{ margin: 0 }}>
                 <label className="label">Course</label>
@@ -211,20 +211,20 @@ export default function BedsideCompanionPage() {
               </div>
               <div className="form-group" style={{ margin: 0 }}>
                 <label className="label">Custom Case</label>
-                <input className="input-field" value={customCase} onChange={e => { setCustomCase(e.target.value); setClinicalCase(''); setGenerated(null); }} placeholder="e.g., Acute Appendicitis, Typhoid Feverâ€¦" />
+                <input className="input-field" value={customCase} onChange={e => { setCustomCase(e.target.value); setClinicalCase(''); setGenerated(null); }} placeholder="e.g., Acute Appendicitis, Typhoid Fever…" />
               </div>
             </div>
 
             {activeCase && (
               <div style={{ marginTop: 14, padding: '8px 14px', background: 'rgba(108,59,255,0.07)', border: '1px solid rgba(108,59,255,0.18)', borderRadius: 'var(--radius-sm)', fontSize: 13, color: 'var(--primary-light)' }}>
-                ðŸ¥ Ready to generate content for: <strong>{activeCase}</strong>
+                🏥 Ready to generate content for: <strong>{activeCase}</strong>
               </div>
             )}
 
             <button className="btn btn-primary btn-lg" style={{ width: '100%', justifyContent: 'center', marginTop: 16, padding: 14 }}
               onClick={handleGenerate} disabled={generating || !activeCase}>
               {generating
-                ? <><span className="spinner" style={{ marginRight: 8 }} />AI is generating clinical contentâ€¦</>
+                ? <><span className="spinner" style={{ marginRight: 8 }} />AI is generating clinical content…</>
                 : '🤖 Generate History Template, Checklist & Pearls'}
             </button>
           </div>
@@ -235,7 +235,7 @@ export default function BedsideCompanionPage() {
               {/* Header bar */}
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16, flexWrap: 'wrap', gap: 10 }}>
                 <div>
-                  <div style={{ fontWeight: 800, fontSize: 16, fontFamily: 'Outfit' }}>âœ¨ Generated: {activeCase}</div>
+                  <div style={{ fontWeight: 800, fontSize: 16, fontFamily: 'Outfit' }}>✨ Generated: {activeCase}</div>
                   <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{course} • {subject || 'Custom'}</div>
                 </div>
                 <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
@@ -246,7 +246,7 @@ export default function BedsideCompanionPage() {
 
               {/* Tabs */}
               <div className="tabs" style={{ marginBottom: 20, width: '100%' }}>
-                {[{ key: 'history', label: 'ðŸ“ History Template' }, { key: 'checklist', label: `✅ Exam Checklist (${checkedCount}/${generated.checklist.length})` }, { key: 'pearls', label: '💡 Clinical Pearls' }].map(tab => (
+                {[{ key: 'history', label: '📝 History Template' }, { key: 'checklist', label: `✅ Exam Checklist (${checkedCount}/${generated.checklist.length})` }, { key: 'pearls', label: '💡 Clinical Pearls' }].map(tab => (
                   <button key={tab.key} className={`tab-btn ${activeTab === tab.key ? 'active' : ''}`} style={{ flex: 1 }} onClick={() => setActiveTab(tab.key as typeof activeTab)}>{tab.label}</button>
                 ))}
               </div>
@@ -261,7 +261,7 @@ export default function BedsideCompanionPage() {
                         <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{activeCase}</div>
                       </div>
                     </div>
-                    <span style={{ background: 'linear-gradient(135deg,#6C3BFF,#8B5CF6)', color: 'white', padding: '4px 12px', borderRadius: 999, fontSize: 11, fontWeight: 700 }}>âœ¨ AI Generated</span>
+                    <span style={{ background: 'linear-gradient(135deg,#6C3BFF,#8B5CF6)', color: 'white', padding: '4px 12px', borderRadius: 999, fontSize: 11, fontWeight: 700 }}>✨ AI Generated</span>
                   </div>
                   {generated.history.split('\n\n').map((section, si) => {
                     const lines = section.split('\n');
@@ -273,7 +273,7 @@ export default function BedsideCompanionPage() {
                       <div key={si} style={{ marginBottom: 14, borderRadius: 'var(--radius-md)', overflow: 'hidden', border: '1px solid var(--border)', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
                         <div style={{ background: `linear-gradient(135deg,${col}18,${col}08)`, borderBottom: `2px solid ${col}30`, padding: '10px 16px', display: 'flex', alignItems: 'center', gap: 8 }}>
                           <div style={{ width: 8, height: 8, borderRadius: '50%', background: col, flexShrink: 0 }} />
-                          <span style={{ fontWeight: 700, fontSize: 13, color: col }}>{heading.replace(/^[📋ðŸ¥💊ðŸ‘¨â€ðŸ‘©â€ðŸ‘¦ðŸ§‘â€ðŸ¤â€ðŸ§‘ðŸ”]/u,'').trim()}</span>
+                          <span style={{ fontWeight: 700, fontSize: 13, color: col }}>{heading.replace(/^[📋🏥💊👨‍👩‍👦🧑‍🤝‍🧑🔍]/u,'').trim()}</span>
                         </div>
                         <div style={{ padding: '12px 16px', background: 'var(--bg-card)' }}>
                           {body.map((line, li) => line.trim() && (
@@ -293,7 +293,7 @@ export default function BedsideCompanionPage() {
                 <div className="animate-fadeIn">
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                      <div style={{ width: 38, height: 38, borderRadius: 'var(--radius-md)', background: 'linear-gradient(135deg,#0EA5E9,#10B981)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18 }}>ðŸ©º</div>
+                      <div style={{ width: 38, height: 38, borderRadius: 'var(--radius-md)', background: 'linear-gradient(135deg,#0EA5E9,#10B981)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18 }}>🩺</div>
                       <div>
                         <div style={{ fontWeight: 700, fontSize: 15 }}>Examination Checklist</div>
                         <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{checkedCount} of {generated.checklist.length} completed</div>
@@ -319,7 +319,7 @@ export default function BedsideCompanionPage() {
                   </div>
                   {checkedCount === generated.checklist.length && (
                     <div style={{ marginTop: 16, padding: '16px 20px', background: 'linear-gradient(135deg,rgba(16,185,129,0.12),rgba(14,165,233,0.08))', border: '1px solid rgba(16,185,129,0.3)', borderRadius: 'var(--radius-lg)', textAlign: 'center', color: 'var(--success)', fontWeight: 700, fontSize: 15 }}>
-                      ðŸŽ‰ Excellent! Examination Complete — Document your findings now.
+                      🎉 Excellent! Examination Complete — Document your findings now.
                     </div>
                   )}
                 </div>
@@ -355,7 +355,7 @@ export default function BedsideCompanionPage() {
         </div>
       )}
 
-      {/* â”€â”€ LIBRARY VIEW â”€â”€ */}
+      {/* ── LIBRARY VIEW ── */}
       {view === 'library' && (
         <div style={{ maxWidth: 1060 }}>
           {!viewEntry ? (
@@ -363,16 +363,16 @@ export default function BedsideCompanionPage() {
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
                 <div style={{ fontWeight: 700, fontSize: 16 }}>📚 Saved Library ({library.length})</div>
                 {library.length > 0 && (
-                  <button className="btn btn-secondary btn-sm" onClick={() => { if (confirm('Clear entire library?')) { saveDB([]); setLibrary([]); } }}>ðŸ—‘ï¸ Clear All</button>
+                  <button className="btn btn-secondary btn-sm" onClick={() => { if (confirm('Clear entire library?')) { saveDB([]); setLibrary([]); } }}>🗑️️ Clear All</button>
                 )}
               </div>
 
               {library.length === 0 ? (
                 <div className="card" style={{ textAlign: 'center', padding: 60, color: 'var(--text-muted)' }}>
-                  <div style={{ fontSize: 48, marginBottom: 16 }}>ðŸ“­</div>
+                  <div style={{ fontSize: 48, marginBottom: 16 }}>📭</div>
                   <div style={{ fontWeight: 600, fontSize: 16, marginBottom: 8, color: 'var(--text-secondary)' }}>No saved entries yet</div>
                   <div style={{ fontSize: 13, marginBottom: 20 }}>Generate content and save it to your library to access it anytime.</div>
-                  <button className="btn btn-primary" onClick={() => setView('generate')}>âœ¨ Generate Now</button>
+                  <button className="btn btn-primary" onClick={() => setView('generate')}>✨ Generate Now</button>
                 </div>
               ) : (
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(300px,1fr))', gap: 16 }}>
@@ -386,20 +386,20 @@ export default function BedsideCompanionPage() {
                         onMouseLeave={e => (e.currentTarget.style.boxShadow = '0 2px 12px rgba(0,0,0,0.05)', e.currentTarget.style.borderColor = 'var(--border)', e.currentTarget.style.transform = 'none')}>
                         <div style={{ background: `linear-gradient(135deg,${col}20,${col}08)`, padding: '16px 18px', borderBottom: `2px solid ${col}30`, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                            <div style={{ width: 36, height: 36, borderRadius: 'var(--radius-md)', background: `${col}25`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18 }}>ðŸ¥</div>
+                            <div style={{ width: 36, height: 36, borderRadius: 'var(--radius-md)', background: `${col}25`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18 }}>🏥</div>
                             <div style={{ fontWeight: 800, fontSize: 14, color: col }}>{entry.caseName}</div>
                           </div>
                           <button style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.25)', color: 'var(--danger)', borderRadius: 6, padding: '3px 9px', fontSize: 11, cursor: 'pointer', fontWeight: 700 }}
-                            onClick={e => { e.stopPropagation(); handleDelete(entry.id); }}>âœ•</button>
+                            onClick={e => { e.stopPropagation(); handleDelete(entry.id); }}>✖</button>
                         </div>
                         <div style={{ padding: '14px 18px' }}>
                           <div style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 12 }}>{entry.course} • {entry.subject || 'Custom'}</div>
                           <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 12 }}>
-                            <span style={{ background: 'rgba(108,59,255,0.1)', color: 'var(--primary-light)', border: '1px solid rgba(108,59,255,0.2)', borderRadius: 999, padding: '2px 10px', fontSize: 11, fontWeight: 600 }}>ðŸ“ History</span>
+                            <span style={{ background: 'rgba(108,59,255,0.1)', color: 'var(--primary-light)', border: '1px solid rgba(108,59,255,0.2)', borderRadius: 999, padding: '2px 10px', fontSize: 11, fontWeight: 600 }}>📝 History</span>
                             <span style={{ background: 'rgba(16,185,129,0.1)', color: 'var(--success)', border: '1px solid rgba(16,185,129,0.2)', borderRadius: 999, padding: '2px 10px', fontSize: 11, fontWeight: 600 }}>✅ {entry.checklist.length} Checks</span>
                             <span style={{ background: 'rgba(245,158,11,0.1)', color: 'var(--warning)', border: '1px solid rgba(245,158,11,0.2)', borderRadius: 999, padding: '2px 10px', fontSize: 11, fontWeight: 600 }}>💡 {entry.pearls.length} Pearls</span>
                           </div>
-                          <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>ðŸ• {entry.savedAt}</div>
+                          <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>🕙 {entry.savedAt}</div>
                         </div>
                       </div>
                     );
@@ -412,17 +412,17 @@ export default function BedsideCompanionPage() {
             <div className="animate-fadeIn">
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16, flexWrap: 'wrap', gap: 10 }}>
                 <div>
-                  <div style={{ fontWeight: 800, fontSize: 17, fontFamily: 'Outfit' }}>ðŸ¥ {viewEntry.caseName}</div>
+                  <div style={{ fontWeight: 800, fontSize: 17, fontFamily: 'Outfit' }}>🏥 {viewEntry.caseName}</div>
                   <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{viewEntry.course} • {viewEntry.subject || 'Custom'} • Saved: {viewEntry.savedAt}</div>
                 </div>
                 <div style={{ display: 'flex', gap: 8 }}>
-                  <button className="btn btn-secondary btn-sm" onClick={() => setViewEntry(null)}>â† Back to Library</button>
-                  <button className="btn btn-danger btn-sm" onClick={() => { handleDelete(viewEntry.id); setViewEntry(null); }}>ðŸ—‘ï¸ Delete</button>
+                  <button className="btn btn-secondary btn-sm" onClick={() => setViewEntry(null)}>← Back to Library</button>
+                  <button className="btn btn-danger btn-sm" onClick={() => { handleDelete(viewEntry.id); setViewEntry(null); }}>🗑️️ Delete</button>
                 </div>
               </div>
 
               <div className="tabs" style={{ marginBottom: 20, width: '100%' }}>
-                {[{ key: 'history', label: 'ðŸ“ History Template' }, { key: 'checklist', label: `✅ Checklist (${viewEntry.checklist.length})` }, { key: 'pearls', label: '💡 Pearls' }].map(tab => (
+                {[{ key: 'history', label: '📝 History Template' }, { key: 'checklist', label: `✅ Checklist (${viewEntry.checklist.length})` }, { key: 'pearls', label: '💡 Pearls' }].map(tab => (
                   <button key={tab.key} className={`tab-btn ${activeTab === tab.key ? 'active' : ''}`} style={{ flex: 1 }} onClick={() => setActiveTab(tab.key as typeof activeTab)}>{tab.label}</button>
                 ))}
               </div>
@@ -448,7 +448,7 @@ export default function BedsideCompanionPage() {
                 <div className="card animate-fadeIn">
                   {viewEntry.pearls.map((pearl, i) => (
                     <div key={i} style={{ display: 'flex', gap: 12, padding: '12px 14px', background: 'var(--bg-surface)', borderRadius: 'var(--radius-sm)', marginBottom: 10, border: '1px solid var(--border)', borderLeft: '3px solid var(--accent)' }}>
-                      <span style={{ fontSize: 18, flexShrink: 0 }}>💭Ž</span>
+                      <span style={{ fontSize: 18, flexShrink: 0 }}>💭</span>
                       <span style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.75 }}>{pearl}</span>
                     </div>
                   ))}

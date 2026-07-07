@@ -1,4 +1,4 @@
-﻿// React component
+// React component
 
 import React, { useState } from 'react';
 
@@ -155,7 +155,7 @@ const INITIAL_RECORDS: LogEntry[] = [
   }
 ];
 
-// â”€â”€â”€ Course → Subject Mapping â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Course → Subject Mapping ─────────────────────────────────────────────────
 const COURSE_DATA: Record<string, string[]> = {
   MBBS: [
     'Anatomy', 'Physiology', 'Biochemistry', 'Pathology', 'Microbiology',
@@ -301,15 +301,15 @@ export default function PortfolioPage() {
   const getTabLabel = (tab: string) => {
     switch (tab) {
       case 'dashboard': return '📊 Dashboard';
-      case 'student-profile': return 'ðŸ‘¤ Student Profile';
-      case 'clinical-logbook': return 'ðŸ¥ Clinical Logbook';
-      case 'case-presentations': return 'ðŸ“‚ Case Presentations';
+      case 'student-profile': return '👤 Student Profile';
+      case 'clinical-logbook': return '🏥 Clinical Logbook';
+      case 'case-presentations': return '📝 Case Presentations';
       case 'seminars': return '🎤 Seminars';
       case 'journal-club': return '📖 Journal Club';
-      case 'teaching': return 'ðŸ‘¨â€ðŸ« Teaching Activities';
-      case 'assessments': return 'ðŸ“ Assessments';
-      case 'reflections': return '💭­ Reflections';
-      case 'documents': return 'ðŸ“Ž Documents';
+      case 'teaching': return '🎓 Teaching Activities';
+      case 'assessments': return '✅ Assessments';
+      case 'reflections': return '💭 Reflections';
+      case 'documents': return '📂 Documents';
       default: return 'Portfolio';
     }
   };
@@ -322,7 +322,7 @@ export default function PortfolioPage() {
       {/* Header section */}
       <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: 16 }}>
         <div>
-          <h1 className="page-title font-outfit">ðŸ—‚ï¸ Academic Portfolio & Logbook</h1>
+          <h1 className="page-title font-outfit">📁 Academic Portfolio & Logbook</h1>
           <p className="page-desc">Track your multi-subject CBME competencies, assessments, and clinical activities.</p>
         </div>
 
@@ -389,14 +389,14 @@ export default function PortfolioPage() {
           {/* Metrics Grid */}
           <div className="grid-4">
             {[
-              { id: 'clinical-logbook', label: 'Clinical Procedures', count: getCount('clinical-logbook'), emoji: 'ðŸ¥' },
-              { id: 'case-presentations', label: 'Case Presentations', count: getCount('case-presentations'), emoji: 'ðŸ“‚' },
+              { id: 'clinical-logbook', label: 'Clinical Procedures', count: getCount('clinical-logbook'), emoji: '🏥' },
+              { id: 'case-presentations', label: 'Case Presentations', count: getCount('case-presentations'), emoji: '📝' },
               { id: 'seminars', label: 'Seminars', count: getCount('seminars'), emoji: '🎤' },
               { id: 'journal-club', label: 'Journal Clubs', count: getCount('journal-club'), emoji: '📖' },
-              { id: 'teaching', label: 'Teaching Activities', count: getCount('teaching'), emoji: 'ðŸ‘¨â€ðŸ«' },
-              { id: 'assessments', label: 'Assessments', count: getCount('assessments'), emoji: 'ðŸ“' },
-              { id: 'reflections', label: 'Reflections', count: getCount('reflections'), emoji: '💭­' },
-              { id: 'documents', label: 'Documents Logged', count: getCount('documents'), emoji: 'ðŸ“Ž' },
+              { id: 'teaching', label: 'Teaching Activities', count: getCount('teaching'), emoji: '🎓' },
+              { id: 'assessments', label: 'Assessments', count: getCount('assessments'), emoji: '✅' },
+              { id: 'reflections', label: 'Reflections', count: getCount('reflections'), emoji: '💭' },
+              { id: 'documents', label: 'Documents Logged', count: getCount('documents'), emoji: '📂' },
             ].map((metric) => (
               <button
                 key={metric.id}
@@ -421,25 +421,25 @@ export default function PortfolioPage() {
             <h3 style={{ fontSize: 18, fontWeight: 700, marginBottom: 16 }}>Quick Actions</h3>
             <div className="grid-4">
               <button onClick={() => setCurrentTab('student-profile')} className="card" style={{ cursor: 'pointer', textAlign: 'left', color: 'inherit' }}>
-                <span style={{ fontSize: 24 }}>ðŸ‘¤</span>
+                <span style={{ fontSize: 24 }}>👤</span>
                 <h4 style={{ fontSize: 14, fontWeight: 700, marginTop: 12, color: 'var(--text-primary)' }}>Update Profile</h4>
                 <p style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 6 }}>Update your academic and personal details.</p>
               </button>
 
               <button onClick={() => { setCurrentTab('clinical-logbook'); setIsModalOpen(true); }} className="card" style={{ cursor: 'pointer', textAlign: 'left', color: 'inherit' }}>
-                <span style={{ fontSize: 24 }}>ðŸ¥</span>
+                <span style={{ fontSize: 24 }}>🏥</span>
                 <h4 style={{ fontSize: 14, fontWeight: 700, marginTop: 12, color: 'var(--text-primary)' }}>Log Procedure</h4>
                 <p style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 6 }}>Quickly log a new clinical procedure or ward duty entry.</p>
               </button>
 
               <button onClick={() => { setCurrentTab('case-presentations'); setIsModalOpen(true); }} className="card" style={{ cursor: 'pointer', textAlign: 'left', color: 'inherit' }}>
-                <span style={{ fontSize: 24 }}>ðŸ“‚</span>
+                <span style={{ fontSize: 24 }}>📝</span>
                 <h4 style={{ fontSize: 14, fontWeight: 700, marginTop: 12, color: 'var(--text-primary)' }}>Add Case Presentation</h4>
                 <p style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 6 }}>Log a case presented in ward rounds or CPC.</p>
               </button>
 
               <button onClick={exportPDF} className="card" style={{ cursor: 'pointer', textAlign: 'left', color: 'inherit' }}>
-                <span style={{ fontSize: 24 }}>â¬‡ï¸</span>
+                <span style={{ fontSize: 24 }}>📄</span>
                 <h4 style={{ fontSize: 14, fontWeight: 700, marginTop: 12, color: 'var(--text-primary)' }}>Export Logbook PDF</h4>
                 <p style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 6 }}>Download your official CBME logbook in PDF format.</p>
               </button>
@@ -479,7 +479,7 @@ export default function PortfolioPage() {
               <button type="submit" className="btn btn-primary" style={{ marginTop: 8 }}>💾 Save Profile</button>
             </form>
           </div>
-          <button onClick={() => setCurrentTab('dashboard')} className="btn btn-ghost" style={{ alignSelf: 'flex-start' }}>â† Back to Portfolio Dashboard</button>
+          <button onClick={() => setCurrentTab('dashboard')} className="btn btn-ghost" style={{ alignSelf: 'flex-start' }}>← Back to Portfolio Dashboard</button>
         </div>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
@@ -500,7 +500,7 @@ export default function PortfolioPage() {
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="ðŸ” Search entries..."
+                placeholder="🔍 Search entries..."
                 className="input-field"
                 style={{ width: 220, padding: '8px 16px' }}
               />
@@ -513,7 +513,7 @@ export default function PortfolioPage() {
           {/* Records Table / View */}
           {filteredRecords.length === 0 ? (
             <div className="empty-state card glass">
-              <div className="empty-state-icon">ðŸ“­</div>
+              <div className="empty-state-icon">📭</div>
               <h3 className="empty-state-title">No records found</h3>
               <p className="empty-state-desc">
                 {searchQuery ? 'Try clearing your search query.' : `No ${getTabLabel(currentTab).substring(3).toLowerCase()} entries logged yet.`}
@@ -573,7 +573,7 @@ export default function PortfolioPage() {
                         <td style={{ fontSize: 12 }}>{r.supervisor}</td>
                         <td>
                           <span className={`badge ${r.status === 'Approved' ? 'badge-success' : 'badge-warning'}`}>
-                            {r.status === 'Approved' ? '✅ Approved' : 'â³ Pending'}
+                            {r.status === 'Approved' ? '✅ Approved' : '⏳ Pending'}
                           </span>
                         </td>
                       </tr>
@@ -585,7 +585,7 @@ export default function PortfolioPage() {
           )}
 
           <button onClick={() => setCurrentTab('dashboard')} className="btn btn-ghost" style={{ alignSelf: 'flex-start' }}>
-            â† Back to Portfolio Dashboard
+            ← Back to Portfolio Dashboard
           </button>
         </div>
       )}
@@ -596,7 +596,7 @@ export default function PortfolioPage() {
           <div className="modal-box" onClick={e => e.stopPropagation()}>
             <div className="modal-header">
               <h3 className="modal-title">Add New {getTabLabel(currentTab).substring(3)} Record</h3>
-              <button onClick={() => setIsModalOpen(false)} className="btn btn-ghost btn-sm" style={{ padding: 4 }}>âœ•</button>
+              <button onClick={() => setIsModalOpen(false)} className="btn btn-ghost btn-sm" style={{ padding: 4 }}>✖</button>
             </div>
 
             <form onSubmit={handleAddRecord}>

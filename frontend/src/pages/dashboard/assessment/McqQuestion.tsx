@@ -1,4 +1,4 @@
-﻿// React component
+// React component
 import React, { useState, useEffect } from 'react';
 
 type Step = 'generate' | 'practice' | 'bank' | 'report';
@@ -112,27 +112,37 @@ export default function MCQQuestionPage() {
     setAnswers({});
     setSubmitted(false);
     
-    // Simulate generation
-    await new Promise(r => setTimeout(r, 2000));
-    
-    const num = parseInt(count) || 10;
-    const generated: MCQ[] = Array.from({ length: num }, (_, i) => ({
-      question: `Question ${i + 1}: Regarding ${topic} in ${subject}, which of the following statements is ${i % 2 === 0 ? 'TRUE' : 'INCORRECT'}?`,
-      options: [
-        `${topic} primarily affects the ${['liver', 'kidney', 'heart', 'lung'][i % 4]}`,
-        `The main mechanism involves receptor-mediated ${['activation', 'inhibition', 'modulation', 'blockade'][i % 4]}`,
-        `First-line treatment includes ${['drug A at standard dose', 'surgical intervention', 'conservative management', 'immunosuppression'][i % 4]}`,
-        `Diagnosis is confirmed by ${['blood test', 'imaging', 'biopsy', 'clinical criteria'][i % 4]}`,
-      ],
-      correct: i % 4,
-      explanation: `The correct answer is option ${['A', 'B', 'C', 'D'][i % 4]}. ${topic} ${i % 2 === 0 ? 'characteristically involves' : 'does NOT involve'} this mechanism because of its underlying pathophysiology. ${instruction ? 'Specific instruction followed: ' + instruction : ''}`
-    }));
-    
-    setMcqs(generated);
-    setGenerating(false);
-    setTimeLeft(parseTimeToSeconds(timeAllowed));
-    setTimerStarted(false);
-    setStep('practice'); // Auto switch to practice
+    try {
+      const apiUrl = import.meta.env.VITE_API_URL || 'https://ugmentor-api-476471947498.asia-south1.run.app';
+      const res = await fetch(`${apiUrl}/api/generate-mcq`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${(await import('@/lib/supabase').then(m => m.supabase.auth.getSession())).data?.session?.access_token || ''}` },
+        body: JSON.stringify({
+          subject,
+          topic,
+          count: parseInt(count) || 10,
+          difficulty: 'mixed',
+          instruction: instruction || undefined,
+        }),
+      });
+      if (!res.ok) throw new Error('API error ' + res.status);
+      const data = await res.json();
+      const generated: MCQ[] = (data.mcqs || []).map((q: any) => ({
+        question: q.question,
+        options: q.options,
+        correct: q.correct,
+        explanation: q.explanation,
+      }));
+      setMcqs(generated);
+    } catch (err) {
+      console.error('MCQ generation failed:', err);
+      alert('Failed to generate MCQs. Please check that the backend is running.');
+    } finally {
+      setGenerating(false);
+      setTimeLeft(parseTimeToSeconds(timeAllowed));
+      setTimerStarted(false);
+      setStep('practice');
+    }
   };
 
   const handleSubmitPractice = () => {
@@ -257,7 +267,7 @@ export default function MCQQuestionPage() {
               onClick={handleGenerate}
               disabled={generating || !subject || !topic}
             >
-              {generating ? <><span className="spinner" style={{ marginRight: 8 }} />Generating MCQs & Savingâ€¦</> : '🤖 Generate MCQs & Save'}
+              {generating ? <><span className="spinner" style={{ marginRight: 8 }} />Generating MCQs & Saving…</> : '🤖 Generate MCQs & Save'}
             </button>
           </div>
         </div>
@@ -267,7 +277,7 @@ export default function MCQQuestionPage() {
         <div className="animate-fadeIn">
           {mcqs.length === 0 ? (
             <div className="empty-state card glass">
-              <div className="empty-state-icon">ðŸ“­</div>
+              <div className="empty-state-icon">📭</div>
               <h3 className="empty-state-title">No Practice Session Active</h3>
               <p className="empty-state-desc">Generate MCQs first or select a set from the Question Bank.</p>
               <button className="btn btn-primary" onClick={() => setStep('generate')}>Go to Self Assess</button>
@@ -281,7 +291,7 @@ export default function MCQQuestionPage() {
                 </div>
                 <div style={{ textAlign: 'right' }}>
                   <div style={{ fontSize: 24, fontWeight: 800, fontFamily: 'Outfit', color: 'var(--primary-light)' }}>
-                    â³ {timerStarted ? `${Math.floor(timeLeft / 60)}:${(timeLeft % 60).toString().padStart(2, '0')}` : timeAllowed}
+                    ⏳ {timerStarted ? `${Math.floor(timeLeft / 60)}:${(timeLeft % 60).toString().padStart(2, '0')}` : timeAllowed}
                   </div>
                   <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>Time Remaining</div>
                 </div>
@@ -289,7 +299,7 @@ export default function MCQQuestionPage() {
 
               {!timerStarted ? (
                 <div className="card glass" style={{ textAlign: 'center', padding: '40px 20px' }}>
-                  <div style={{ fontSize: 48, marginBottom: 16 }}>â±ï¸</div>
+                  <div style={{ fontSize: 48, marginBottom: 16 }}>⏱️</div>
                   <h3 style={{ fontSize: 20, fontWeight: 700, marginBottom: 8 }}>Ready to start the practice session?</h3>
                   <p style={{ color: 'var(--text-secondary)', marginBottom: 24 }}>Once started, the timer will count down from {timeAllowed}. The session will auto-submit when time is up.</p>
                   <button className="btn btn-primary btn-lg" onClick={() => setTimerStarted(true)}>Start Timer</button>
@@ -344,7 +354,7 @@ export default function MCQQuestionPage() {
           ) : (
             <div style={{ maxWidth: 800 }}>
               <div className="card glass" style={{ marginBottom: 24, textAlign: 'center', padding: '32px 20px' }}>
-                <div style={{ fontSize: 64, marginBottom: 16 }}>{accuracy >= 80 ? 'ðŸ†' : accuracy >= 50 ? 'ðŸ‘' : '📚'}</div>
+                <div style={{ fontSize: 64, marginBottom: 16 }}>{accuracy >= 80 ? '🏆' : accuracy >= 50 ? '👍' : '📚'}</div>
                 <h2 className="font-outfit" style={{ fontSize: 28, fontWeight: 800, marginBottom: 8 }}>Performance Report</h2>
                 <div style={{ fontSize: 52, fontWeight: 900, fontFamily: 'Outfit', color: accuracy >= 80 ? 'var(--success)' : accuracy >= 50 ? 'var(--warning)' : 'var(--danger)', marginBottom: 8 }}>
                   {score}/{mcqs.length} ({accuracy}%)

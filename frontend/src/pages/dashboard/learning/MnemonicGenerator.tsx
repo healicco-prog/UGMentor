@@ -78,9 +78,9 @@ export default function MnemonicGeneratorPage() {
     setGeneratedNote('');
     
     try {
-      const res = await fetch('/api/generate-mnemonic', {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || 'https://ugmentor-api-476471947498.asia-south1.run.app'}/api/generate-mnemonic`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${(await import('@/lib/supabase').then(m => m.supabase.auth.getSession())).data?.session?.access_token || ''}` },
         body: JSON.stringify({ course, subject, topic: topic.trim(), content: content.trim() })
       });
       const data = await res.json();
@@ -119,11 +119,11 @@ export default function MnemonicGeneratorPage() {
 
       <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap', alignItems: 'flex-start' }}>
 
-        {/* â”€â”€ LEFT: Creator Form â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+        {/* ── LEFT: Creator Form ──────────────────────────── */}
         <div style={{ flex: 1, minWidth: 340, display: 'flex', flexDirection: 'column', gap: 20 }}>
           <div className="card">
             <div style={{ fontWeight: 800, fontSize: 17, marginBottom: 20, display: 'flex', alignItems: 'center', gap: 8 }}>
-              âœ¨ Create New Mnemonic
+              ✨ Create New Mnemonic
             </div>
 
             <div className="form-group">
@@ -192,7 +192,7 @@ export default function MnemonicGeneratorPage() {
               disabled={generating || !canGenerate}
             >
               {generating
-                ? <><span className="spinner" style={{ marginRight: 8 }} />Generating Mnemonicsâ€¦</>
+                ? <><span className="spinner" style={{ marginRight: 8 }} />Generating Mnemonics…</>
                 : `🤖 Generate Mnemonics`}
             </button>
           </div>
@@ -202,7 +202,7 @@ export default function MnemonicGeneratorPage() {
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 20px', borderBottom: '1px solid var(--border)', background: 'var(--bg-elevated)' }}>
                 <div>
                   <div style={{ fontWeight: 700, fontSize: 15 }}>🧠 Generated Mnemonics</div>
-                  <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 2 }}>{course} Â· {subject} Â· {topic}</div>
+                  <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 2 }}>{course} · {subject} · {topic}</div>
                 </div>
                 <button className="btn btn-primary btn-sm" onClick={handleSave}>💾 Save to My Mnemonics</button>
               </div>
@@ -239,7 +239,7 @@ export default function MnemonicGeneratorPage() {
           )}
         </div>
 
-        {/* â”€â”€ RIGHT: Saved Notes â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+        {/* ── RIGHT: Saved Notes ──────────────────────────── */}
         <div style={{ width: 300, flexShrink: 0, display: 'flex', flexDirection: 'column', gap: 16 }}>
           <div className="card">
             <div style={{ fontWeight: 800, fontSize: 15, marginBottom: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -249,7 +249,7 @@ export default function MnemonicGeneratorPage() {
 
             {savedNotes.length === 0 ? (
               <div style={{ textAlign: 'center', padding: '32px 0', color: 'var(--text-muted)', fontSize: 13 }}>
-                <div style={{ fontSize: 32, marginBottom: 8 }}>ðŸ“­</div>
+                <div style={{ fontSize: 32, marginBottom: 8 }}>📭</div>
                 No mnemonics saved yet.
               </div>
             ) : (
@@ -266,7 +266,7 @@ export default function MnemonicGeneratorPage() {
                     }}
                   >
                     <div style={{ fontWeight: 700, fontSize: 13, color: 'var(--text-primary)' }}>{n.topic}</div>
-                    <div style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 4 }}>{n.course} Â· {n.subject}</div>
+                    <div style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 4 }}>{n.course} · {n.subject}</div>
                   </button>
                 ))}
               </div>
@@ -277,7 +277,7 @@ export default function MnemonicGeneratorPage() {
             <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
               <div style={{ padding: '14px 16px', borderBottom: '1px solid var(--border)', background: 'var(--bg-elevated)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div style={{ fontWeight: 700, fontSize: 13 }}>{selectedSaved.topic}</div>
-                <button className="btn btn-ghost btn-sm" onClick={() => setSelectedSaved(null)} style={{ padding: '2px 8px' }}>âœ•</button>
+                <button className="btn btn-ghost btn-sm" onClick={() => setSelectedSaved(null)} style={{ padding: '2px 8px' }}>✖</button>
               </div>
               <div className="markdown-body" style={{ padding: 16, maxHeight: 360, overflowY: 'auto', fontSize: 12, lineHeight: 1.7, color: 'var(--text-secondary)' }}>
                 <ReactMarkdown 

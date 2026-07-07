@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
-// â”€â”€â”€ Course → Subject Mapping â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Course → Subject Mapping ─────────────────────────────────────────────────
 const COURSE_DATA: Record<string, string[]> = {
   MBBS: [
     'Anatomy', 'Physiology', 'Biochemistry', 'Pathology', 'Microbiology',
@@ -39,26 +39,26 @@ const COURSE_DATA: Record<string, string[]> = {
 
 const COURSES = Object.keys(COURSE_DATA);
 
-// â”€â”€â”€ Note Type options â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Note Type options ────────────────────────────────────────────────────────
 const NOTE_TYPES = [
   {
     id: 'detailed',
     label: 'Detailed Notes',
-    desc: '~1500 words Â· Full explanations, clinical correlations & exam Q&A',
+    desc: '~1500 words  Full explanations, clinical correlations & exam Q&A',
     icon: '📖',
     words: 1500,
   },
   {
     id: 'summary',
     label: 'Brief Summary',
-    desc: '~750 words Â· Concise bullet points for quick revision',
+    desc: '~750 words  Concise bullet points for quick revision',
     icon: '⚡',
     words: 750,
   },
 ];
 
-// â”€â”€â”€ AI Note Generation endpoint connected â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-// â”€â”€â”€ Saved Note type â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── AI Note Generation endpoint connected ──────────────────────────────────────
+// ─── Saved Note type ─────────────────────────────────────────────────────────
 interface SavedNote {
   id: string;
   course: string;
@@ -70,7 +70,7 @@ interface SavedNote {
   wordCount: number;
 }
 
-// â”€â”€â”€ Component â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Component ───────────────────────────────────────────────────────────────
 export default function NotesCreatorPage() {
   // Selection state
   const [course, setCourse] = useState('');
@@ -128,9 +128,9 @@ export default function NotesCreatorPage() {
     setGeneratedNote('');
     
     try {
-      const res = await fetch('/api/generate-notes', {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || 'https://ugmentor-api-476471947498.asia-south1.run.app'}/api/generate-notes`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${(await import('@/lib/supabase').then(m => m.supabase.auth.getSession())).data?.session?.access_token || ''}` },
         body: JSON.stringify({ course, subject, topic: topic.trim(), noteType })
       });
       const data = await res.json();
@@ -169,19 +169,19 @@ export default function NotesCreatorPage() {
   return (
     <div className="page-container">
       <div className="page-header">
-        <h1 className="page-title font-outfit">ðŸ“ Notes Creator</h1>
+        <h1 className="page-title font-outfit">📝 Notes Creator</h1>
         <p className="page-desc">Select Course → Subject → Topic, choose note type, then generate & save AI-powered notes.</p>
       </div>
 
       <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap', alignItems: 'flex-start' }}>
 
-        {/* â”€â”€ LEFT: Creator Form â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+        {/* ── LEFT: Creator Form ──────────────────────────── */}
         <div style={{ flex: 1, minWidth: 340, display: 'flex', flexDirection: 'column', gap: 20 }}>
 
           {/* Step 1-3: Selectors */}
           <div className="card">
             <div style={{ fontWeight: 800, fontSize: 17, marginBottom: 20, display: 'flex', alignItems: 'center', gap: 8 }}>
-              âœ¨ Create New Note
+              ✨ Create New Note
             </div>
 
             {/* STEP 1 — Course */}
@@ -266,7 +266,7 @@ export default function NotesCreatorPage() {
               disabled={generating || !canGenerate}
             >
               {generating
-                ? <><span className="spinner" style={{ marginRight: 8 }} />Generating {noteType === 'detailed' ? '~1500' : '~750'} wordsâ€¦</>
+                ? <><span className="spinner" style={{ marginRight: 8 }} />Generating {noteType === 'detailed' ? '~1500' : '~750'} words…</>
                 : `🤖 Generate ${NOTE_TYPES.find(n => n.id === noteType)?.label}`}
             </button>
 
@@ -287,12 +287,12 @@ export default function NotesCreatorPage() {
                     {NOTE_TYPES.find(n => n.id === noteType)?.icon} Generated Note
                   </div>
                   <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 2 }}>
-                    {course} Â· {subject} Â· {topic} — <strong>{countWords(generatedNote).toLocaleString()} words</strong>
+                    {course}  {subject}  {topic} — <strong>{countWords(generatedNote).toLocaleString()} words</strong>
                   </div>
                 </div>
                 <div style={{ display: 'flex', gap: 8 }}>
                   <button className="btn btn-ghost btn-sm" onClick={() => setEditMode(!editMode)}>
-                    {editMode ? 'ðŸ‘ï¸ View' : 'âœï¸ Edit'}
+                    {editMode ? '👁️ View' : 'œ️ Edit'}
                   </button>
                   <button className="btn btn-primary btn-sm" onClick={handleSave}>
                     💾 Save Note
@@ -348,14 +348,14 @@ export default function NotesCreatorPage() {
 
               {/* Save footer */}
               <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 10, padding: '0 24px 20px' }}>
-                <button className="btn btn-secondary btn-sm" onClick={() => setGeneratedNote('')}>ðŸ—‘ï¸ Discard</button>
+                <button className="btn btn-secondary btn-sm" onClick={() => setGeneratedNote('')}>🗑️️ Discard</button>
                 <button className="btn btn-primary" onClick={handleSave}>💾 Save to My Notes</button>
               </div>
             </div>
           )}
         </div>
 
-        {/* â”€â”€ RIGHT: Saved Notes â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+        {/* ── RIGHT: Saved Notes ──────────────────────────── */}
         <div style={{ width: 300, flexShrink: 0, display: 'flex', flexDirection: 'column', gap: 16 }}>
           <div className="card">
             <div style={{ fontWeight: 800, fontSize: 15, marginBottom: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -365,7 +365,7 @@ export default function NotesCreatorPage() {
 
             {savedNotes.length === 0 ? (
               <div style={{ textAlign: 'center', padding: '32px 0', color: 'var(--text-muted)', fontSize: 13 }}>
-                <div style={{ fontSize: 32, marginBottom: 8 }}>ðŸ“­</div>
+                <div style={{ fontSize: 32, marginBottom: 8 }}>📭</div>
                 No saved notes yet. Generate one!
               </div>
             ) : (
@@ -387,9 +387,9 @@ export default function NotesCreatorPage() {
                         {n.noteType === 'detailed' ? '📖 Detailed' : '⚡ Summary'}
                       </span>
                     </div>
-                    <div style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 4 }}>{n.course} Â· {n.subject}</div>
+                    <div style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 4 }}>{n.course}  {n.subject}</div>
                     <div style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 2 }}>
-                      {n.createdAt} Â· ~{n.wordCount.toLocaleString()} words
+                      {n.createdAt}  ~{n.wordCount.toLocaleString()} words
                     </div>
                   </button>
                 ))}
@@ -447,9 +447,9 @@ export default function NotesCreatorPage() {
                     style={{ padding: '2px 8px', fontSize: 11 }}
                     title="Download as PDF"
                   >
-                    â¬‡ï¸ Download PDF
+                    📄 Download PDF
                   </button>
-                  <button className="btn btn-ghost btn-sm" onClick={() => setSelectedSaved(null)} style={{ padding: '2px 8px' }}>âœ•</button>
+                  <button className="btn btn-ghost btn-sm" onClick={() => setSelectedSaved(null)} style={{ padding: '2px 8px' }}>✖</button>
                 </div>
               </div>
               <div className="markdown-body" id={`printable-note-${selectedSaved.id}`} style={{ padding: 16, maxHeight: 360, overflowY: 'auto', fontSize: 12, lineHeight: 1.7, color: 'var(--text-secondary)' }}>
